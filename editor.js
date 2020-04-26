@@ -1,4 +1,4 @@
-window.editor = (() => {
+window.ENE.Editor = (() => {
   //define some sample data
   var entities = [
     { entity: "PLAYER" },
@@ -17,7 +17,6 @@ window.editor = (() => {
     }
   ];
 
-  // pass in true for textarea
   var makeAutocompleteEditor = isRule => (
     cell,
     onRendered,
@@ -44,7 +43,7 @@ window.editor = (() => {
 
     //set focus on the select box when the editor is selected (timeout allows for editor to be added to DOM)
     onRendered(function() {
-      addAutocomplete(editor, isRule);
+      ENE.Completion.addAutocomplete(editor, isRule);
       editor.focus();
     });
 
@@ -61,6 +60,9 @@ window.editor = (() => {
   };
 
   var entitiesTable = new Tabulator("#manifest-table", {
+    dataLoaded: data => {
+      data.forEach(({ entity }) => window.ENE.Completion.parseEntity(entity));
+    },
     height: "75vh", // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
     keybindings: false,
     data: entities, //assign data to table
@@ -72,8 +74,12 @@ window.editor = (() => {
         field: "entity",
         editor: makeAutocompleteEditor(),
         variableHeight: true,
-        headerFilter: true,
-        width: "40%"
+        headerFilter: "input",
+        width: "40%",
+        cellEdited: cell => {
+          if (cell.getOldValue() !== cell.getValue())
+            window.ENE.Completion.parseEntity(cell.getValue());
+        }
       },
       { title: "Name", field: "name", editor: true },
       {
@@ -95,6 +101,9 @@ window.editor = (() => {
   });
 
   var rulesTable = new Tabulator("#rules-table", {
+    dataLoaded: data => {
+      data.forEach(({ rule }) => window.ENE.Completion.parseRule(rule));
+    },
     height: "75vh", // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
     keybindings: false,
     data: rules, //assign data to table
@@ -108,9 +117,9 @@ window.editor = (() => {
         editor: makeAutocompleteEditor(true),
         formatter: "textarea",
         headerFilter: "input",
-        cellClick: (e, cell) => {
-          console.log(e);
-          console.log(cell.getRow());
+        cellEdited: cell => {
+          if (cell.getOldValue() !== cell.getValue())
+            window.ENE.Completion.parseRule(cell.getValue());
         }
       },
       {
@@ -147,65 +156,6 @@ window.editor = (() => {
   //   "resize",
   //   () => entitiesTable.redraw(true) && rulesTable.redraw(true)
   // );
-
-  var entities = ["PLAYER", "CAVE", "TORCH"];
-  var properties = ["location", "dark"];
-
-  function addAutocomplete(el, isRule) {
-    var manifestPattern = /(^|[a-z0-9]+=(?:\((?:link\s)?)?)([A-Z0-9\-\_]+)$/;
-    var rulePattern = /(\s*|[a-z0-9]+=(?:\((?:link\s)?)?)([A-Z0-9\-\_]+)$/;
-    var entityStrategy = {
-      id: "entity",
-      // start of line or "=" or "=(" or "=(link " or rule, followed by ID
-      // text to replace must be in capture group 2 and pattern must end in "$"
-      match: isRule ? rulePattern : manifestPattern,
-      search: function(term, callback) {
-        callback(
-          entities.filter(function(name) {
-            return name.startsWith(term);
-          })
-        );
-      },
-      template: function(name) {
-        return name;
-      },
-      replace: function(name) {
-        return "$1" + name;
-      }
-    };
-
-    var propertyStrategy = {
-      id: "entity",
-      match: /([A-Za-z0-9]+\.)([a-z0-9_-]+)$/,
-      search: function(term, callback) {
-        callback(
-          properties.filter(function(name) {
-            return name.startsWith(term);
-          })
-        );
-      },
-      template: function(name) {
-        return name;
-      },
-      replace: function(name) {
-        return "$1" + name;
-      }
-    };
-
-    var editor = new Textcomplete.editors.Textarea(el);
-
-    var textcomplete = new Textcomplete(editor, {
-      dropdown: {
-        maxCount: 4,
-        placement: "top"
-      }
-    });
-    textcomplete.register([entityStrategy, propertyStrategy]);
-    textcomplete.on("rendered", function() {
-      textcomplete.dropdown.items[0].activate();
-    });
-    el.addEventListener("blur", () => textcomplete.destroy());
-  }
 
   return { entitiesTable, rulesTable };
 })();
