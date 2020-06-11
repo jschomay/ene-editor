@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Elm Narrative Engine Platform - My Projects</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+    </head>
+    <body>
+        <!-- Nav -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+            <a href="/" class="navbar-brand">Elm Narrative Engine Platform</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav mr-0 ml-auto">
+                    <a class="nav-item nav-link" href="http://elmnarrativeengine.com/">About</a>
+                    <a class="nav-item nav-link" href="https://package.elm-lang.org/packages/jschomay/elm-narrative-engine/latest/">Documentation</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main -->
+        <div class="container">
+          <h2>My Projects</h2>
+
+          <div id="projects" class="list-group mb-2"><em>Loading...</em></div>
+
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new-project-modal">New Project</button>
+
+          <em id="cloud-status" class="small float-right text-warning">Not connected to cloud</em>
+        </div>
+
+        <!-- New project modal -->
+        <div class="modal fade" id="new-project-modal" tabindex="-1" role="dialog" aria-labelledby="newProjectModal" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="newProjectModalLabel">Create a new project</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div id="project-details">
+                  <input id="project-name" class="form-control mb-3" type="text" placeholder="Project name">
+                  <input id="project-description" class="form-control" type="text" placeholder="Description">
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="create-new-project" type="button" class="btn btn-primary">Create</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous" ></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous" ></script>
+        <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-analytics.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-firestore.js"></script>
+
+        <script>
+          // Your web app's Firebase configuration
+          var firebaseConfig = {
+            apiKey: "AIzaSyDQfqo0Lt4spcyNcW_lzLOSgrFmgZm1PNw",
+            authDomain: "ene-editor.firebaseapp.com",
+            databaseURL: "https://ene-editor.firebaseio.com",
+            projectId: "ene-editor",
+            storageBucket: "ene-editor.appspot.com",
+            messagingSenderId: "842435219703",
+            appId: "1:842435219703:web:a2027ebb0f0fd052a003f2",
+            measurementId: "G-66NEJ8LKGJ"
+          };
+          // Initialize Firebase
+          firebase.initializeApp(firebaseConfig);
+          // Initialize Analytics
+          // firebase.analytics();
+        </script>
+        <script>
+          let status = document.querySelector("#cloud-status");
+          status.classList.remove("text-warning");
+          status.classList.add("text-success");
+          status.textContent = "Connected to cloud - " + firebase.app().options.projectId;
+        </script>
+        <script src="projects.js"></script>
+    </body>
+</html>
