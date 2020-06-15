@@ -23,7 +23,8 @@ window.ENE.Editor = (() => {
     .then(docs => {
       // entitiesTable will be defined by the time the promise returns
       docs.forEach(doc => {
-        window.ENE.Completion.parseEntity(doc.data().entity);
+        doc.data().entity &&
+          window.ENE.Completion.parseEntity(doc.data().entity);
         entitiesTable.addRow({ ...doc.data(), id: doc.id });
       });
     })
@@ -36,7 +37,7 @@ window.ENE.Editor = (() => {
     .then(docs => {
       // rulesTable will be defined by the time the promise returns
       docs.forEach(doc => {
-        window.ENE.Completion.parseRule(doc.data().rule);
+        doc.data().rule && window.ENE.Completion.parseRule(doc.data().rule);
         rulesTable.addRow({ ...doc.data(), id: doc.id });
       });
     })
