@@ -5,15 +5,6 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
-        <link href="https://unpkg.com/tabulator-tables@4.5.3/dist/css/tabulator.min.css" rel="stylesheet">
-        <script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.5.3/dist/js/tabulator.min.js"></script>
-        <script type="text/javascript" src="textcomplete.js"></script>
-        <style>
-            .tabulator-cell.tabulator-editing { overflow: visible; }
-            .dropdown-menu li:hover, .dropdown-menu .active { background: gold; }
-            .tabulator-cell textarea { resize: none;}
-            .textcomplete-dropdown { top: auto; }
-        </style>
     </head>
     <body>
         <!-- Nav -->
@@ -30,91 +21,24 @@
             </div>
         </nav>
 
-        <!-- Main data grids -->
+        <!-- Main -->
         <div class="container">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" id="manifest-tab" data-toggle="tab" href="#manifest" role="tab" aria-controls="manifest" aria-selected="true">Manifest</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="rules-tab" data-toggle="tab" href="#rules" role="tab" aria-controls="rules" aria-selected="false">Rules</a>
-                </li>
-                <button class="nav-item nav-link btn btn-sm text-secondary mr-0 ml-auto" data-toggle="modal" data-target="#cheatsheetModal">Cheat Sheet</button>
-            </ul>
-            <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="manifest" role="tabpanel" aria-labelledby="manifest-tab">
-                    <!-- entities table -->
-                    <div id="manifest-table"></div>
-                    <button id="add-row-entities" type="button" class="btn btn-primary">Add row</button>
-                </div>
-                <div class="tab-pane fade" id="rules" role="tabpanel" aria-labelledby="rules-tab">
-                    <!-- rules table -->
-                    <div id="rules-table"></div>
-                    <button id="add-row-rules" type="button" class="btn btn-primary">Add row</button>
-                </div>
-            </div>
+          <div class="jumbotron">
+            <h1 class="display-4">Browse, Play, and Create interactive story games</h1>
+            <p class="lead">The official Elm Narrative Engine editor to create and share your games.</p>
+            <hr class="my-4">
+            <p>Public games coming soon.</p>
+            <a class="btn btn-primary btn-lg" href="projects.html" role="button">Make a game</a>
+          </div> 
             <em id="cloud-status" class="small float-right text-warning">Not connected to cloud</em>
         </div>
 
-
-        <!-- Cheatsheet Modal -->
-        <div class="modal fade" id="cheatsheetModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg " role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Syntax Cheat Sheet</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <h5>Building the World Model</h5>
-                        <p>Provide an entity ID (conventionally in all caps), followed by tag, stat, and link properties.</p>
-                        <pre><code>PLAYER.fear=1
-TORCH.item.illumination=7.current_location=PLAYER
-CAVE.location.dark
-                        </code></pre>
-
-                        <h5>Queries</h5>
-                        <p>Select by ID or "*" to match all.  You can add additional tag, stat, and link constraints.</p>
-                        <pre><code>PLAYER.current_location=(*.dark).fear&lt;5
-CAVE.dark.!explored
-*.enemy.current_location=CAVE
-                        </code></pre>
-
-                        <h5>Changes</h5>
-                        <p>Provide the ID or a query and the tags, stats, and links you want to change.</p>
-                        <pre><code>PLAYER.current_location=CAVE.fear+1
-CAVE.explored
-(*.enemy).blinded
-                        </code></pre>
-
-                        <h5>Rules</h5>
-                        <p>Rules are made up of queries and changes.  "IF" and "DO" can have multiple lines or can be left off entirely.  "$" refers to the ID that triggered the rule.</p>
-                        <pre><code>ON: CAVE.dark
-IF: PLAYER.fear&lt;5
-    *.item.illumination&gt;3.current_location=PLAYER
-DO: PLAYER.current_location=CAVE.fear+1
-    CAVE.explored
-                        </code></pre>
-
-                        <h5>Narrative</h5>
-                        <p>Create dynamic and conditional text with cycling text, keyword lookups, and queries.  "---" breaks the text into multiple parts.</p>
-                        <pre><code>You shout at {$.name}{| again}.
-"{What do you want?|Why do you keep bothering me?|Leave me alone!}"
-{$.suspicious&gt;3 &amp; WARRANT.location=PLAYER?"Stop!---You're under arrest!"|"Never mind."}
-                        </code></pre>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous" ></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous" ></script>
         <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-analytics.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-auth.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-firestore.js"></script>
 
         <script>
           // Your web app's Firebase configuration
@@ -134,13 +58,10 @@ DO: PLAYER.current_location=CAVE.fear+1
           // firebase.analytics();
         </script>
         <script>
-          window.ENE = {};
           let status = document.querySelector("#cloud-status");
           status.classList.remove("text-warning");
           status.classList.add("text-success");
           status.textContent = "Connected to cloud - " + firebase.app().options.projectId;
         </script>
-        <script src="completion.js"></script>
-        <script src="editor.js"></script>
     </body>
 </html>

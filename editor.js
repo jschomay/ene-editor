@@ -1,13 +1,30 @@
 window.ENE.Editor = (() => {
-  //define some sample data
-  var entities = [
-    { entity: "PLAYER" },
-    {
-      entity: "CAVE.dark",
-      name: "Dark cave",
-      description: "It's a dark cave"
-    }
-  ];
+  const searchParams = new URLSearchParams(window.location.search);
+  const projectId = searchParams.get("id");
+  const projectRef = firebase
+    .firestore()
+    .collection("projects")
+    .doc(projectId);
+  const manifestRef = projectRef.collection("manifest");
+
+  projectRef.get().then(doc => {
+    let name = doc.data().name;
+    $("#project-title").text(`Editing "${name}"`);
+    document.title += ` - editing "${name}"`;
+  });
+
+  // fetch and import manifest data
+  manifestRef
+    .orderBy("createdAt")
+    .get()
+    .then(docs => {
+      // entitiesTable will be defined by the time the promise returns
+      docs.forEach(doc => {
+        window.ENE.Completion.parseEntity(doc.data().entity);
+        entitiesTable.addRow({ ...doc.data(), id: doc.id });
+      });
+    })
+    .catch(e => console.error(e));
 
   var rules = [
     {
@@ -63,9 +80,15 @@ window.ENE.Editor = (() => {
     dataLoaded: data => {
       data.forEach(({ entity }) => window.ENE.Completion.parseEntity(entity));
     },
+    cellEdited: cell => {
+      manifestRef
+        .doc(cell.getData().id)
+        .update({ [cell.getField()]: cell.getValue() })
+        // .then(() => console.log("Entity updated"))
+        .catch(e => console.error(e));
+    },
     height: "75vh", // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
     keybindings: false,
-    data: entities, //assign data to table
     layout: "fitColumns", //fit columns to width of table (optional)
     columns: [
       //Define Table Columns
@@ -93,9 +116,15 @@ window.ENE.Editor = (() => {
         formatter: "buttonCross",
         width: 10,
         align: "center",
-        cellClick: (e, cell) =>
-          confirm("Are you sure you want to delete this row?") &&
-          cell.getRow().delete()
+        cellClick: (e, cell) => {
+          if (confirm("Are you sure you want to delete this row?")) {
+            cell.getRow().delete();
+            manifestRef
+              .doc(cell.getData().id)
+              .delete()
+              .catch(e => console.error(e));
+          }
+        }
       }
     ]
   });
@@ -132,16 +161,30 @@ window.ENE.Editor = (() => {
         formatter: "buttonCross",
         width: "10px",
         align: "center",
-        cellClick: (e, cell) =>
-          confirm("Are you sure you want to delete this row?") &&
-          cell.getRow().delete()
+        cellClick: (e, cell) => {
+          if (confirm("Are you sure you want to delete this row?")) {
+            cell.getRow().delete();
+          }
+        }
       }
     ]
   });
 
-  $("#add-row-entities").click(() =>
-    entitiesTable.addRow().then(row => entitiesTable.scrollToRow(row))
-  );
+  $("#add-row-entities").click(() => {
+    let createdAt = new Date().getTime();
+    let entityRef = manifestRef.doc();
+    entityRef
+      .set({ createdAt })
+      // .then(() => console.log("New empty entity persisted"))
+      .catch(e => console.error(e));
+
+    entitiesTable
+      .addRow({ id: entityRef.id, createdAt })
+      .then(row =>
+        entitiesTable.scrollToRow(row).then(() => row.getCell("entity").edit())
+      )
+      .catch(e => console.error(e));
+  });
 
   $("#add-row-rules").click(() =>
     rulesTable.addRow().then(row => rulesTable.scrollToRow(row))
@@ -151,11 +194,6 @@ window.ENE.Editor = (() => {
     "resize",
     () => entitiesTable.redraw(true) && rulesTable.redraw(true)
   );
-
-  // window.addEventListener(
-  //   "resize",
-  //   () => entitiesTable.redraw(true) && rulesTable.redraw(true)
-  // );
 
   return { entitiesTable, rulesTable };
 })();
