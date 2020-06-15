@@ -1,12 +1,15 @@
 window.ENE.Editor = (() => {
   const searchParams = new URLSearchParams(window.location.search);
   const projectId = searchParams.get("id");
+
   const projectRef = firebase
     .firestore()
     .collection("projects")
     .doc(projectId);
   const manifestRef = projectRef.collection("manifest");
+  const rulesRef = projectRef.collection("rules");
 
+  // fetch project data
   projectRef.get().then(doc => {
     let name = doc.data().name;
     $("#project-title").text(`Editing "${name}"`);
@@ -26,13 +29,20 @@ window.ENE.Editor = (() => {
     })
     .catch(e => console.error(e));
 
-  var rules = [
-    {
-      id: "go_to_location",
-      rule: "ON: *.location\nDO: PLAYER.location=$",
-      narrative: "Let's check out {$.name}"
-    }
-  ];
+  // fetch and import rules data
+  rulesRef
+    .orderBy("createdAt")
+    .get()
+    .then(docs => {
+      // rulesTable will be defined by the time the promise returns
+      docs.forEach(doc => {
+        window.ENE.Completion.parseRule(doc.data().rule);
+        rulesTable.addRow({ ...doc.data(), id: doc.id });
+      });
+    })
+    .catch(e => console.error(e));
+
+  // --- Editor ---
 
   var makeAutocompleteEditor = isRule => (
     cell,
@@ -76,10 +86,9 @@ window.ENE.Editor = (() => {
     return editor;
   };
 
+  // --- Tables ---
+
   var entitiesTable = new Tabulator("#manifest-table", {
-    dataLoaded: data => {
-      data.forEach(({ entity }) => window.ENE.Completion.parseEntity(entity));
-    },
     cellEdited: cell => {
       manifestRef
         .doc(cell.getData().id)
@@ -117,7 +126,7 @@ window.ENE.Editor = (() => {
         width: 10,
         align: "center",
         cellClick: (e, cell) => {
-          if (confirm("Are you sure you want to delete this row?")) {
+          if (confirm("Are you sure you want to delete this entity?")) {
             cell.getRow().delete();
             manifestRef
               .doc(cell.getData().id)
@@ -130,16 +139,19 @@ window.ENE.Editor = (() => {
   });
 
   var rulesTable = new Tabulator("#rules-table", {
-    dataLoaded: data => {
-      data.forEach(({ rule }) => window.ENE.Completion.parseRule(rule));
+    cellEdited: cell => {
+      rulesRef
+        .doc(cell.getData().id)
+        .update({ [cell.getField()]: cell.getValue() })
+        // .then(() => console.log("Rule updated"))
+        .catch(e => console.error(e));
     },
     height: "75vh", // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
     keybindings: false,
-    data: rules, //assign data to table
     layout: "fitColumns", //fit columns to width of table (optional)
     columns: [
       //Define Table Columns
-      { title: "ID", field: "id", editor: true, headerFilter: true },
+      { title: "Rule ID", field: "rule_id", editor: true, headerFilter: true },
       {
         title: "Rule",
         field: "rule",
@@ -162,8 +174,12 @@ window.ENE.Editor = (() => {
         width: "10px",
         align: "center",
         cellClick: (e, cell) => {
-          if (confirm("Are you sure you want to delete this row?")) {
+          if (confirm("Are you sure you want to delete this rule?")) {
             cell.getRow().delete();
+            rulesRef
+              .doc(cell.getData().id)
+              .delete()
+              .catch(e => console.error(e));
           }
         }
       }
@@ -186,9 +202,21 @@ window.ENE.Editor = (() => {
       .catch(e => console.error(e));
   });
 
-  $("#add-row-rules").click(() =>
-    rulesTable.addRow().then(row => rulesTable.scrollToRow(row))
-  );
+  $("#add-row-rules").click(() => {
+    let createdAt = new Date().getTime();
+    let newRuleRef = rulesRef.doc();
+    newRuleRef
+      .set({ createdAt })
+      // .then(() => console.log("New empty rule persisted"))
+      .catch(e => console.error(e));
+
+    rulesTable
+      .addRow({ id: newRuleRef.id, createdAt })
+      .then(row =>
+        rulesTable.scrollToRow(row).then(() => row.getCell("rule_id").edit())
+      )
+      .catch(e => console.error(e));
+  });
 
   window.addEventListener(
     "resize",
