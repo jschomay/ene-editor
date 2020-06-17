@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Elm Narrative Engine Platform - My Projects</title>
+        <title>Elm Narrative Engine Platform - Sign In</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+        <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+        <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
     </head>
     <body>
         <!-- Nav -->
@@ -23,49 +25,26 @@
 
         <!-- Main -->
         <div class="container">
-          <h2>My Projects</h2>
+          <h2>Sign In</h2>
 
-          <div id="projects" class="list-group mb-2"><em>Loading...</em></div>
 
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new-project-modal">New Project</button>
+          <div class="alert alert-primary" role="alert">
+            Sign in to create you own projects and collaborate with others!
+          </div>
 
           <em id="cloud-status" class="small float-right text-warning">Not connected to cloud</em>
         </div>
 
-        <!-- New project modal -->
-        <div class="modal fade" id="new-project-modal" tabindex="-1" role="dialog" aria-labelledby="newProjectModal" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="newProjectModalLabel">Create a new project</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <div id="project-details">
-                  <input id="project-name" class="form-control mb-3" type="text" placeholder="Project name">
-                  <input id="project-description" class="form-control" type="text" placeholder="Description">
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button id="create-new-project" type="button" class="btn btn-primary">Create</button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <div id="sign-in"></div>
 
         <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous" ></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous" ></script>
         <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-analytics.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-auth.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-firestore.js"></script>
 
 
         <script>
-          window.ENE = {};
           // Your web app's Firebase configuration
           var firebaseConfig = {
             apiKey: "AIzaSyDQfqo0Lt4spcyNcW_lzLOSgrFmgZm1PNw",
@@ -87,17 +66,22 @@
           status.classList.add("text-success");
           status.textContent = "Connected to cloud - " + firebase.app().options.projectId;
 
+          // Initialize the FirebaseUI Widget using Firebase.
+          // See https://github.com/firebase/firebaseui-web
+          var ui = new firebaseui.auth.AuthUI(firebase.auth());
+          ui.start('#sign-in', {
+            signInSuccessUrl: window.location.origin + "/projects.html",
+            signInOptions: [
+              firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+              //firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
+            ]
+          });
+
           firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
-              // User is signed in.
-              // TODO load profile
-              // TODO do same auth check on edit page
-               window.ENE.projects.init();
-            } else {
-              window.location.href = window.location.origin + "/sign-in.html";
+              window.location.href = window.location.origin + "/projects.html";
             }
           });
         </script>
-        <script src="projects.js"></script>
     </body>
 </html>
