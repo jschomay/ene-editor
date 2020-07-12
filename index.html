@@ -29,7 +29,7 @@
             <hr class="my-4">
             <p>Public games coming soon.</p>
             <a class="btn btn-primary btn-lg" href="projects.html" role="button">Make a game</a>
-          </div> 
+          </div>
             <em id="cloud-status" class="small float-right text-warning">Not connected to cloud</em>
         </div>
 
@@ -40,28 +40,5 @@
         <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-analytics.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-auth.js"></script>
 
-        <script>
-          // Your web app's Firebase configuration
-          var firebaseConfig = {
-            apiKey: "AIzaSyDQfqo0Lt4spcyNcW_lzLOSgrFmgZm1PNw",
-            authDomain: "ene-editor.firebaseapp.com",
-            databaseURL: "https://ene-editor.firebaseio.com",
-            projectId: "ene-editor",
-            storageBucket: "ene-editor.appspot.com",
-            messagingSenderId: "842435219703",
-            appId: "1:842435219703:web:a2027ebb0f0fd052a003f2",
-            measurementId: "G-66NEJ8LKGJ"
-          };
-          // Initialize Firebase
-          firebase.initializeApp(firebaseConfig);
-          // Initialize Analytics
-          // firebase.analytics();
-        </script>
-        <script>
-          let status = document.querySelector("#cloud-status");
-          status.classList.remove("text-warning");
-          status.classList.add("text-success");
-          status.textContent = "Connected to cloud - " + firebase.app().options.projectId;
-        </script>
     </body>
 </html>

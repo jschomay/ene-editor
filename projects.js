@@ -1,6 +1,6 @@
 window.ENE = window.ENE || {};
-window.ENE.projects = {
-  init: () => {
+window.ENE.Projects = {
+  init: user => {
     const $projects = $("#projects");
     const $projectDetails = $("#project-details");
     const $newProjectModal = $("#new-project-modal");
@@ -9,10 +9,14 @@ window.ENE.projects = {
     firebase
       .firestore()
       .collection("projects")
+      .where("owner", "==", user.uid)
       .get()
       .then(snapshot => {
         $projects.empty();
         snapshot.forEach(renderProject);
+      })
+      .catch(e => {
+        console.error(e);
       });
 
     $("#create-new-project").click(function() {
@@ -24,7 +28,13 @@ window.ENE.projects = {
       firebase
         .firestore()
         .collection("projects")
-        .add({ name, description })
+        .add({
+          name,
+          description,
+          public: false,
+          owner: user.uid,
+          collaborators: []
+        })
         .then(doc => {
           // need to empty out form or browser remembers it
           $projectDetails.find("#project-name").val("");

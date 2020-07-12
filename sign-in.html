@@ -44,23 +44,8 @@
         <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-auth.js"></script>
 
 
+        <script src="firebase.js"></script>
         <script>
-          // Your web app's Firebase configuration
-          var firebaseConfig = {
-            apiKey: "AIzaSyDQfqo0Lt4spcyNcW_lzLOSgrFmgZm1PNw",
-            authDomain: "ene-editor.firebaseapp.com",
-            databaseURL: "https://ene-editor.firebaseio.com",
-            projectId: "ene-editor",
-            storageBucket: "ene-editor.appspot.com",
-            messagingSenderId: "842435219703",
-            appId: "1:842435219703:web:a2027ebb0f0fd052a003f2",
-            measurementId: "G-66NEJ8LKGJ"
-          };
-          // Initialize Firebase
-          firebase.initializeApp(firebaseConfig);
-          // Initialize Analytics
-          // firebase.analytics();
-
           let status = document.querySelector("#cloud-status");
           status.classList.remove("text-warning");
           status.classList.add("text-success");

@@ -64,40 +64,11 @@
         <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-firestore.js"></script>
 
 
-        <script>
-          window.ENE = {};
-          // Your web app's Firebase configuration
-          var firebaseConfig = {
-            apiKey: "AIzaSyDQfqo0Lt4spcyNcW_lzLOSgrFmgZm1PNw",
-            authDomain: "ene-editor.firebaseapp.com",
-            databaseURL: "https://ene-editor.firebaseio.com",
-            projectId: "ene-editor",
-            storageBucket: "ene-editor.appspot.com",
-            messagingSenderId: "842435219703",
-            appId: "1:842435219703:web:a2027ebb0f0fd052a003f2",
-            measurementId: "G-66NEJ8LKGJ"
-          };
-          // Initialize Firebase
-          firebase.initializeApp(firebaseConfig);
-          // Initialize Analytics
-          // firebase.analytics();
-
-          let status = document.querySelector("#cloud-status");
-          status.classList.remove("text-warning");
-          status.classList.add("text-success");
-          status.textContent = "Connected to cloud - " + firebase.app().options.projectId;
-
-          firebase.auth().onAuthStateChanged(function(user) {
-            if (user) {
-              // User is signed in.
-              // TODO load profile
-              // TODO do same auth check on edit page
-               window.ENE.projects.init();
-            } else {
-              window.location.href = window.location.origin + "/sign-in.html";
-            }
-          });
-        </script>
+        <script src="firebase.js"></script>
+        <script src="authenticate.js"></script>
         <script src="projects.js"></script>
+        <script>
+          window.onAuth = window.ENE.Projects.init;
+        </script>
     </body>
 </html>
