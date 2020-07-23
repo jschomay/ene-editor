@@ -17,12 +17,13 @@ window.ENE.Completion = (() => {
   }
 
   function addAutocomplete(el, isRule) {
+    // start of line or "=" or "=(" or "=(link " or rule, followed by ID
+    // text to replace must be in capture group 2 and pattern must end in "$"
+    // manifest must start with entity, rule has whitespace before it
     var manifestPattern = /(^|[a-z0-9]+=(?:\((?:link\s)?)?)([A-Z0-9\-\_]+)$/;
     var rulePattern = /(\s*|[a-z0-9]+=(?:\((?:link\s)?)?)([A-Z0-9\-\_]+)$/;
     var entityStrategy = {
       id: "entity",
-      // start of line or "=" or "=(" or "=(link " or rule, followed by ID
-      // text to replace must be in capture group 2 and pattern must end in "$"
       match: isRule ? rulePattern : manifestPattern,
       search: function(term, callback) {
         callback(
@@ -41,7 +42,12 @@ window.ENE.Completion = (() => {
 
     var propertyStrategy = {
       id: "entity",
-      match: /(\$|\*|[A-Za-z0-9]+)\.([a-z0-9_-]+)$/,
+      // ? or * or ID followed by . and maybe followed by -, then the property
+      // the entire first part including the . and maybe - is preserved
+      // matched property must be group 2, hence the uncaptured group
+      // note that this will match - in entity defs and ON: lines, which isn't
+      // accurate, but for now not worth complicating
+      match: /((?:\$|\*|[A-Za-z0-9]+)\.-?)([a-z0-9_-]+)$/,
       search: function(term, callback) {
         callback(
           [...properties].filter(function(name) {
@@ -53,7 +59,7 @@ window.ENE.Completion = (() => {
         return name;
       },
       replace: function(name) {
-        return "$1." + name;
+        return "$1" + name;
       }
     };
 
