@@ -8,6 +8,11 @@ window.ENE.Completion = (() => {
     props.forEach(p => properties.add(p.replace(/=.+$/, "")));
   }
 
+  function removeEntity(entity) {
+    var [e, ...props] = entity.replace(/\(.+?\)/g, "").split(".");
+    entities.delete(e);
+  }
+
   function parseRule(rule) {
     var doClause = rule.split("DO:")[1];
     if (!doClause) return;
@@ -77,5 +82,5 @@ window.ENE.Completion = (() => {
     });
     el.addEventListener("blur", () => textcomplete.destroy());
   }
-  return { addAutocomplete, parseEntity, parseRule };
+  return { addAutocomplete, removeEntity, parseEntity, parseRule };
 })();

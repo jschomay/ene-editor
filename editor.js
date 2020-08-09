@@ -166,8 +166,10 @@ window.ENE.Editor = {
           headerFilter: "input",
           width: "40%",
           cellEdited: cell => {
-            if (cell.getOldValue() !== cell.getValue())
+            if (cell.getOldValue() !== cell.getValue()) {
+              window.ENE.Completion.removeEntity(cell.getOldValue());
               window.ENE.Completion.parseEntity(cell.getValue());
+            }
           }
         },
         { title: "Name", field: "name", editor: true },
@@ -182,7 +184,15 @@ window.ENE.Editor = {
           formatter: "buttonCross",
           width: 10,
           align: "center",
-          cellClick: onRowDelete(manifestRef)
+          cellClick: (e, cell) => {
+            window.ENE.Completion.removeEntity(
+              cell
+                .getRow()
+                .getCell("entity")
+                .getValue()
+            );
+            onRowDelete(manifestRef)(e, cell);
+          }
         }
       ]
     });
