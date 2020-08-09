@@ -32,7 +32,7 @@
             Sign in to create you own projects and collaborate with others!
           </div>
 
-          <em id="cloud-status" class="small float-right text-warning">Not connected to cloud</em>
+          <em id="cloud-status" class="small float-right text-warning">Offline</em>
         </div>
 
         <div id="sign-in"></div>
@@ -46,11 +46,6 @@
 
         <script src="firebase.js"></script>
         <script>
-          let status = document.querySelector("#cloud-status");
-          status.classList.remove("text-warning");
-          status.classList.add("text-success");
-          status.textContent = "Connected to cloud - " + firebase.app().options.projectId;
-
           // Initialize the FirebaseUI Widget using Firebase.
           // See https://github.com/firebase/firebaseui-web
           var ui = new firebaseui.auth.AuthUI(firebase.auth());

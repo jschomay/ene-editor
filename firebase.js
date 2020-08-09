@@ -18,6 +18,5 @@ let statusEl = document.querySelector("#cloud-status");
 if (statusEl) {
   statusEl.classList.remove("text-warning");
   statusEl.classList.add("text-success");
-  statusEl.textContent =
-    "Connected to cloud - " + firebase.app().options.projectId;
+  statusEl.textContent = "online";
 }
