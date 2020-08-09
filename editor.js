@@ -1,6 +1,7 @@
 window.ENE = window.ENE || {};
 window.ENE.Editor = {
   init: user => {
+    const saveIndicatorEL = document.querySelector("#save-indicator");
     const searchParams = new URLSearchParams(window.location.search);
     const projectId = searchParams.get("id");
 
@@ -95,16 +96,63 @@ window.ENE.Editor = {
       return editor;
     };
 
+    const showSaving = () => {
+      saveIndicatorEL.classList.add("show", "text-warning");
+      saveIndicatorEL.innerHTML = "Saving...";
+    };
+
+    const showSaved = () => {
+      saveIndicatorEL.classList.remove("text-warning");
+      saveIndicatorEL.classList.add("text-info");
+      saveIndicatorEL.innerHTML = "Saved";
+      window.setTimeout(
+        () => saveIndicatorEL.classList.remove("show", "text-info"),
+        1000
+      );
+    };
+
+    const onCellEdited = ref => cell => {
+      showSaving();
+      ref
+        .doc(cell.getData().id)
+        .update({ [cell.getField()]: cell.getValue() })
+        .then(showSaved)
+        .catch(e => console.error(e));
+    };
+
+    const onRowDelete = ref => (e, cell) => {
+      if (confirm("Are you sure you want to delete this entity?")) {
+        showSaving();
+        cell.getRow().delete();
+        ref
+          .doc(cell.getData().id)
+          .delete()
+          .then(showSaved)
+          .catch(e => console.error(e));
+      }
+    };
+
+    const onRowAdd = (ref, table) => () => {
+      showSaving();
+      let createdAt = new Date().getTime();
+      let entityRef = ref.doc();
+      entityRef
+        .set({ createdAt })
+        .then(showSaved)
+        .catch(e => console.error(e));
+
+      table
+        .addRow({ id: entityRef.id, createdAt })
+        .then(row => {
+          table.scrollToRow(row).then(() => row.getCells()[0].edit());
+        })
+        .catch(e => console.error(e));
+    };
+
     // --- Tables ---
 
     var entitiesTable = new Tabulator("#manifest-table", {
-      cellEdited: cell => {
-        manifestRef
-          .doc(cell.getData().id)
-          .update({ [cell.getField()]: cell.getValue() })
-          // .then(() => console.log("Entity updated"))
-          .catch(e => console.error(e));
-      },
+      cellEdited: onCellEdited(manifestRef),
       height: "75vh", // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
       keybindings: false,
       layout: "fitColumns", //fit columns to width of table (optional)
@@ -134,27 +182,13 @@ window.ENE.Editor = {
           formatter: "buttonCross",
           width: 10,
           align: "center",
-          cellClick: (e, cell) => {
-            if (confirm("Are you sure you want to delete this entity?")) {
-              cell.getRow().delete();
-              manifestRef
-                .doc(cell.getData().id)
-                .delete()
-                .catch(e => console.error(e));
-            }
-          }
+          cellClick: onRowDelete(manifestRef)
         }
       ]
     });
 
     var rulesTable = new Tabulator("#rules-table", {
-      cellEdited: cell => {
-        rulesRef
-          .doc(cell.getData().id)
-          .update({ [cell.getField()]: cell.getValue() })
-          // .then(() => console.log("Rule updated"))
-          .catch(e => console.error(e));
-      },
+      cellEdited: onCellEdited(rulesRef),
       height: "75vh", // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
       keybindings: false,
       layout: "fitColumns", //fit columns to width of table (optional)
@@ -187,52 +221,13 @@ window.ENE.Editor = {
           formatter: "buttonCross",
           width: "10px",
           align: "center",
-          cellClick: (e, cell) => {
-            if (confirm("Are you sure you want to delete this rule?")) {
-              cell.getRow().delete();
-              rulesRef
-                .doc(cell.getData().id)
-                .delete()
-                .catch(e => console.error(e));
-            }
-          }
+          cellClick: onRowDelete(rulesRef)
         }
       ]
     });
 
-    $("#add-row-entities").click(() => {
-      let createdAt = new Date().getTime();
-      let entityRef = manifestRef.doc();
-      entityRef
-        .set({ createdAt })
-        // .then(() => console.log("New empty entity persisted"))
-        .catch(e => console.error(e));
-
-      entitiesTable
-        .addRow({ id: entityRef.id, createdAt })
-        .then(row =>
-          entitiesTable
-            .scrollToRow(row)
-            .then(() => row.getCell("entity").edit())
-        )
-        .catch(e => console.error(e));
-    });
-
-    $("#add-row-rules").click(() => {
-      let createdAt = new Date().getTime();
-      let newRuleRef = rulesRef.doc();
-      newRuleRef
-        .set({ createdAt })
-        // .then(() => console.log("New empty rule persisted"))
-        .catch(e => console.error(e));
-
-      rulesTable
-        .addRow({ id: newRuleRef.id, createdAt })
-        .then(row =>
-          rulesTable.scrollToRow(row).then(() => row.getCell("rule_id").edit())
-        )
-        .catch(e => console.error(e));
-    });
+    $("#add-row-entities").click(onRowAdd(manifestRef, entitiesTable));
+    $("#add-row-rules").click(onRowAdd(rulesRef, rulesTable));
 
     window.addEventListener(
       "resize",
