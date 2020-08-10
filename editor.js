@@ -1,6 +1,25 @@
 window.ENE = window.ENE || {};
 window.ENE.Editor = {
   init: user => {
+    // hook up Elm Sytax validator
+    var syntaxValidator = Elm.Main.init({
+      node: document.createElement("div")
+    });
+    syntaxValidator.ports.reportErrors.subscribe(function([ref, errors]) {
+      let [tableId, rowId, field] = ref.split("|");
+      let table = tableId === "rules" ? rulesTable : entitiesTable;
+      let targetCell = table
+        .getRow(rowId)
+        .getCell(field)
+        .getElement();
+      let errorEl = document.createElement("a");
+      errorEl.className = "badge badge-danger text-white d-block float-right";
+      errorEl.title = errors;
+      errorEl.href = "javascript:void(0)";
+      errorEl.innerHTML = "Parse errors!";
+      targetCell.appendChild(errorEl);
+    });
+
     const saveIndicatorEL = document.querySelector("#save-indicator");
     const searchParams = new URLSearchParams(window.location.search);
     const projectId = searchParams.get("id");
@@ -90,19 +109,38 @@ window.ENE.Editor = {
         editor.focus();
       });
 
-      //when the value has been set, trigger the cell to update
+      function validate(value) {
+        const validator = isRule
+          ? syntaxValidator.ports.validateRuleRequests.send
+          : syntaxValidator.ports.validateEntityRequests.send;
+
+        let table = isRule ? "rules" : "manifest";
+        let id =
+          table +
+          "|" +
+          cell.getRow().getIndex() +
+          "|" +
+          cell.getColumn().getField();
+        window.setTimeout(() => validator([id, value]), 0);
+      }
+
       function successFunc() {
+        validate(editor.value);
         success(editor.value);
         cell.getRow().normalizeHeight();
       }
 
-      editor.addEventListener("change", successFunc);
+      function cancelFunc() {
+        validate(cell.getValue());
+        cancel();
+      }
+
       editor.addEventListener("blur", successFunc);
-      editor.addEventListener("keyup", e => {
+      editor.addEventListener("keydown", e => {
         // esc
-        if (e.keyCode === 27) cancel();
+        if (e.keyCode === 27) cancelFunc();
         // shift + enter
-        if (e.keyCode === 13 && e.shiftKey) success(editor.value);
+        if (e.keyCode === 13 && e.shiftKey) successFunc(editor.value);
         // shift + tab
         if (e.keyCode === 9 && e.shiftKey) cell.nav().left();
       });
@@ -144,13 +182,12 @@ window.ENE.Editor = {
         cell.getRow().normalizeHeight();
       }
 
-      editor.addEventListener("change", successFunc);
       editor.addEventListener("blur", successFunc);
-      editor.addEventListener("keyup", e => {
+      editor.addEventListener("keydown", e => {
         // esc
         if (e.keyCode === 27) cancel();
         // shift+enter
-        if (e.keyCode === 13 && e.shiftKey) success(editor.value);
+        if (e.keyCode === 13 && e.shiftKey) successFunc(editor.value);
         // shift + tab
         if (e.keyCode === 9 && e.shiftKey) cell.nav().left();
       });
