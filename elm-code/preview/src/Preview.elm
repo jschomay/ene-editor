@@ -1,4 +1,4 @@
-module Preview exposing (main)
+port module Preview exposing (main)
 
 import Browser
 import Dict exposing (Dict)
@@ -33,8 +33,8 @@ type alias MyWorldModel =
     Dict WorldModel.ID MyEntity
 
 
-entity : String -> String -> String -> ( String, ExtraFields )
-entity entityString name description =
+toEntity : String -> String -> String -> ( String, ExtraFields )
+toEntity entityString name description =
     ( entityString, { name = name, description = description } )
 
 
@@ -54,30 +54,29 @@ type alias Content =
     Dict String String
 
 
-type Errors
-    = Error SyntaxHelpers.ParseErrors
-    | Loading
-
-
 type alias Model =
-    { worldModel : Result Errors MyWorldModel
-    , rules : Result Errors MyRules
-    , content : Result Errors Content
+    { parseErrors : Maybe SyntaxHelpers.ParseErrors
+    , worldModel : MyWorldModel
+    , rules : MyRules
+    , content : Content
     , story : String
     , ruleCounts : Dict String Int
     , debug : NarrativeEngine.Debug.State
     }
 
 
-initialModel : Model
+initialModel : ( Model, Cmd Msg )
 initialModel =
-    { worldModel = Err Loading
-    , rules = Err Loading
-    , content = Err Loading
-    , story = ""
-    , ruleCounts = Dict.empty
-    , debug = NarrativeEngine.Debug.init
-    }
+    ( { parseErrors = Nothing
+      , worldModel = Dict.empty
+      , rules = Dict.empty
+      , content = Dict.empty
+      , story = ""
+      , ruleCounts = Dict.empty
+      , debug = NarrativeEngine.Debug.init
+      }
+    , Cmd.none
+    )
 
 
 getDescription : NarrativeParser.Config MyEntity -> WorldModel.ID -> MyWorldModel -> String
@@ -106,35 +105,51 @@ makeConfig trigger matchedRule ruleCounts worldModel =
     }
 
 
+type alias ParsedEntity =
+    Result SyntaxHelpers.ParseErrors ( WorldModel.ID, MyEntity )
+
+
 type Msg
     = InteractWith WorldModel.ID
     | UpdateDebugSearchText String
+    | AddEntities (EntityParser.ParsedWorldModel ExtraFields)
 
 
-update : Msg -> Model -> Model
-update msg ({ worldModel, rules, content } as model) =
-    Result.map3 (\a b c -> update_ a b c msg model)
-        worldModel
-        rules
-        content
-        |> Result.withDefault model
+port addEntities : (List { description : String, entity : String, name : String } -> msg) -> Sub msg
 
 
-update_ : MyWorldModel -> MyRules -> Content -> Msg -> Model -> Model
-update_ worldModel rules content msg model =
-    -- this gets passed through the check for any parse errors to make the code simpler
-    -- if you need to save back one of parsed fields, wrap in `Ok`
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+    addEntities <| AddEntities << parseEntities
+
+
+parseEntities : List { description : String, entity : String, name : String } -> EntityParser.ParsedWorldModel ExtraFields
+parseEntities entities =
+    let
+        addExtraEntityFields { description, name } { tags, stats, links } =
+            { tags = tags
+            , stats = stats
+            , links = links
+            , name = name
+            , description = description
+            }
+    in
+    EntityParser.parseMany addExtraEntityFields <| List.map (\{ entity, description, name } -> ( entity, { description = description, name = name } )) entities
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
     case msg of
         InteractWith trigger ->
             -- we need to check if any rule matched
-            case Rules.findMatchingRule trigger rules worldModel of
+            case Rules.findMatchingRule trigger model.rules model.worldModel of
                 Just ( matchedRuleID, { changes } ) ->
-                    { model
-                        | worldModel = Ok <| WorldModel.applyChanges changes trigger worldModel
+                    ( { model
+                        | worldModel = WorldModel.applyChanges changes trigger model.worldModel
                         , story =
-                            Dict.get matchedRuleID content
+                            Dict.get matchedRuleID model.content
                                 |> Maybe.withDefault ("ERROR finding narrative content for " ++ matchedRuleID)
-                                |> NarrativeParser.parse (makeConfig trigger matchedRuleID model.ruleCounts worldModel)
+                                |> NarrativeParser.parse (makeConfig trigger matchedRuleID model.ruleCounts model.worldModel)
                                 |> List.head
                                 |> Maybe.withDefault ("ERROR parsing narrative content for " ++ matchedRuleID)
                         , ruleCounts = Dict.update matchedRuleID (Maybe.map ((+) 1) >> Maybe.withDefault 1 >> Just) model.ruleCounts
@@ -142,20 +157,32 @@ update_ worldModel rules content msg model =
                             model.debug
                                 |> NarrativeEngine.Debug.setLastMatchedRuleId matchedRuleID
                                 |> NarrativeEngine.Debug.setLastInteractionId trigger
-                    }
+                      }
+                    , Cmd.none
+                    )
 
                 Nothing ->
-                    { model
-                        | story = getDescription (makeConfig trigger trigger model.ruleCounts worldModel) trigger worldModel
+                    ( { model
+                        | story = getDescription (makeConfig trigger trigger model.ruleCounts model.worldModel) trigger model.worldModel
                         , ruleCounts = Dict.update trigger (Maybe.map ((+) 1) >> Maybe.withDefault 1 >> Just) model.ruleCounts
                         , debug =
                             model.debug
                                 |> NarrativeEngine.Debug.setLastMatchedRuleId trigger
                                 |> NarrativeEngine.Debug.setLastInteractionId trigger
-                    }
+                      }
+                    , Cmd.none
+                    )
 
         UpdateDebugSearchText searchText ->
-            { model | debug = NarrativeEngine.Debug.updateSearch searchText model.debug }
+            ( { model | debug = NarrativeEngine.Debug.updateSearch searchText model.debug }, Cmd.none )
+
+        AddEntities parsedEntities ->
+            case parsedEntities of
+                Err errors ->
+                    ( { model | parseErrors = Just errors }, Cmd.none )
+
+                Ok newEntities ->
+                    ( { model | parseErrors = Nothing, worldModel = Dict.union newEntities model.worldModel }, Cmd.none )
 
 
 query : String -> MyWorldModel -> List ( WorldModel.ID, MyEntity )
@@ -171,58 +198,38 @@ assert q worldModel =
 
 
 view : Model -> Html Msg
-view ({ worldModel, rules, content } as model) =
-    let
-        res =
-            Result.map3 (\a b c -> view_ a b c model)
-                worldModel
-                rules
-                content
-    in
-    case res of
-        Ok rendered ->
-            rendered
-
-        Err (Error e) ->
-            SyntaxHelpers.parseErrorsView e
-
-        Err Loading ->
-            text "LOADING"
-
-
-view_ : MyWorldModel -> MyRules -> Content -> Model -> Html Msg
-view_ worldModel rules content model =
+view model =
     let
         -- we can get links and stats directly
         currentLocation =
-            WorldModel.getLink "PLAYER" "current_location" worldModel
+            WorldModel.getLink "PLAYER" "current_location" model.worldModel
                 |> Maybe.withDefault "ERROR getting current location"
 
         fearLevel =
-            WorldModel.getStat "PLAYER" "fear" worldModel
+            WorldModel.getStat "PLAYER" "fear" model.worldModel
                 |> Maybe.map String.fromInt
                 |> Maybe.withDefault "ERROR can't find PLAYER's fear stat"
 
         -- we can query the world model as needed
         inventory =
-            query "*.item.current_location=PLAYER" worldModel
+            query "*.item.current_location=PLAYER" model.worldModel
 
         locations =
-            query "*.location" worldModel
+            query "*.location" model.worldModel
                 |> List.filter (\( locationID, _ ) -> locationID /= currentLocation)
 
         -- The next two use an advanced syntax to look up the player's current
         -- location
         items =
-            query "*.item.current_location=(link PLAYER.current_location)" worldModel
+            query "*.item.current_location=(link PLAYER.current_location)" model.worldModel
 
         characters =
-            query "*.character.current_location=(link PLAYER.current_location)" worldModel
+            query "*.character.current_location=(link PLAYER.current_location)" model.worldModel
     in
     div [ style "width" "70%", style "margin" "auto" ]
-        [ NarrativeEngine.Debug.debugBar UpdateDebugSearchText worldModel model.debug
-        , h1 [] [ text <| "You are currently located in the " ++ getName currentLocation worldModel ]
-        , h2 [] [ text <| getDescription (makeConfig currentLocation currentLocation model.ruleCounts worldModel) currentLocation worldModel ]
+        [ NarrativeEngine.Debug.debugBar UpdateDebugSearchText model.worldModel model.debug
+        , h1 [] [ text <| "You are currently located in the " ++ getName currentLocation model.worldModel ]
+        , h2 [] [ text <| getDescription (makeConfig currentLocation currentLocation model.ruleCounts model.worldModel) currentLocation model.worldModel ]
         , h3 [] [ text <| "Fear level: " ++ fearLevel ]
         , div [ style "display" "flex" ]
             [ div [ style "flex" "0 0 auto" ]
@@ -248,19 +255,6 @@ entityView ( id, { name } ) =
 
 
 
--- loadWorldModel =
---     let
---         addExtraEntityFields { name, description } { tags, stats, links } =
---             { tags = tags
---             , stats = stats
---             , links = links
---             , name = name
---             , description = description
---             }
---     in
---     EntityParser.parseMany addExtraEntityFields
---         initialWorldModelSpec
---         (NarrativeParser.parseMany narrative_content)
 -- loadRules =
 --     let
 --         addExtraRuleFields extraFields rule =
@@ -274,8 +268,16 @@ entityView ( id, { name } ) =
 
 main : Program () Model Msg
 main =
-    Browser.sandbox
-        { init = initialModel
-        , view = view
+    Browser.element
+        { init = \f -> initialModel
+        , view =
+            \model ->
+                case model.parseErrors of
+                    Just errors ->
+                        SyntaxHelpers.parseErrorsView errors
+
+                    Nothing ->
+                        view model
         , update = update
+        , subscriptions = subscriptions
         }
