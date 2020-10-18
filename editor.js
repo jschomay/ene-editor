@@ -85,6 +85,7 @@ window.ENE.Editor = {
 
       //create and style editor
       var editor = document.createElement(isRule ? "textarea" : "input");
+      var autoComplete;
 
       //create and style input
       editor.style.padding = "3px";
@@ -97,7 +98,7 @@ window.ENE.Editor = {
 
       //set focus on the select box when the editor is selected (timeout allows for editor to be added to DOM)
       onRendered(function () {
-        ENE.Completion.addAutocomplete(editor, isRule);
+        autoComplete = ENE.Completion.addAutocomplete(editor, isRule);
         editor.style.height = "100%";
         if (isRule) {
           editor.style.minHeight = "7em";
@@ -128,7 +129,7 @@ window.ENE.Editor = {
       }
 
       function cancelFunc() {
-        if (autoComplete.cancel()) return;
+        if (autoComplete.dropdown.shown) return;
         validate(cell.getValue() || "");
         cancel();
       }
@@ -264,7 +265,7 @@ window.ENE.Editor = {
           headerFilter: "input",
           width: "40%",
           cellEdited: (cell) => {
-            if (cell.getOldValue() !== cell.getValue()) {
+            if (cell.getOldValue() && cell.getOldValue() !== cell.getValue()) {
               window.ENE.Completion.removeEntity(cell.getOldValue());
               window.ENE.Completion.parseEntity(cell.getValue());
             }
@@ -314,7 +315,7 @@ window.ENE.Editor = {
           variableHeight: true,
           headerFilter: "input",
           cellEdited: (cell) => {
-            if (cell.getOldValue() !== cell.getValue())
+            if (cell.getOldValue() && cell.getOldValue() !== cell.getValue())
               window.ENE.Completion.parseRule(cell.getValue());
           }
         },

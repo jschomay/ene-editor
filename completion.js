@@ -81,6 +81,8 @@ window.ENE.Completion = (() => {
       textcomplete.dropdown.items[0].activate();
     });
     el.addEventListener("blur", () => textcomplete.destroy());
+
+    return textcomplete;
   }
   return { addAutocomplete, removeEntity, parseEntity, parseRule };
 })();
