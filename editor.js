@@ -2,7 +2,7 @@ window.ENE = window.ENE || {};
 window.ENE.Editor = {
   init: (user) => {
     // hook up Elm Sytax validator
-    var syntaxValidator = Elm.Main.init({
+    var syntaxValidator = Elm.Validator.init({
       node: document.createElement("div")
     });
     syntaxValidator.ports.reportErrors.subscribe(function ([ref, errors]) {
@@ -20,6 +20,12 @@ window.ENE.Editor = {
     const saveIndicatorEL = document.querySelector("#save-indicator");
     const searchParams = new URLSearchParams(window.location.search);
     const projectId = searchParams.get("id");
+
+    document
+      .querySelector("#preview-button")
+      .addEventListener("click", () =>
+        window.open("preview.html?id=" + projectId, "_blank")
+      );
 
     const projectRef = firebase
       .firestore()

@@ -4962,20 +4962,20 @@ var elm$json$Json$Decode$errorToStringHelp = F2(
 	});
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
-var author$project$Main$init = function (flags) {
+var author$project$Validator$init = function (flags) {
 	return _Utils_Tuple2('Hi', elm$core$Platform$Cmd$none);
 };
-var author$project$Main$ValidateEntity = function (a) {
+var author$project$Validator$ValidateEntity = function (a) {
 	return {$: 0, a: a};
 };
-var author$project$Main$ValidateRule = function (a) {
+var author$project$Validator$ValidateRule = function (a) {
 	return {$: 1, a: a};
 };
 var elm$json$Json$Decode$andThen = _Json_andThen;
 var elm$json$Json$Decode$index = _Json_decodeIndex;
 var elm$json$Json$Decode$string = _Json_decodeString;
 var elm$json$Json$Decode$succeed = _Json_succeed;
-var author$project$Main$validateEntityRequests = _Platform_incomingPort(
+var author$project$Validator$validateEntityRequests = _Platform_incomingPort(
 	'validateEntityRequests',
 	A2(
 		elm$json$Json$Decode$andThen,
@@ -4989,7 +4989,7 @@ var author$project$Main$validateEntityRequests = _Platform_incomingPort(
 				A2(elm$json$Json$Decode$index, 1, elm$json$Json$Decode$string));
 		},
 		A2(elm$json$Json$Decode$index, 0, elm$json$Json$Decode$string)));
-var author$project$Main$validateRuleRequests = _Platform_incomingPort(
+var author$project$Validator$validateRuleRequests = _Platform_incomingPort(
 	'validateRuleRequests',
 	A2(
 		elm$json$Json$Decode$andThen,
@@ -5004,12 +5004,12 @@ var author$project$Main$validateRuleRequests = _Platform_incomingPort(
 		},
 		A2(elm$json$Json$Decode$index, 0, elm$json$Json$Decode$string)));
 var elm$core$Platform$Sub$batch = _Platform_batch;
-var author$project$Main$subscriptions = function (_n0) {
+var author$project$Validator$subscriptions = function (_n0) {
 	return elm$core$Platform$Sub$batch(
 		_List_fromArray(
 			[
-				author$project$Main$validateEntityRequests(author$project$Main$ValidateEntity),
-				author$project$Main$validateRuleRequests(author$project$Main$ValidateRule)
+				author$project$Validator$validateEntityRequests(author$project$Validator$ValidateEntity),
+				author$project$Validator$validateRuleRequests(author$project$Validator$ValidateRule)
 			]));
 };
 var elm$core$Basics$identity = function (x) {
@@ -5025,7 +5025,7 @@ var elm$json$Json$Encode$list = F2(
 				entries));
 	});
 var elm$json$Json$Encode$string = _Json_wrap;
-var author$project$Main$reportErrors = _Platform_outgoingPort(
+var author$project$Validator$reportErrors = _Platform_outgoingPort(
 	'reportErrors',
 	function ($) {
 		var a = $.a;
@@ -6812,7 +6812,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$parseRule = 
 					A2(elm$parser$Parser$ignorer, jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$ruleParser, elm$parser$Parser$end),
 					source)));
 	});
-var author$project$Main$update = F2(
+var author$project$Validator$update = F2(
 	function (msg, model) {
 		if (!msg.$) {
 			var _n1 = msg.a;
@@ -6831,7 +6831,7 @@ var author$project$Main$update = F2(
 						return elm$core$Platform$Cmd$none;
 					} else {
 						var errors = _n2.a;
-						return author$project$Main$reportErrors(
+						return author$project$Validator$reportErrors(
 							_Utils_Tuple2(el, errors));
 					}
 				}());
@@ -6852,7 +6852,7 @@ var author$project$Main$update = F2(
 						return elm$core$Platform$Cmd$none;
 					} else {
 						var errors = _n4.a;
-						return author$project$Main$reportErrors(
+						return author$project$Validator$reportErrors(
 							_Utils_Tuple2(el, errors));
 					}
 				}());
@@ -6874,7 +6874,7 @@ var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 };
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
-var author$project$Main$view = function (model) {
+var author$project$Validator$view = function (model) {
 	return elm$html$Html$text('no view needed');
 };
 var elm$browser$Browser$External = function (a) {
@@ -7092,7 +7092,7 @@ var elm$url$Url$fromString = function (str) {
 		A2(elm$core$String$dropLeft, 8, str)) : elm$core$Maybe$Nothing);
 };
 var elm$browser$Browser$element = _Browser_element;
-var author$project$Main$main = elm$browser$Browser$element(
-	{aY: author$project$Main$init, a3: author$project$Main$subscriptions, a5: author$project$Main$update, a7: author$project$Main$view});
-_Platform_export({'Main':{'init':author$project$Main$main(
+var author$project$Validator$main = elm$browser$Browser$element(
+	{aY: author$project$Validator$init, a3: author$project$Validator$subscriptions, a5: author$project$Validator$update, a7: author$project$Validator$view});
+_Platform_export({'Validator':{'init':author$project$Validator$main(
 	elm$json$Json$Decode$succeed(0))(0)}});}(this));
