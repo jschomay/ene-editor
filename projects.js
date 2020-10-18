@@ -1,6 +1,6 @@
 window.ENE = window.ENE || {};
 window.ENE.Projects = {
-  init: user => {
+  init: (user) => {
     const $projects = $("#projects");
     const $projectDetails = $("#project-details");
     const $newProjectModal = $("#new-project-modal");
@@ -11,15 +11,15 @@ window.ENE.Projects = {
       .collection("projects")
       .where("owner", "==", user.uid)
       .get()
-      .then(snapshot => {
+      .then((snapshot) => {
         $projects.empty();
         snapshot.forEach(renderProject);
       })
-      .catch(e => {
+      .catch((e) => {
         console.error(e);
       });
 
-    $("#create-new-project").click(function() {
+    $("#create-new-project").click(function () {
       $(this).attr("disabled", true);
       let originalButtonText = $(this).text();
       $(this).text("Creating...");
@@ -35,7 +35,7 @@ window.ENE.Projects = {
           owner: user.uid,
           collaborators: []
         })
-        .then(doc => {
+        .then((doc) => {
           // need to empty out form or browser remembers it
           $projectDetails.find("#project-name").val("");
           $projectDetails.find("#project-description").val("");
@@ -45,7 +45,7 @@ window.ENE.Projects = {
 
           window.location.href = `/edit.html?id=${doc.id}`;
         })
-        .catch(e => {
+        .catch((e) => {
           console.error("Error creating project", e);
           alert("Error creating project, please refresh and try again.");
         });

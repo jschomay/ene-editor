@@ -1,17 +1,14 @@
 window.ENE = window.ENE || {};
 window.ENE.Editor = {
-  init: user => {
+  init: (user) => {
     // hook up Elm Sytax validator
     var syntaxValidator = Elm.Main.init({
       node: document.createElement("div")
     });
-    syntaxValidator.ports.reportErrors.subscribe(function([ref, errors]) {
+    syntaxValidator.ports.reportErrors.subscribe(function ([ref, errors]) {
       let [tableId, rowId, field] = ref.split("|");
       let table = tableId === "rules" ? rulesTable : entitiesTable;
-      let targetCell = table
-        .getRow(rowId)
-        .getCell(field)
-        .getElement();
+      let targetCell = table.getRow(rowId).getCell(field).getElement();
       let errorEl = document.createElement("a");
       errorEl.className = "badge badge-danger text-white d-block float-right";
       errorEl.title = errors;
@@ -34,12 +31,12 @@ window.ENE.Editor = {
     // fetch project data
     projectRef
       .get()
-      .then(doc => {
+      .then((doc) => {
         let name = doc.data().name;
         $("#project-title").text(`Editing "${name}"`);
         document.title += ` - editing "${name}"`;
       })
-      .catch(e => {
+      .catch((e) => {
         console.error(e);
         window.location.href = window.location.origin + "/projects.html";
       });
@@ -48,32 +45,32 @@ window.ENE.Editor = {
     manifestRef
       .orderBy("createdAt")
       .get()
-      .then(docs => {
+      .then((docs) => {
         // entitiesTable will be defined by the time the promise returns
-        docs.forEach(doc => {
+        docs.forEach((doc) => {
           doc.data().entity &&
             window.ENE.Completion.parseEntity(doc.data().entity);
           entitiesTable.addRow({ ...doc.data(), id: doc.id });
         });
       })
-      .catch(e => console.error(e));
+      .catch((e) => console.error(e));
 
     // fetch and import rules data
     rulesRef
       .orderBy("createdAt")
       .get()
-      .then(docs => {
+      .then((docs) => {
         // rulesTable will be defined by the time the promise returns
-        docs.forEach(doc => {
+        docs.forEach((doc) => {
           doc.data().rule && window.ENE.Completion.parseRule(doc.data().rule);
           rulesTable.addRow({ ...doc.data(), id: doc.id });
         });
       })
-      .catch(e => console.error(e));
+      .catch((e) => console.error(e));
 
     // --- Editor ---
 
-    var makeAutocompleteEditor = isRule => (
+    var makeAutocompleteEditor = (isRule) => (
       cell,
       onRendered,
       success,
@@ -99,7 +96,7 @@ window.ENE.Editor = {
       editor.value = cell.getValue() || "";
 
       //set focus on the select box when the editor is selected (timeout allows for editor to be added to DOM)
-      onRendered(function() {
+      onRendered(function () {
         ENE.Completion.addAutocomplete(editor, isRule);
         editor.style.height = "100%";
         if (isRule) {
@@ -131,12 +128,13 @@ window.ENE.Editor = {
       }
 
       function cancelFunc() {
-        validate(cell.getValue());
+        if (autoComplete.cancel()) return;
+        validate(cell.getValue() || "");
         cancel();
       }
 
       editor.addEventListener("blur", successFunc);
-      editor.addEventListener("keydown", e => {
+      editor.addEventListener("keydown", (e) => {
         // esc
         if (e.keyCode === 27) cancelFunc();
         // shift + enter
@@ -169,7 +167,7 @@ window.ENE.Editor = {
       editor.value = cell.getValue() || "";
 
       //set focus on the select box when the editor is selected (timeout allows for editor to be added to DOM)
-      onRendered(function() {
+      onRendered(function () {
         editor.style.height = "100%";
         editor.style.minHeight = "7em";
         cell.getRow().normalizeHeight();
@@ -183,7 +181,7 @@ window.ENE.Editor = {
       }
 
       editor.addEventListener("blur", successFunc);
-      editor.addEventListener("keydown", e => {
+      editor.addEventListener("keydown", (e) => {
         // esc
         if (e.keyCode === 27) cancel();
         // shift+enter
@@ -211,16 +209,16 @@ window.ENE.Editor = {
       );
     };
 
-    const onCellEdited = ref => cell => {
+    const onCellEdited = (ref) => (cell) => {
       showSaving();
       ref
         .doc(cell.getData().id)
         .update({ [cell.getField()]: cell.getValue() })
         .then(showSaved)
-        .catch(e => console.error(e));
+        .catch((e) => console.error(e));
     };
 
-    const onRowDelete = ref => (e, cell) => {
+    const onRowDelete = (ref) => (e, cell) => {
       if (confirm("Are you sure you want to delete this entity?")) {
         showSaving();
         cell.getRow().delete();
@@ -228,7 +226,7 @@ window.ENE.Editor = {
           .doc(cell.getData().id)
           .delete()
           .then(showSaved)
-          .catch(e => console.error(e));
+          .catch((e) => console.error(e));
       }
     };
 
@@ -239,14 +237,14 @@ window.ENE.Editor = {
       entityRef
         .set({ createdAt })
         .then(showSaved)
-        .catch(e => console.error(e));
+        .catch((e) => console.error(e));
 
       table
         .addRow({ id: entityRef.id, createdAt })
-        .then(row => {
+        .then((row) => {
           table.scrollToRow(row).then(() => row.getCells()[0].edit());
         })
-        .catch(e => console.error(e));
+        .catch((e) => console.error(e));
     };
 
     // --- Tables ---
@@ -265,7 +263,7 @@ window.ENE.Editor = {
           variableHeight: true,
           headerFilter: "input",
           width: "40%",
-          cellEdited: cell => {
+          cellEdited: (cell) => {
             if (cell.getOldValue() !== cell.getValue()) {
               window.ENE.Completion.removeEntity(cell.getOldValue());
               window.ENE.Completion.parseEntity(cell.getValue());
@@ -287,10 +285,7 @@ window.ENE.Editor = {
           align: "center",
           cellClick: (e, cell) => {
             window.ENE.Completion.removeEntity(
-              cell
-                .getRow()
-                .getCell("entity")
-                .getValue()
+              cell.getRow().getCell("entity").getValue()
             );
             onRowDelete(manifestRef)(e, cell);
           }
@@ -318,7 +313,7 @@ window.ENE.Editor = {
           formatter: "textarea",
           variableHeight: true,
           headerFilter: "input",
-          cellEdited: cell => {
+          cellEdited: (cell) => {
             if (cell.getOldValue() !== cell.getValue())
               window.ENE.Completion.parseRule(cell.getValue());
           }

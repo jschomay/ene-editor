@@ -5,7 +5,7 @@ window.ENE.Completion = (() => {
   function parseEntity(entity) {
     var [e, ...props] = entity.replace(/\(.+?\)/g, "").split(".");
     entities.add(e);
-    props.forEach(p => properties.add(p.replace(/=.+$/, "")));
+    props.forEach((p) => properties.add(p.replace(/=.+$/, "")));
   }
 
   function removeEntity(entity) {
@@ -30,17 +30,17 @@ window.ENE.Completion = (() => {
     var entityStrategy = {
       id: "entity",
       match: isRule ? rulePattern : manifestPattern,
-      search: function(term, callback) {
+      search: function (term, callback) {
         callback(
-          [...entities].filter(function(name) {
+          [...entities].filter(function (name) {
             return name.startsWith(term);
           })
         );
       },
-      template: function(name) {
+      template: function (name) {
         return name;
       },
-      replace: function(name) {
+      replace: function (name) {
         return "$1" + name;
       }
     };
@@ -53,17 +53,17 @@ window.ENE.Completion = (() => {
       // note that this will match - in entity defs and ON: lines, which isn't
       // accurate, but for now not worth complicating
       match: /((?:\$|\*|[A-Za-z0-9]+)\.-?)([a-z0-9_-]+)$/,
-      search: function(term, callback) {
+      search: function (term, callback) {
         callback(
-          [...properties].filter(function(name) {
+          [...properties].filter(function (name) {
             return name.startsWith(term);
           })
         );
       },
-      template: function(name) {
+      template: function (name) {
         return name;
       },
-      replace: function(name) {
+      replace: function (name) {
         return "$1" + name;
       }
     };
@@ -77,7 +77,7 @@ window.ENE.Completion = (() => {
       }
     });
     textcomplete.register([entityStrategy, propertyStrategy]);
-    textcomplete.on("rendered", function() {
+    textcomplete.on("rendered", function () {
       textcomplete.dropdown.items[0].activate();
     });
     el.addEventListener("blur", () => textcomplete.destroy());
