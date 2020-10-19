@@ -200,56 +200,58 @@ assert q worldModel =
 view : Model -> Html Msg
 view model =
     let
-        -- we can get links and stats directly
         currentLocation =
             WorldModel.getLink "PLAYER" "current_location" model.worldModel
-                |> Maybe.withDefault "ERROR getting current location"
 
-        fearLevel =
-            WorldModel.getStat "PLAYER" "fear" model.worldModel
-                |> Maybe.map String.fromInt
-                |> Maybe.withDefault "ERROR can't find PLAYER's fear stat"
-
-        -- we can query the world model as needed
         inventory =
             query "*.item.current_location=PLAYER" model.worldModel
 
         locations =
             query "*.location" model.worldModel
-                |> List.filter (\( locationID, _ ) -> locationID /= currentLocation)
+                |> List.filter (\( locationID, _ ) -> Just locationID /= currentLocation)
 
-        -- The next two use an advanced syntax to look up the player's current
-        -- location
         items =
             query "*.item.current_location=(link PLAYER.current_location)" model.worldModel
 
         characters =
             query "*.character.current_location=(link PLAYER.current_location)" model.worldModel
-    in
-    div [ style "width" "70%", style "margin" "auto" ]
-        [ NarrativeEngine.Debug.debugBar UpdateDebugSearchText model.worldModel model.debug
-        , h1 [] [ text <| "You are currently located in the " ++ getName currentLocation model.worldModel ]
-        , h2 [] [ text <| getDescription (makeConfig currentLocation currentLocation model.ruleCounts model.worldModel) currentLocation model.worldModel ]
-        , h3 [] [ text <| "Fear level: " ++ fearLevel ]
-        , div [ style "display" "flex" ]
-            [ div [ style "flex" "0 0 auto" ]
-                [ h3 [] [ text "You have:" ]
-                , ul [] <| List.map entityView inventory
-                , h3 [] [ text "You see the following items:" ]
-                , ul [] <| List.map entityView items
-                , h3 [] [ text "You see the following characters:" ]
-                , ul [] <| List.map entityView characters
-                , h3 [] [ text "Places near by:" ]
-                , ul [] <| List.map entityView locations
+
+        section heading entities =
+            span []
+                [ b [] [ text heading ]
+                , ul [] entities
                 ]
-            , div [ style "flex" "1 1 auto", style "font-size" "2em", style "padding" "0 2em" ]
+
+        ifNotEmpty l v =
+            if List.isEmpty l then
+                text ""
+
+            else
+                v l
+    in
+    div [ style "width" "90%", style "margin" "auto" ] <|
+        [ NarrativeEngine.Debug.debugBar UpdateDebugSearchText model.worldModel model.debug
+        , currentLocation
+            |> Maybe.map
+                (\l ->
+                    section "Current location" <| [ entityView ( l, { name = getName l model.worldModel } ) ]
+                )
+            |> Maybe.withDefault (text "")
+        , div [ style "display" "flex" ]
+            [ div [ style "flex" "1 0 auto" ]
+                [ ifNotEmpty locations (section "Other locations" << List.map entityView)
+                , ifNotEmpty items (section "Nearby items" << List.map entityView)
+                , ifNotEmpty characters (section "Nearby characters" << List.map entityView)
+                , ifNotEmpty inventory (section "Inventory" << List.map entityView)
+                ]
+            , div [ style "flex" "1 0 auto" ]
                 [ em [] [ text model.story ]
                 ]
             ]
         ]
 
 
-entityView : ( WorldModel.ID, MyEntity ) -> Html Msg
+entityView : ( WorldModel.ID, { a | name : String } ) -> Html Msg
 entityView ( id, { name } ) =
     li [ onClick <| InteractWith id, style "cursor" "pointer" ] [ text name ]
 

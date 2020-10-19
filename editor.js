@@ -242,7 +242,7 @@ window.ENE.Editor = {
       let createdAt = new Date().getTime();
       let entityRef = ref.doc();
       entityRef
-        .set({ createdAt })
+        .set({ createdAt, entity: "", name: "", description: "" })
         .then(showSaved)
         .catch((e) => console.error(e));
 

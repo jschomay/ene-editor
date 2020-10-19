@@ -4722,25 +4722,25 @@ var elm$core$Basics$sub = _Basics_sub;
 var elm$core$Elm$JsArray$length = _JsArray_length;
 var elm$core$Array$builderToArray = F2(
 	function (reverseNodeList, builder) {
-		if (!builder.f) {
+		if (!builder.e) {
 			return A4(
 				elm$core$Array$Array_elm_builtin,
-				elm$core$Elm$JsArray$length(builder.h),
+				elm$core$Elm$JsArray$length(builder.g),
 				elm$core$Array$shiftStep,
 				elm$core$Elm$JsArray$empty,
-				builder.h);
+				builder.g);
 		} else {
-			var treeLen = builder.f * elm$core$Array$branchFactor;
+			var treeLen = builder.e * elm$core$Array$branchFactor;
 			var depth = elm$core$Basics$floor(
 				A2(elm$core$Basics$logBase, elm$core$Array$branchFactor, treeLen - 1));
 			var correctNodeList = reverseNodeList ? elm$core$List$reverse(builder.i) : builder.i;
-			var tree = A2(elm$core$Array$treeFromBuilder, correctNodeList, builder.f);
+			var tree = A2(elm$core$Array$treeFromBuilder, correctNodeList, builder.e);
 			return A4(
 				elm$core$Array$Array_elm_builtin,
-				elm$core$Elm$JsArray$length(builder.h) + treeLen,
+				elm$core$Elm$JsArray$length(builder.g) + treeLen,
 				A2(elm$core$Basics$max, 5, depth * elm$core$Array$shiftStep),
 				tree,
-				builder.h);
+				builder.g);
 		}
 	});
 var elm$core$Basics$idiv = _Basics_idiv;
@@ -4754,7 +4754,7 @@ var elm$core$Array$initializeHelp = F5(
 				return A2(
 					elm$core$Array$builderToArray,
 					false,
-					{i: nodeList, f: (len / elm$core$Array$branchFactor) | 0, h: tail});
+					{i: nodeList, e: (len / elm$core$Array$branchFactor) | 0, g: tail});
 			} else {
 				var leaf = elm$core$Array$Leaf(
 					A3(elm$core$Elm$JsArray$initialize, elm$core$Array$branchFactor, fromIndex, fn));
@@ -5007,7 +5007,7 @@ var elm$core$Basics$identity = function (x) {
 var jschomay$elm_narrative_engine$NarrativeEngine$Debug$State = elm$core$Basics$identity;
 var jschomay$elm_narrative_engine$NarrativeEngine$Debug$init = {Q: 'Start', R: 'Begin', W: ''};
 var author$project$Preview$initialModel = _Utils_Tuple2(
-	{P: elm$core$Dict$empty, q: jschomay$elm_narrative_engine$NarrativeEngine$Debug$init, J: elm$core$Maybe$Nothing, s: elm$core$Dict$empty, V: elm$core$Dict$empty, L: '', e: elm$core$Dict$empty},
+	{P: elm$core$Dict$empty, q: jschomay$elm_narrative_engine$NarrativeEngine$Debug$init, J: elm$core$Maybe$Nothing, x: elm$core$Dict$empty, V: elm$core$Dict$empty, L: '', h: elm$core$Dict$empty},
 	elm$core$Platform$Cmd$none);
 var author$project$Preview$AddEntities = function (a) {
 	return {$: 2, a: a};
@@ -5030,7 +5030,7 @@ var author$project$Preview$addEntities = _Platform_incomingPort(
 							elm$json$Json$Decode$andThen,
 							function (description) {
 								return elm$json$Json$Decode$succeed(
-									{z: description, af: entity, w: name});
+									{z: description, af: entity, s: name});
 							},
 							A2(elm$json$Json$Decode$field, 'description', elm$json$Json$Decode$string));
 					},
@@ -6080,11 +6080,11 @@ var author$project$Preview$parseEntities = function (entities) {
 	var addExtraEntityFields = F2(
 		function (_n1, _n2) {
 			var description = _n1.z;
-			var name = _n1.w;
+			var name = _n1.s;
 			var tags = _n2.aM;
 			var stats = _n2.aJ;
 			var links = _n2.ar;
-			return {z: description, ar: links, w: name, aJ: stats, aM: tags};
+			return {z: description, ar: links, s: name, aJ: stats, aM: tags};
 		});
 	return A2(
 		jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$parseMany,
@@ -6094,10 +6094,10 @@ var author$project$Preview$parseEntities = function (entities) {
 			function (_n0) {
 				var entity = _n0.af;
 				var description = _n0.z;
-				var name = _n0.w;
+				var name = _n0.s;
 				return _Utils_Tuple2(
 					entity,
-					{z: description, w: name});
+					{z: description, s: name});
 			},
 			entities));
 };
@@ -6175,7 +6175,7 @@ var elm$core$Array$fromListHelp = F3(
 				return A2(
 					elm$core$Array$builderToArray,
 					true,
-					{i: nodeList, f: nodeListSize, h: jsArray});
+					{i: nodeList, e: nodeListSize, g: jsArray});
 			} else {
 				var $temp$list = remainingItems,
 					$temp$nodeList = A2(
@@ -7149,7 +7149,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$parseMatcher
 var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$conditionalText = function (config) {
 	var assert = function (matcher) {
 		return !elm$core$List$isEmpty(
-			A2(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$query, matcher, config.e));
+			A2(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$query, matcher, config.h));
 	};
 	var process = function (_n5) {
 		var queryText = _n5.a;
@@ -7447,7 +7447,7 @@ var author$project$Preview$getName = F2(
 			A2(
 				elm$core$Maybe$map,
 				function ($) {
-					return $.w;
+					return $.s;
 				},
 				A2(elm$core$Dict$get, entityID, worldModel_)));
 	});
@@ -7470,7 +7470,7 @@ var author$project$Preview$makeConfig = F4(
 						A2(author$project$Preview$getName, id, worldModel));
 				}),
 			bc: trigger,
-			e: worldModel
+			h: worldModel
 		};
 	});
 var elm$core$Dict$union = F2(
@@ -8142,7 +8142,7 @@ var author$project$Preview$update = F2(
 		switch (msg.$) {
 			case 0:
 				var trigger = msg.a;
-				var _n1 = A3(jschomay$elm_narrative_engine$NarrativeEngine$Core$Rules$findMatchingRule, trigger, model.V, model.e);
+				var _n1 = A3(jschomay$elm_narrative_engine$NarrativeEngine$Core$Rules$findMatchingRule, trigger, model.V, model.h);
 				if (!_n1.$) {
 					var _n2 = _n1.a;
 					var matchedRuleID = _n2.a;
@@ -8155,7 +8155,7 @@ var author$project$Preview$update = F2(
 									jschomay$elm_narrative_engine$NarrativeEngine$Debug$setLastInteractionId,
 									trigger,
 									A2(jschomay$elm_narrative_engine$NarrativeEngine$Debug$setLastMatchedRuleId, matchedRuleID, model.q)),
-								s: A3(
+								x: A3(
 									elm$core$Dict$update,
 									matchedRuleID,
 									A2(
@@ -8166,19 +8166,19 @@ var author$project$Preview$update = F2(
 											elm$core$Basics$composeR,
 											elm$core$Maybe$withDefault(1),
 											elm$core$Maybe$Just)),
-									model.s),
+									model.x),
 								L: A2(
 									elm$core$Maybe$withDefault,
 									'ERROR parsing narrative content for ' + matchedRuleID,
 									elm$core$List$head(
 										A2(
 											jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$parse,
-											A4(author$project$Preview$makeConfig, trigger, matchedRuleID, model.s, model.e),
+											A4(author$project$Preview$makeConfig, trigger, matchedRuleID, model.x, model.h),
 											A2(
 												elm$core$Maybe$withDefault,
 												'ERROR finding narrative content for ' + matchedRuleID,
 												A2(elm$core$Dict$get, matchedRuleID, model.P))))),
-								e: A3(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$applyChanges, changes, trigger, model.e)
+								h: A3(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$applyChanges, changes, trigger, model.h)
 							}),
 						elm$core$Platform$Cmd$none);
 				} else {
@@ -8190,7 +8190,7 @@ var author$project$Preview$update = F2(
 									jschomay$elm_narrative_engine$NarrativeEngine$Debug$setLastInteractionId,
 									trigger,
 									A2(jschomay$elm_narrative_engine$NarrativeEngine$Debug$setLastMatchedRuleId, trigger, model.q)),
-								s: A3(
+								x: A3(
 									elm$core$Dict$update,
 									trigger,
 									A2(
@@ -8201,12 +8201,12 @@ var author$project$Preview$update = F2(
 											elm$core$Basics$composeR,
 											elm$core$Maybe$withDefault(1),
 											elm$core$Maybe$Just)),
-									model.s),
+									model.x),
 								L: A3(
 									author$project$Preview$getDescription,
-									A4(author$project$Preview$makeConfig, trigger, trigger, model.s, model.e),
+									A4(author$project$Preview$makeConfig, trigger, trigger, model.x, model.h),
 									trigger,
-									model.e)
+									model.h)
 							}),
 						elm$core$Platform$Cmd$none);
 				}
@@ -8237,7 +8237,7 @@ var author$project$Preview$update = F2(
 							model,
 							{
 								J: elm$core$Maybe$Nothing,
-								e: A2(elm$core$Dict$union, newEntities, model.e)
+								h: A2(elm$core$Dict$union, newEntities, model.h)
 							}),
 						elm$core$Platform$Cmd$none);
 				}
@@ -8287,7 +8287,7 @@ var elm$html$Html$Events$onClick = function (msg) {
 };
 var author$project$Preview$entityView = function (_n0) {
 	var id = _n0.a;
-	var name = _n0.b.w;
+	var name = _n0.b.s;
 	return A2(
 		elm$html$Html$li,
 		_List_fromArray(
@@ -8323,11 +8323,10 @@ var author$project$Preview$query = F2(
 				jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$parseMatcher(q)));
 	});
 var elm$core$Basics$neq = _Utils_notEqual;
+var elm$html$Html$b = _VirtualDom_node('b');
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$em = _VirtualDom_node('em');
-var elm$html$Html$h1 = _VirtualDom_node('h1');
-var elm$html$Html$h2 = _VirtualDom_node('h2');
-var elm$html$Html$h3 = _VirtualDom_node('h3');
+var elm$html$Html$span = _VirtualDom_node('span');
 var elm$html$Html$ul = _VirtualDom_node('ul');
 var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$getLink = F3(
 	function (id, key, store) {
@@ -8346,23 +8345,10 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$getLink = F3(
 					elm$core$Dict$get(key)),
 				A2(elm$core$Dict$get, id, store)));
 	});
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$getStat = F3(
-	function (id, key, store) {
-		return A2(
-			elm$core$Maybe$andThen,
-			A2(
-				elm$core$Basics$composeR,
-				function ($) {
-					return $.aJ;
-				},
-				elm$core$Dict$get(key)),
-			A2(elm$core$Dict$get, id, store));
-	});
 var elm$core$String$contains = _String_contains;
 var elm$core$String$startsWith = _String_startsWith;
 var elm$core$String$toLower = _String_toLower;
 var elm$html$Html$input = _VirtualDom_node('input');
-var elm$html$Html$span = _VirtualDom_node('span');
 var elm$json$Json$Encode$string = _Json_wrap;
 var elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
@@ -8531,64 +8517,70 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Debug$debugBar = F3(
 				]));
 	});
 var author$project$Preview$view = function (model) {
-	var items = A2(author$project$Preview$query, '*.item.current_location=(link PLAYER.current_location)', model.e);
-	var inventory = A2(author$project$Preview$query, '*.item.current_location=PLAYER', model.e);
-	var fearLevel = A2(
-		elm$core$Maybe$withDefault,
-		'ERROR can\'t find PLAYER\'s fear stat',
-		A2(
-			elm$core$Maybe$map,
-			elm$core$String$fromInt,
-			A3(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$getStat, 'PLAYER', 'fear', model.e)));
-	var currentLocation = A2(
-		elm$core$Maybe$withDefault,
-		'ERROR getting current location',
-		A3(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$getLink, 'PLAYER', 'current_location', model.e));
+	var section = F2(
+		function (heading, entities) {
+			return A2(
+				elm$html$Html$span,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$b,
+						_List_Nil,
+						_List_fromArray(
+							[
+								elm$html$Html$text(heading)
+							])),
+						A2(elm$html$Html$ul, _List_Nil, entities)
+					]));
+		});
+	var items = A2(author$project$Preview$query, '*.item.current_location=(link PLAYER.current_location)', model.h);
+	var inventory = A2(author$project$Preview$query, '*.item.current_location=PLAYER', model.h);
+	var ifNotEmpty = F2(
+		function (l, v) {
+			return elm$core$List$isEmpty(l) ? elm$html$Html$text('') : v(l);
+		});
+	var currentLocation = A3(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$getLink, 'PLAYER', 'current_location', model.h);
 	var locations = A2(
 		elm$core$List$filter,
 		function (_n0) {
 			var locationID = _n0.a;
-			return !_Utils_eq(locationID, currentLocation);
+			return !_Utils_eq(
+				elm$core$Maybe$Just(locationID),
+				currentLocation);
 		},
-		A2(author$project$Preview$query, '*.location', model.e));
-	var characters = A2(author$project$Preview$query, '*.character.current_location=(link PLAYER.current_location)', model.e);
+		A2(author$project$Preview$query, '*.location', model.h));
+	var characters = A2(author$project$Preview$query, '*.character.current_location=(link PLAYER.current_location)', model.h);
 	return A2(
 		elm$html$Html$div,
 		_List_fromArray(
 			[
-				A2(elm$html$Html$Attributes$style, 'width', '70%'),
+				A2(elm$html$Html$Attributes$style, 'width', '90%'),
 				A2(elm$html$Html$Attributes$style, 'margin', 'auto')
 			]),
 		_List_fromArray(
 			[
-				A3(jschomay$elm_narrative_engine$NarrativeEngine$Debug$debugBar, author$project$Preview$UpdateDebugSearchText, model.e, model.q),
+				A3(jschomay$elm_narrative_engine$NarrativeEngine$Debug$debugBar, author$project$Preview$UpdateDebugSearchText, model.h, model.q),
 				A2(
-				elm$html$Html$h1,
-				_List_Nil,
-				_List_fromArray(
-					[
-						elm$html$Html$text(
-						'You are currently located in the ' + A2(author$project$Preview$getName, currentLocation, model.e))
-					])),
+				elm$core$Maybe$withDefault,
+				elm$html$Html$text(''),
 				A2(
-				elm$html$Html$h2,
-				_List_Nil,
-				_List_fromArray(
-					[
-						elm$html$Html$text(
-						A3(
-							author$project$Preview$getDescription,
-							A4(author$project$Preview$makeConfig, currentLocation, currentLocation, model.s, model.e),
-							currentLocation,
-							model.e))
-					])),
-				A2(
-				elm$html$Html$h3,
-				_List_Nil,
-				_List_fromArray(
-					[
-						elm$html$Html$text('Fear level: ' + fearLevel)
-					])),
+					elm$core$Maybe$map,
+					function (l) {
+						return A2(
+							section,
+							'Current location',
+							_List_fromArray(
+								[
+									author$project$Preview$entityView(
+									_Utils_Tuple2(
+										l,
+										{
+											s: A2(author$project$Preview$getName, l, model.h)
+										}))
+								]));
+					},
+					currentLocation)),
 				A2(
 				elm$html$Html$div,
 				_List_fromArray(
@@ -8601,62 +8593,44 @@ var author$project$Preview$view = function (model) {
 						elm$html$Html$div,
 						_List_fromArray(
 							[
-								A2(elm$html$Html$Attributes$style, 'flex', '0 0 auto')
+								A2(elm$html$Html$Attributes$style, 'flex', '1 0 auto')
 							]),
 						_List_fromArray(
 							[
 								A2(
-								elm$html$Html$h3,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('You have:')
-									])),
+								ifNotEmpty,
+								locations,
 								A2(
-								elm$html$Html$ul,
-								_List_Nil,
-								A2(elm$core$List$map, author$project$Preview$entityView, inventory)),
+									elm$core$Basics$composeL,
+									section('Other locations'),
+									elm$core$List$map(author$project$Preview$entityView))),
 								A2(
-								elm$html$Html$h3,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('You see the following items:')
-									])),
+								ifNotEmpty,
+								items,
 								A2(
-								elm$html$Html$ul,
-								_List_Nil,
-								A2(elm$core$List$map, author$project$Preview$entityView, items)),
+									elm$core$Basics$composeL,
+									section('Nearby items'),
+									elm$core$List$map(author$project$Preview$entityView))),
 								A2(
-								elm$html$Html$h3,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('You see the following characters:')
-									])),
+								ifNotEmpty,
+								characters,
 								A2(
-								elm$html$Html$ul,
-								_List_Nil,
-								A2(elm$core$List$map, author$project$Preview$entityView, characters)),
+									elm$core$Basics$composeL,
+									section('Nearby characters'),
+									elm$core$List$map(author$project$Preview$entityView))),
 								A2(
-								elm$html$Html$h3,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('Places near by:')
-									])),
+								ifNotEmpty,
+								inventory,
 								A2(
-								elm$html$Html$ul,
-								_List_Nil,
-								A2(elm$core$List$map, author$project$Preview$entityView, locations))
+									elm$core$Basics$composeL,
+									section('Inventory'),
+									elm$core$List$map(author$project$Preview$entityView)))
 							])),
 						A2(
 						elm$html$Html$div,
 						_List_fromArray(
 							[
-								A2(elm$html$Html$Attributes$style, 'flex', '1 1 auto'),
-								A2(elm$html$Html$Attributes$style, 'font-size', '2em'),
-								A2(elm$html$Html$Attributes$style, 'padding', '0 2em')
+								A2(elm$html$Html$Attributes$style, 'flex', '1 0 auto')
 							]),
 						_List_fromArray(
 							[
@@ -8885,6 +8859,7 @@ var elm$url$Url$fromString = function (str) {
 };
 var elm$browser$Browser$element = _Browser_element;
 var elm$html$Html$code = _VirtualDom_node('code');
+var elm$html$Html$h1 = _VirtualDom_node('h1');
 var elm$html$Html$pre = _VirtualDom_node('pre');
 var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$Helpers$parseErrorsView = function (errors) {
 	return A2(

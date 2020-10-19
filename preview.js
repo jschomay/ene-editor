@@ -36,7 +36,10 @@ window.ENE.Preivew = {
         // TODO check if change type is "remove" and respond accordingly
         // for now this just sends any new/changed docs
         app.ports.addEntities.send(
-          snapshop.docChanges().map((c) => c.doc.data())
+          snapshop
+            .docChanges()
+            .map((c) => c.doc.data())
+            .filter(({ entity }) => !!entity)
         );
       },
       (e) => console.error(e)
