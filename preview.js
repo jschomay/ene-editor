@@ -44,5 +44,20 @@ window.ENE.Preivew = {
       },
       (e) => console.error(e)
     );
+
+    // fetch and import rules data
+    rulesRef.onSnapshot(
+      (snapshop) => {
+        // TODO check if change type is "remove" and respond accordingly
+        // for now this just sends any new/changed docs
+        app.ports.addRules.send(
+          snapshop
+            .docChanges()
+            .map((c) => c.doc.data())
+            .filter(({ rule_id }) => !!rule_id)
+        );
+      },
+      (e) => console.error(e)
+    );
   }
 };

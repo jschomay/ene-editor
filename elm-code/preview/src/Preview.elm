@@ -14,7 +14,7 @@ import NarrativeEngine.Syntax.NarrativeParser as NarrativeParser
 import NarrativeEngine.Syntax.RuleParser as RuleParser
 
 
-type alias ExtraFields =
+type alias EntityFields =
     NamedComponent {}
 
 
@@ -26,20 +26,28 @@ type alias NamedComponent a =
 
 
 type alias MyEntity =
-    WorldModel.NarrativeComponent ExtraFields
+    WorldModel.NarrativeComponent EntityFields
 
 
 type alias MyWorldModel =
     Dict WorldModel.ID MyEntity
 
 
-toEntity : String -> String -> String -> ( String, ExtraFields )
+toEntity : String -> String -> String -> ( String, EntityFields )
 toEntity entityString name description =
     ( entityString, { name = name, description = description } )
 
 
+type alias RuleFields =
+    NarrativeComponent {}
+
+
+type alias NarrativeComponent a =
+    { a | narrative : String }
+
+
 type alias MyRule =
-    Rules.Rule {}
+    Rules.Rule RuleFields
 
 
 type alias MyRules =
@@ -112,18 +120,33 @@ type alias ParsedEntity =
 type Msg
     = InteractWith WorldModel.ID
     | UpdateDebugSearchText String
-    | AddEntities (EntityParser.ParsedWorldModel ExtraFields)
+    | AddEntities (EntityParser.ParsedWorldModel EntityFields)
+    | AddRules (RuleParser.ParsedRules RuleFields)
 
 
-port addEntities : (List { description : String, entity : String, name : String } -> msg) -> Sub msg
+type alias EntitySpec =
+    { description : String, entity : String, name : String }
+
+
+type alias RuleSpec =
+    { rule : String, rule_id : String, narrative : String }
+
+
+port addEntities : (List EntitySpec -> msg) -> Sub msg
+
+
+port addRules : (List RuleSpec -> msg) -> Sub msg
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    addEntities <| AddEntities << parseEntities
+    Sub.batch
+        [ addEntities <| AddEntities << parseEntities
+        , addRules <| AddRules << parseRules
+        ]
 
 
-parseEntities : List { description : String, entity : String, name : String } -> EntityParser.ParsedWorldModel ExtraFields
+parseEntities : List EntitySpec -> EntityParser.ParsedWorldModel EntityFields
 parseEntities entities =
     let
         addExtraEntityFields { description, name } { tags, stats, links } =
@@ -135,6 +158,21 @@ parseEntities entities =
             }
     in
     EntityParser.parseMany addExtraEntityFields <| List.map (\{ entity, description, name } -> ( entity, { description = description, name = name } )) entities
+
+
+parseRules : List RuleSpec -> RuleParser.ParsedRules RuleFields
+parseRules rules =
+    let
+        addExtraEntityFields { narrative } { changes, conditions, trigger } =
+            { trigger = trigger
+            , conditions = conditions
+            , changes = changes
+            , narrative = narrative
+            }
+    in
+    RuleParser.parseRules addExtraEntityFields <|
+        Dict.fromList <|
+            List.map (\{ rule_id, rule, narrative } -> ( rule_id, ( rule, { narrative = narrative } ) )) rules
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -183,6 +221,14 @@ update msg model =
 
                 Ok newEntities ->
                     ( { model | parseErrors = Nothing, worldModel = Dict.union newEntities model.worldModel }, Cmd.none )
+
+        AddRules parsedRules ->
+            case parsedRules of
+                Err errors ->
+                    ( { model | parseErrors = Just errors }, Cmd.none )
+
+                Ok newRules ->
+                    ( { model | parseErrors = Nothing, rules = Dict.union newRules model.rules }, Cmd.none )
 
 
 query : String -> MyWorldModel -> List ( WorldModel.ID, MyEntity )
@@ -254,18 +300,6 @@ view model =
 entityView : ( WorldModel.ID, { a | name : String } ) -> Html Msg
 entityView ( id, { name } ) =
     li [ onClick <| InteractWith id, style "cursor" "pointer" ] [ text name ]
-
-
-
--- loadRules =
---     let
---         addExtraRuleFields extraFields rule =
---             -- no extra fields, so this is just a pass-through
---             rule
---                 (RuleParser.parseRules addExtraRuleFields rulesSpec)
---                 (NarrativeParser.parseMany narrative_content)
---     in
---     True
 
 
 main : Program () Model Msg
