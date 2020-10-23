@@ -237,12 +237,12 @@ window.ENE.Editor = {
       }
     };
 
-    const onRowAdd = (ref, table) => () => {
+    const onRowAdd = (ref, table, empty) => () => {
       showSaving();
       let createdAt = new Date().getTime();
       let entityRef = ref.doc();
       entityRef
-        .set({ createdAt, entity: "", name: "", description: "" })
+        .set({ createdAt, ...empty })
         .then(showSaved)
         .catch((e) => console.error(e));
 
@@ -341,8 +341,12 @@ window.ENE.Editor = {
       ]
     });
 
-    $("#add-row-entities").click(onRowAdd(manifestRef, entitiesTable));
-    $("#add-row-rules").click(onRowAdd(rulesRef, rulesTable));
+    $("#add-row-entities").click(
+      onRowAdd(manifestRef, entitiesTable, { name: "", description: "" })
+    );
+    $("#add-row-rules").click(
+      onRowAdd(rulesRef, rulesTable, { rule: "", narrative: "" })
+    );
 
     window.addEventListener(
       "resize",
