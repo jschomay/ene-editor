@@ -58,15 +58,10 @@ type alias RulesSpec =
     Dict Rules.RuleID ( String, {} )
 
 
-type alias Content =
-    Dict String String
-
-
 type alias Model =
     { parseErrors : Maybe SyntaxHelpers.ParseErrors
     , worldModel : MyWorldModel
     , rules : MyRules
-    , content : Content
     , story : String
     , ruleCounts : Dict String Int
     , debug : NarrativeEngine.Debug.State
@@ -78,7 +73,6 @@ initialModel =
     ( { parseErrors = Nothing
       , worldModel = Dict.empty
       , rules = Dict.empty
-      , content = Dict.empty
       , story = ""
       , ruleCounts = Dict.empty
       , debug = NarrativeEngine.Debug.init
@@ -181,12 +175,11 @@ update msg model =
         InteractWith trigger ->
             -- we need to check if any rule matched
             case Rules.findMatchingRule trigger model.rules model.worldModel of
-                Just ( matchedRuleID, { changes } ) ->
+                Just ( matchedRuleID, { changes, narrative } ) ->
                     ( { model
                         | worldModel = WorldModel.applyChanges changes trigger model.worldModel
                         , story =
-                            Dict.get matchedRuleID model.content
-                                |> Maybe.withDefault ("ERROR finding narrative content for " ++ matchedRuleID)
+                            narrative
                                 |> NarrativeParser.parse (makeConfig trigger matchedRuleID model.ruleCounts model.worldModel)
                                 |> List.head
                                 |> Maybe.withDefault ("ERROR parsing narrative content for " ++ matchedRuleID)
