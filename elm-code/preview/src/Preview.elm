@@ -150,8 +150,19 @@ parseEntities entities =
             , name = name
             , description = description
             }
+
+        parsedEntities =
+            entities
+                |> List.map (\{ entity, description, name } -> ( entity, { description = description, name = name } ))
+                |> EntityParser.parseMany addExtraEntityFields
+
+        parsedDescriptions =
+            entities
+                |> List.map (\{ entity, description } -> ( entity, description ))
+                |> Dict.fromList
+                |> NarrativeParser.parseMany
     in
-    EntityParser.parseMany addExtraEntityFields <| List.map (\{ entity, description, name } -> ( entity, { description = description, name = name } )) entities
+    parsedDescriptions |> Result.andThen (always parsedEntities)
 
 
 parseRules : List RuleSpec -> RuleParser.ParsedRules RuleFields
@@ -163,10 +174,20 @@ parseRules rules =
             , changes = changes
             , narrative = narrative
             }
+
+        parsedRules =
+            rules
+                |> List.map (\{ rule_id, rule, narrative } -> ( rule_id, ( rule, { narrative = narrative } ) ))
+                |> Dict.fromList
+                |> RuleParser.parseRules addExtraEntityFields
+
+        parsedNarratives =
+            rules
+                |> List.map (\{ rule_id, narrative } -> ( rule_id, narrative ))
+                |> Dict.fromList
+                |> NarrativeParser.parseMany
     in
-    RuleParser.parseRules addExtraEntityFields <|
-        Dict.fromList <|
-            List.map (\{ rule_id, rule, narrative } -> ( rule_id, ( rule, { narrative = narrative } ) )) rules
+    parsedNarratives |> Result.andThen (always parsedRules)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )

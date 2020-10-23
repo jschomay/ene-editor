@@ -2873,7 +2873,7 @@ var _VirtualDom_mapEventRecord = F2(function(func, record)
 	return {
 		w: func(record.w),
 		ab: record.ab,
-		X: record.X
+		Y: record.Y
 	}
 });
 
@@ -3145,7 +3145,7 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.ab;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.X) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.Y) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -5005,9 +5005,9 @@ var elm$core$Basics$identity = function (x) {
 	return x;
 };
 var jschomay$elm_narrative_engine$NarrativeEngine$Debug$State = elm$core$Basics$identity;
-var jschomay$elm_narrative_engine$NarrativeEngine$Debug$init = {T: 'Start', U: 'Begin', _: ''};
+var jschomay$elm_narrative_engine$NarrativeEngine$Debug$init = {U: 'Start', V: 'Begin', _: ''};
 var author$project$Preview$initialModel = _Utils_Tuple2(
-	{r: jschomay$elm_narrative_engine$NarrativeEngine$Debug$init, D: elm$core$Maybe$Nothing, y: elm$core$Dict$empty, L: elm$core$Dict$empty, N: '', h: elm$core$Dict$empty},
+	{r: jschomay$elm_narrative_engine$NarrativeEngine$Debug$init, D: elm$core$Maybe$Nothing, z: elm$core$Dict$empty, L: elm$core$Dict$empty, N: '', h: elm$core$Dict$empty},
 	elm$core$Platform$Cmd$none);
 var author$project$Preview$AddEntities = function (a) {
 	return {$: 2, a: a};
@@ -5033,7 +5033,7 @@ var author$project$Preview$addEntities = _Platform_incomingPort(
 							elm$json$Json$Decode$andThen,
 							function (description) {
 								return elm$json$Json$Decode$succeed(
-									{v: description, S: entity, o: name});
+									{s: description, R: entity, o: name});
 							},
 							A2(elm$json$Json$Decode$field, 'description', elm$json$Json$Decode$string));
 					},
@@ -5053,81 +5053,16 @@ var author$project$Preview$addRules = _Platform_incomingPort(
 							elm$json$Json$Decode$andThen,
 							function (narrative) {
 								return elm$json$Json$Decode$succeed(
-									{B: narrative, Y: rule, Z: rule_id});
+									{x: narrative, Z: rule, S: rule_id});
 							},
 							A2(elm$json$Json$Decode$field, 'narrative', elm$json$Json$Decode$string));
 					},
 					A2(elm$json$Json$Decode$field, 'rule', elm$json$Json$Decode$string));
 			},
 			A2(elm$json$Json$Decode$field, 'rule_id', elm$json$Json$Decode$string))));
-var elm$core$List$foldrHelper = F4(
-	function (fn, acc, ctr, ls) {
-		if (!ls.b) {
-			return acc;
-		} else {
-			var a = ls.a;
-			var r1 = ls.b;
-			if (!r1.b) {
-				return A2(fn, a, acc);
-			} else {
-				var b = r1.a;
-				var r2 = r1.b;
-				if (!r2.b) {
-					return A2(
-						fn,
-						a,
-						A2(fn, b, acc));
-				} else {
-					var c = r2.a;
-					var r3 = r2.b;
-					if (!r3.b) {
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(fn, c, acc)));
-					} else {
-						var d = r3.a;
-						var r4 = r3.b;
-						var res = (ctr > 500) ? A3(
-							elm$core$List$foldl,
-							fn,
-							acc,
-							elm$core$List$reverse(r4)) : A4(elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(
-									fn,
-									c,
-									A2(fn, d, res))));
-					}
-				}
-			}
-		}
-	});
-var elm$core$List$foldr = F3(
-	function (fn, acc, ls) {
-		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
-	});
-var elm$core$List$map = F2(
-	function (f, xs) {
-		return A3(
-			elm$core$List$foldr,
-			F2(
-				function (x, acc) {
-					return A2(
-						elm$core$List$cons,
-						f(x),
-						acc);
-				}),
-			_List_Nil,
-			xs);
+var elm$core$Basics$always = F2(
+	function (a, _n0) {
+		return a;
 	});
 var elm$core$Dict$Black = 1;
 var elm$core$Dict$RBNode_elm_builtin = F5(
@@ -5236,6 +5171,97 @@ var elm$core$Dict$insert = F3(
 		} else {
 			var x = _n0;
 			return x;
+		}
+	});
+var elm$core$Dict$fromList = function (assocs) {
+	return A3(
+		elm$core$List$foldl,
+		F2(
+			function (_n0, dict) {
+				var key = _n0.a;
+				var value = _n0.b;
+				return A3(elm$core$Dict$insert, key, value, dict);
+			}),
+		elm$core$Dict$empty,
+		assocs);
+};
+var elm$core$List$foldrHelper = F4(
+	function (fn, acc, ctr, ls) {
+		if (!ls.b) {
+			return acc;
+		} else {
+			var a = ls.a;
+			var r1 = ls.b;
+			if (!r1.b) {
+				return A2(fn, a, acc);
+			} else {
+				var b = r1.a;
+				var r2 = r1.b;
+				if (!r2.b) {
+					return A2(
+						fn,
+						a,
+						A2(fn, b, acc));
+				} else {
+					var c = r2.a;
+					var r3 = r2.b;
+					if (!r3.b) {
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(fn, c, acc)));
+					} else {
+						var d = r3.a;
+						var r4 = r3.b;
+						var res = (ctr > 500) ? A3(
+							elm$core$List$foldl,
+							fn,
+							acc,
+							elm$core$List$reverse(r4)) : A4(elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(
+									fn,
+									c,
+									A2(fn, d, res))));
+					}
+				}
+			}
+		}
+	});
+var elm$core$List$foldr = F3(
+	function (fn, acc, ls) {
+		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
+	});
+var elm$core$List$map = F2(
+	function (f, xs) {
+		return A3(
+			elm$core$List$foldr,
+			F2(
+				function (x, acc) {
+					return A2(
+						elm$core$List$cons,
+						f(x),
+						acc);
+				}),
+			_List_Nil,
+			xs);
+	});
+var elm$core$Result$andThen = F2(
+	function (callback, result) {
+		if (!result.$) {
+			var value = result.a;
+			return callback(value);
+		} else {
+			var msg = result.a;
+			return elm$core$Result$Err(msg);
 		}
 	});
 var elm$core$Result$map = F2(
@@ -5365,10 +5391,6 @@ var elm$parser$Parser$Advanced$end = function (x) {
 	};
 };
 var elm$parser$Parser$end = elm$parser$Parser$Advanced$end(elm$parser$Parser$ExpectingEnd);
-var elm$core$Basics$always = F2(
-	function (a, _n0) {
-		return a;
-	});
 var elm$parser$Parser$Advanced$map2 = F3(
 	function (func, _n0, _n1) {
 		var parseA = _n0;
@@ -6099,43 +6121,6 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$parseMany 
 			elm$core$Result$Ok(elm$core$Dict$empty),
 			entities);
 	});
-var author$project$Preview$parseEntities = function (entities) {
-	var addExtraEntityFields = F2(
-		function (_n1, _n2) {
-			var description = _n1.v;
-			var name = _n1.o;
-			var tags = _n2.aQ;
-			var stats = _n2.aN;
-			var links = _n2.av;
-			return {v: description, av: links, o: name, aN: stats, aQ: tags};
-		});
-	return A2(
-		jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$parseMany,
-		addExtraEntityFields,
-		A2(
-			elm$core$List$map,
-			function (_n0) {
-				var entity = _n0.S;
-				var description = _n0.v;
-				var name = _n0.o;
-				return _Utils_Tuple2(
-					entity,
-					{v: description, o: name});
-			},
-			entities));
-};
-var elm$core$Dict$fromList = function (assocs) {
-	return A3(
-		elm$core$List$foldl,
-		F2(
-			function (_n0, dict) {
-				var key = _n0.a;
-				var value = _n0.b;
-				return A3(elm$core$Dict$insert, key, value, dict);
-			}),
-		elm$core$Dict$empty,
-		assocs);
-};
 var elm$core$Dict$foldl = F3(
 	function (func, acc, dict) {
 		foldl:
@@ -6161,6 +6146,123 @@ var elm$core$Dict$foldl = F3(
 			}
 		}
 	});
+var elm$core$Array$fromListHelp = F3(
+	function (list, nodeList, nodeListSize) {
+		fromListHelp:
+		while (true) {
+			var _n0 = A2(elm$core$Elm$JsArray$initializeFromList, elm$core$Array$branchFactor, list);
+			var jsArray = _n0.a;
+			var remainingItems = _n0.b;
+			if (_Utils_cmp(
+				elm$core$Elm$JsArray$length(jsArray),
+				elm$core$Array$branchFactor) < 0) {
+				return A2(
+					elm$core$Array$builderToArray,
+					true,
+					{i: nodeList, e: nodeListSize, g: jsArray});
+			} else {
+				var $temp$list = remainingItems,
+					$temp$nodeList = A2(
+					elm$core$List$cons,
+					elm$core$Array$Leaf(jsArray),
+					nodeList),
+					$temp$nodeListSize = nodeListSize + 1;
+				list = $temp$list;
+				nodeList = $temp$nodeList;
+				nodeListSize = $temp$nodeListSize;
+				continue fromListHelp;
+			}
+		}
+	});
+var elm$core$Array$fromList = function (list) {
+	if (!list.b) {
+		return elm$core$Array$empty;
+	} else {
+		return A3(elm$core$Array$fromListHelp, list, _List_Nil, 0);
+	}
+};
+var elm$core$Bitwise$shiftRightZfBy = _Bitwise_shiftRightZfBy;
+var elm$core$Array$bitMask = 4294967295 >>> (32 - elm$core$Array$shiftStep);
+var elm$core$Bitwise$and = _Bitwise_and;
+var elm$core$Elm$JsArray$unsafeGet = _JsArray_unsafeGet;
+var elm$core$Array$getHelp = F3(
+	function (shift, index, tree) {
+		getHelp:
+		while (true) {
+			var pos = elm$core$Array$bitMask & (index >>> shift);
+			var _n0 = A2(elm$core$Elm$JsArray$unsafeGet, pos, tree);
+			if (!_n0.$) {
+				var subTree = _n0.a;
+				var $temp$shift = shift - elm$core$Array$shiftStep,
+					$temp$index = index,
+					$temp$tree = subTree;
+				shift = $temp$shift;
+				index = $temp$index;
+				tree = $temp$tree;
+				continue getHelp;
+			} else {
+				var values = _n0.a;
+				return A2(elm$core$Elm$JsArray$unsafeGet, elm$core$Array$bitMask & index, values);
+			}
+		}
+	});
+var elm$core$Bitwise$shiftLeftBy = _Bitwise_shiftLeftBy;
+var elm$core$Array$tailIndex = function (len) {
+	return (len >>> 5) << 5;
+};
+var elm$core$Basics$ge = _Utils_ge;
+var elm$core$Array$get = F2(
+	function (index, _n0) {
+		var len = _n0.a;
+		var startShift = _n0.b;
+		var tree = _n0.c;
+		var tail = _n0.d;
+		return ((index < 0) || (_Utils_cmp(index, len) > -1)) ? elm$core$Maybe$Nothing : ((_Utils_cmp(
+			index,
+			elm$core$Array$tailIndex(len)) > -1) ? elm$core$Maybe$Just(
+			A2(elm$core$Elm$JsArray$unsafeGet, elm$core$Array$bitMask & index, tail)) : elm$core$Maybe$Just(
+			A3(elm$core$Array$getHelp, startShift, index, tree)));
+	});
+var elm$core$Basics$min = F2(
+	function (x, y) {
+		return (_Utils_cmp(x, y) < 0) ? x : y;
+	});
+var elm$core$Basics$modBy = _Basics_modBy;
+var elm$core$Basics$composeL = F3(
+	function (g, f, x) {
+		return g(
+			f(x));
+	});
+var elm$core$List$all = F2(
+	function (isOkay, list) {
+		return !A2(
+			elm$core$List$any,
+			A2(elm$core$Basics$composeL, elm$core$Basics$not, isOkay),
+			list);
+	});
+var elm$core$List$isEmpty = function (xs) {
+	if (!xs.b) {
+		return true;
+	} else {
+		return false;
+	}
+};
+var elm$core$String$trim = _String_trim;
+var elm$parser$Parser$Advanced$backtrackable = function (_n0) {
+	var parse = _n0;
+	return function (s0) {
+		var _n1 = parse(s0);
+		if (_n1.$ === 1) {
+			var x = _n1.b;
+			return A2(elm$parser$Parser$Advanced$Bad, false, x);
+		} else {
+			var a = _n1.b;
+			var s1 = _n1.c;
+			return A3(elm$parser$Parser$Advanced$Good, false, a, s1);
+		}
+	};
+};
+var elm$parser$Parser$backtrackable = elm$parser$Parser$Advanced$backtrackable;
 var elm$parser$Parser$Expecting = function (a) {
 	return {$: 0, a: a};
 };
@@ -6200,6 +6302,448 @@ var elm$parser$Parser$chompUntil = function (str) {
 	return elm$parser$Parser$Advanced$chompUntil(
 		elm$parser$Parser$toToken(str));
 };
+var elm$parser$Parser$Advanced$commit = function (a) {
+	return function (s) {
+		return A3(elm$parser$Parser$Advanced$Good, true, a, s);
+	};
+};
+var elm$parser$Parser$commit = elm$parser$Parser$Advanced$commit;
+var elm$parser$Parser$Advanced$lazy = function (thunk) {
+	return function (s) {
+		var _n0 = thunk(0);
+		var parse = _n0;
+		return parse(s);
+	};
+};
+var elm$parser$Parser$lazy = elm$parser$Parser$Advanced$lazy;
+var elm$random$Random$Seed = F2(
+	function (a, b) {
+		return {$: 0, a: a, b: b};
+	});
+var elm$random$Random$next = function (_n0) {
+	var state0 = _n0.a;
+	var incr = _n0.b;
+	return A2(elm$random$Random$Seed, ((state0 * 1664525) + incr) >>> 0, incr);
+};
+var elm$random$Random$initialSeed = function (x) {
+	var _n0 = elm$random$Random$next(
+		A2(elm$random$Random$Seed, 0, 1013904223));
+	var state1 = _n0.a;
+	var incr = _n0.b;
+	var state2 = (state1 + x) >>> 0;
+	return elm$random$Random$next(
+		A2(elm$random$Random$Seed, state2, incr));
+};
+var elm$random$Random$Generator = elm$core$Basics$identity;
+var elm$core$Bitwise$xor = _Bitwise_xor;
+var elm$random$Random$peel = function (_n0) {
+	var state = _n0.a;
+	var word = (state ^ (state >>> ((state >>> 28) + 4))) * 277803737;
+	return ((word >>> 22) ^ word) >>> 0;
+};
+var elm$random$Random$int = F2(
+	function (a, b) {
+		return function (seed0) {
+			var _n0 = (_Utils_cmp(a, b) < 0) ? _Utils_Tuple2(a, b) : _Utils_Tuple2(b, a);
+			var lo = _n0.a;
+			var hi = _n0.b;
+			var range = (hi - lo) + 1;
+			if (!((range - 1) & range)) {
+				return _Utils_Tuple2(
+					(((range - 1) & elm$random$Random$peel(seed0)) >>> 0) + lo,
+					elm$random$Random$next(seed0));
+			} else {
+				var threshhold = (((-range) >>> 0) % range) >>> 0;
+				var accountForBias = function (seed) {
+					accountForBias:
+					while (true) {
+						var x = elm$random$Random$peel(seed);
+						var seedN = elm$random$Random$next(seed);
+						if (_Utils_cmp(x, threshhold) < 0) {
+							var $temp$seed = seedN;
+							seed = $temp$seed;
+							continue accountForBias;
+						} else {
+							return _Utils_Tuple2((x % range) + lo, seedN);
+						}
+					}
+				};
+				return accountForBias(seed0);
+			}
+		};
+	});
+var elm$random$Random$step = F2(
+	function (_n0, seed) {
+		var generator = _n0;
+		return generator(seed);
+	});
+var elm$core$Dict$filter = F2(
+	function (isGood, dict) {
+		return A3(
+			elm$core$Dict$foldl,
+			F3(
+				function (k, v, d) {
+					return A2(isGood, k, v) ? A3(elm$core$Dict$insert, k, v, d) : d;
+				}),
+			elm$core$Dict$empty,
+			dict);
+	});
+var elm$core$Dict$get = F2(
+	function (targetKey, dict) {
+		get:
+		while (true) {
+			if (dict.$ === -2) {
+				return elm$core$Maybe$Nothing;
+			} else {
+				var key = dict.b;
+				var value = dict.c;
+				var left = dict.d;
+				var right = dict.e;
+				var _n1 = A2(elm$core$Basics$compare, targetKey, key);
+				switch (_n1) {
+					case 0:
+						var $temp$targetKey = targetKey,
+							$temp$dict = left;
+						targetKey = $temp$targetKey;
+						dict = $temp$dict;
+						continue get;
+					case 1:
+						return elm$core$Maybe$Just(value);
+					default:
+						var $temp$targetKey = targetKey,
+							$temp$dict = right;
+						targetKey = $temp$targetKey;
+						dict = $temp$dict;
+						continue get;
+				}
+			}
+		}
+	});
+var elm$core$Maybe$andThen = F2(
+	function (callback, maybeValue) {
+		if (!maybeValue.$) {
+			var value = maybeValue.a;
+			return callback(value);
+		} else {
+			return elm$core$Maybe$Nothing;
+		}
+	});
+var elm$core$Maybe$map2 = F3(
+	function (func, ma, mb) {
+		if (ma.$ === 1) {
+			return elm$core$Maybe$Nothing;
+		} else {
+			var a = ma.a;
+			if (mb.$ === 1) {
+				return elm$core$Maybe$Nothing;
+			} else {
+				var b = mb.a;
+				return elm$core$Maybe$Just(
+					A2(func, a, b));
+			}
+		}
+	});
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$hasStat = F5(
+	function (key, comparator, statMatcher, store, entity) {
+		if (!statMatcher.$) {
+			var value = statMatcher.a;
+			return function (actual) {
+				return _Utils_eq(
+					A2(elm$core$Basics$compare, actual, value),
+					comparator);
+			}(
+				A2(
+					elm$core$Maybe$withDefault,
+					0,
+					A2(elm$core$Dict$get, key, entity.aN)));
+		} else {
+			var compareID = statMatcher.a;
+			var compareKey = statMatcher.b;
+			return A2(
+				elm$core$Maybe$withDefault,
+				false,
+				A2(
+					elm$core$Maybe$map,
+					elm$core$Basics$eq(comparator),
+					A3(
+						elm$core$Maybe$map2,
+						elm$core$Basics$compare,
+						A2(elm$core$Dict$get, key, entity.aN),
+						A2(
+							elm$core$Maybe$andThen,
+							A2(
+								elm$core$Basics$composeR,
+								function ($) {
+									return $.aN;
+								},
+								elm$core$Dict$get(compareKey)),
+							A2(elm$core$Dict$get, compareID, store)))));
+		}
+	});
+var elm$core$Dict$member = F2(
+	function (key, dict) {
+		var _n0 = A2(elm$core$Dict$get, key, dict);
+		if (!_n0.$) {
+			return true;
+		} else {
+			return false;
+		}
+	});
+var elm$core$Set$member = F2(
+	function (key, _n0) {
+		var dict = _n0;
+		return A2(elm$core$Dict$member, key, dict);
+	});
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$hasTag = F2(
+	function (value, entity) {
+		return A2(elm$core$Set$member, value, entity.aQ);
+	});
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$findSpecific = F3(
+	function (id, queries, store) {
+		var matchesQueries = function (entity) {
+			return A2(
+				elm$core$List$all,
+				function (q) {
+					return A3(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$queryFn, q, store, entity);
+				},
+				queries) ? _List_fromArray(
+				[
+					_Utils_Tuple2(id, entity)
+				]) : _List_Nil;
+		};
+		return A2(
+			elm$core$Maybe$withDefault,
+			_List_Nil,
+			A2(
+				elm$core$Maybe$map,
+				matchesQueries,
+				A2(elm$core$Dict$get, id, store)));
+	});
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$hasLink = F4(
+	function (key, linkMatcher, store, entity) {
+		var assertMatch = F2(
+			function (matcher, actualID) {
+				if (!matcher.$) {
+					var expectedID = matcher.a;
+					var qs = matcher.b;
+					return _Utils_eq(expectedID, actualID) && (!elm$core$List$isEmpty(
+						A3(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$findSpecific, actualID, qs, store)));
+				} else {
+					var qs = matcher.a;
+					return !elm$core$List$isEmpty(
+						A3(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$findSpecific, actualID, qs, store));
+				}
+			});
+		if (!linkMatcher.$) {
+			var entityMatcher = linkMatcher.a;
+			return A2(
+				elm$core$Maybe$withDefault,
+				false,
+				A2(
+					elm$core$Maybe$map,
+					assertMatch(entityMatcher),
+					A2(elm$core$Dict$get, key, entity.av)));
+		} else {
+			var compareID = linkMatcher.a;
+			var compareKey = linkMatcher.b;
+			return A2(
+				elm$core$Maybe$withDefault,
+				false,
+				A3(
+					elm$core$Maybe$map2,
+					elm$core$Basics$eq,
+					A2(elm$core$Dict$get, key, entity.av),
+					A2(
+						elm$core$Maybe$andThen,
+						A2(
+							elm$core$Basics$composeR,
+							function ($) {
+								return $.av;
+							},
+							elm$core$Dict$get(compareKey)),
+						A2(elm$core$Dict$get, compareID, store))));
+		}
+	});
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$queryFn = F2(
+	function (q, store) {
+		switch (q.$) {
+			case 0:
+				var value = q.a;
+				return jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$hasTag(value);
+			case 1:
+				var key = q.a;
+				var comparator = q.b;
+				var value = q.c;
+				return A4(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$hasStat, key, comparator, value, store);
+			case 2:
+				var key = q.a;
+				var value = q.b;
+				return A3(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$hasLink, key, value, store);
+			default:
+				var nestedQuery = q.a;
+				return A2(
+					elm$core$Basics$composeL,
+					elm$core$Basics$not,
+					A2(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$queryFn, nestedQuery, store));
+		}
+	});
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$findGeneral = F2(
+	function (queries, store) {
+		var gatherMatches = F2(
+			function (id, entity) {
+				return A2(
+					elm$core$List$all,
+					function (q) {
+						return A3(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$queryFn, q, store, entity);
+					},
+					queries);
+			});
+		return elm$core$Dict$toList(
+			A2(elm$core$Dict$filter, gatherMatches, store));
+	});
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$query = F2(
+	function (matcher, store) {
+		if (!matcher.$) {
+			var id = matcher.a;
+			var queries = matcher.b;
+			return A3(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$findSpecific, id, queries, store);
+		} else {
+			var queries = matcher.a;
+			return A2(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$findGeneral, queries, store);
+		}
+	});
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$CompareLink = F2(
+	function (a, b) {
+		return {$: 1, a: a, b: b};
+	});
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$CompareStat = F2(
+	function (a, b) {
+		return {$: 1, a: a, b: b};
+	});
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$HasLink = F2(
+	function (a, b) {
+		return {$: 2, a: a, b: b};
+	});
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$HasStat = F3(
+	function (a, b, c) {
+		return {$: 1, a: a, b: b, c: c};
+	});
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$Match = F2(
+	function (a, b) {
+		return {$: 0, a: a, b: b};
+	});
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$MatchAny = function (a) {
+	return {$: 1, a: a};
+};
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$SpecificLink = function (a) {
+	return {$: 0, a: a};
+};
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$replaceTrigger = F2(
+	function (trigger, matcher) {
+		var replaceInSelector = function (id) {
+			return (id === '$') ? trigger : id;
+		};
+		var replaceInQuery = function (q) {
+			_n1$3:
+			while (true) {
+				switch (q.$) {
+					case 1:
+						if ((q.c.$ === 1) && (q.c.a === '$')) {
+							var key = q.a;
+							var comparison = q.b;
+							var _n3 = q.c;
+							var compareKey = _n3.b;
+							return A3(
+								jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$HasStat,
+								key,
+								comparison,
+								A2(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$CompareStat, trigger, compareKey));
+						} else {
+							break _n1$3;
+						}
+					case 2:
+						if (!q.b.$) {
+							if ((!q.b.a.$) && (q.b.a.a === '$')) {
+								var key = q.a;
+								var _n2 = q.b.a;
+								var queries = _n2.b;
+								return A2(
+									jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$HasLink,
+									key,
+									jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$SpecificLink(
+										A2(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$Match, trigger, queries)));
+							} else {
+								break _n1$3;
+							}
+						} else {
+							if (q.b.a === '$') {
+								var key = q.a;
+								var _n4 = q.b;
+								var compareKey = _n4.b;
+								return A2(
+									jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$HasLink,
+									key,
+									A2(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$CompareLink, trigger, compareKey));
+							} else {
+								break _n1$3;
+							}
+						}
+					default:
+						break _n1$3;
+				}
+			}
+			return q;
+		};
+		if (matcher.$ === 1) {
+			var queries = matcher.a;
+			return jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$MatchAny(
+				A2(elm$core$List$map, replaceInQuery, queries));
+		} else {
+			var id = matcher.a;
+			var queries = matcher.b;
+			return A2(
+				jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$Match,
+				replaceInSelector(id),
+				A2(elm$core$List$map, replaceInQuery, queries));
+		}
+	});
+var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$Helpers$sequence = function (list) {
+	return A3(
+		elm$core$List$foldl,
+		F2(
+			function (r, acc) {
+				if (!r.$) {
+					var a = r.a;
+					return A2(
+						elm$core$Result$map,
+						elm$core$List$cons(a),
+						acc);
+				} else {
+					var e = r.a;
+					return elm$core$Result$Err(e);
+				}
+			}),
+		elm$core$Result$Ok(_List_Nil),
+		list);
+};
+var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$Helpers$parseMultiple = F2(
+	function (parser, strings) {
+		return jschomay$elm_narrative_engine$NarrativeEngine$Syntax$Helpers$sequence(
+			A2(elm$core$List$map, parser, strings));
+	});
+var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$Looping = 1;
+var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$Randomly = 2;
+var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$Sticking = 0;
+var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$break = elm$parser$Parser$symbol('|');
+var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$close = elm$parser$Parser$symbol('}');
+var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$open = elm$parser$Parser$symbol('{');
+var elm$core$String$replace = F3(
+	function (before, after, string) {
+		return A2(
+			elm$core$String$join,
+			after,
+			A2(elm$core$String$split, before, string));
+	});
 var elm$parser$Parser$ExpectingKeyword = function (a) {
 	return {$: 9, a: a};
 };
@@ -6235,255 +6779,87 @@ var elm$parser$Parser$keyword = function (kwd) {
 			kwd,
 			elm$parser$Parser$ExpectingKeyword(kwd)));
 };
+var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$fromResult = function (res) {
+	if (!res.$) {
+		var s = res.a;
+		return elm$parser$Parser$succeed(s);
+	} else {
+		var e = res.a;
+		return elm$parser$Parser$problem(e);
+	}
+};
+var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$propertyText = function (config) {
+	var keywords = A2(
+		elm$core$List$map,
+		function (_n0) {
+			var propName = _n0.a;
+			var fn = _n0.b;
+			return A2(
+				elm$parser$Parser$ignorer,
+				elm$parser$Parser$succeed(fn),
+				elm$parser$Parser$keyword(propName));
+		},
+		elm$core$Dict$toList(config.bb));
+	var getProp = F2(
+		function (id, propFn) {
+			return propFn(
+				A3(elm$core$String$replace, '$', config.ac, id));
+		});
+	return A2(
+		elm$parser$Parser$andThen,
+		jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$fromResult,
+		A2(
+			elm$parser$Parser$keeper,
+			A2(
+				elm$parser$Parser$keeper,
+				elm$parser$Parser$succeed(getProp),
+				A2(
+					elm$parser$Parser$ignorer,
+					A2(
+						elm$parser$Parser$andThen,
+						jschomay$elm_narrative_engine$NarrativeEngine$Syntax$Helpers$notEmpty,
+						elm$parser$Parser$getChompedString(
+							elm$parser$Parser$chompWhile(
+								function (c) {
+									return !A2(
+										elm$core$List$member,
+										c,
+										_List_fromArray(
+											['{', '.', '|', '}']));
+								}))),
+					elm$parser$Parser$symbol('.'))),
+			A2(
+				elm$parser$Parser$ignorer,
+				elm$parser$Parser$oneOf(keywords),
+				jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$close)));
+};
+var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$notReserved = function (_char) {
+	return !A2(
+		elm$core$List$member,
+		_char,
+		_List_fromArray(
+			['{', '}', '|']));
+};
+var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$staticText = A2(
+	elm$parser$Parser$andThen,
+	jschomay$elm_narrative_engine$NarrativeEngine$Syntax$Helpers$notEmpty,
+	elm$parser$Parser$getChompedString(
+		A2(
+			elm$parser$Parser$ignorer,
+			elm$parser$Parser$succeed(0),
+			elm$parser$Parser$chompWhile(jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$notReserved))));
 var elm$parser$Parser$token = function (str) {
 	return elm$parser$Parser$Advanced$token(
 		elm$parser$Parser$toToken(str));
 };
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$Rules$EntityTrigger = function (a) {
-	return {$: 1, a: a};
-};
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$Rules$SpecificTrigger = function (a) {
-	return {$: 0, a: a};
-};
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$AddTag = function (a) {
-	return {$: 0, a: a};
-};
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$DecStat = F2(
-	function (a, b) {
-		return {$: 4, a: a, b: b};
-	});
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$IncStat = F2(
-	function (a, b) {
-		return {$: 3, a: a, b: b};
-	});
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$LookUpLinkTarget = F2(
-	function (a, b) {
-		return {$: 1, a: a, b: b};
-	});
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$RemoveTag = function (a) {
-	return {$: 1, a: a};
-};
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$SetLink = F2(
-	function (a, b) {
-		return {$: 5, a: a, b: b};
-	});
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$SetStat = F2(
-	function (a, b) {
-		return {$: 2, a: a, b: b};
-	});
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$SpecificLinkTarget = function (a) {
-	return {$: 0, a: a};
-};
-var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$changeEntityParser = function () {
-	var toUpdateEntity = F3(
-		function (acc, propName, updateConstructor) {
-			return elm$parser$Parser$Loop(
-				A2(
-					elm$core$List$cons,
-					updateConstructor(propName),
-					acc));
-		});
-	var lookupParser = function (mapper) {
-		return A2(
-			elm$parser$Parser$keeper,
-			A2(
-				elm$parser$Parser$keeper,
-				A2(
-					elm$parser$Parser$ignorer,
-					A2(
-						elm$parser$Parser$ignorer,
-						elm$parser$Parser$succeed(mapper),
-						elm$parser$Parser$keyword('(link')),
-					elm$parser$Parser$chompWhile(
-						elm$core$Basics$eq(' '))),
-				A2(
-					elm$parser$Parser$ignorer,
-					elm$parser$Parser$oneOf(
-						_List_fromArray(
-							[
-								A2(
-								elm$parser$Parser$map,
-								elm$core$Basics$always('$'),
-								elm$parser$Parser$token('$')),
-								jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$idParser
-							])),
-					elm$parser$Parser$symbol('.'))),
-			A2(
-				elm$parser$Parser$ignorer,
-				jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$propertyNameParser,
-				elm$parser$Parser$symbol(')')));
-	};
-	var helper = function (acc) {
-		return elm$parser$Parser$oneOf(
-			_List_fromArray(
-				[
-					A2(
-					elm$parser$Parser$keeper,
-					A2(
-						elm$parser$Parser$ignorer,
-						A2(
-							elm$parser$Parser$ignorer,
-							elm$parser$Parser$succeed(elm$core$Basics$identity),
-							elm$parser$Parser$chompWhile(
-								elm$core$Basics$eq(' '))),
-						elm$parser$Parser$symbol('.')),
-					elm$parser$Parser$oneOf(
-						_List_fromArray(
-							[
-								A2(
-								elm$parser$Parser$keeper,
-								A2(
-									elm$parser$Parser$ignorer,
-									elm$parser$Parser$succeed(
-										function (t) {
-											return elm$parser$Parser$Loop(
-												A2(
-													elm$core$List$cons,
-													jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$RemoveTag(t),
-													acc));
-										}),
-									elm$parser$Parser$symbol('-')),
-								jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$propertyNameParser),
-								A2(
-								elm$parser$Parser$keeper,
-								A2(
-									elm$parser$Parser$keeper,
-									elm$parser$Parser$succeed(
-										toUpdateEntity(acc)),
-									jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$propertyNameParser),
-								elm$parser$Parser$oneOf(
-									_List_fromArray(
-										[
-											A2(
-											elm$parser$Parser$keeper,
-											A2(
-												elm$parser$Parser$ignorer,
-												elm$parser$Parser$succeed(elm$core$Basics$identity),
-												elm$parser$Parser$symbol('+')),
-											A2(
-												elm$parser$Parser$map,
-												function (n) {
-													return function (key) {
-														return A2(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$IncStat, key, n);
-													};
-												},
-												jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$numberParser)),
-											A2(
-											elm$parser$Parser$keeper,
-											A2(
-												elm$parser$Parser$ignorer,
-												elm$parser$Parser$succeed(elm$core$Basics$identity),
-												elm$parser$Parser$symbol('-')),
-											A2(
-												elm$parser$Parser$map,
-												function (n) {
-													return function (key) {
-														return A2(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$DecStat, key, n);
-													};
-												},
-												jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$numberParser)),
-											A2(
-											elm$parser$Parser$keeper,
-											A2(
-												elm$parser$Parser$ignorer,
-												elm$parser$Parser$succeed(elm$core$Basics$identity),
-												elm$parser$Parser$symbol('=')),
-											elm$parser$Parser$oneOf(
-												_List_fromArray(
-													[
-														A2(
-														elm$parser$Parser$map,
-														function (n) {
-															return function (key) {
-																return A2(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$SetStat, key, n);
-															};
-														},
-														jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$numberParser),
-														A2(
-														elm$parser$Parser$map,
-														function (_n0) {
-															return function (key) {
-																return A2(
-																	jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$SetLink,
-																	key,
-																	jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$SpecificLinkTarget('$'));
-															};
-														},
-														elm$parser$Parser$symbol('$')),
-														A2(
-														elm$parser$Parser$map,
-														function (id) {
-															return function (key) {
-																return A2(
-																	jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$SetLink,
-																	key,
-																	jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$SpecificLinkTarget(id));
-															};
-														},
-														jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$idParser),
-														lookupParser(
-														F3(
-															function (lookupID, lookupKey, key) {
-																return A2(
-																	jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$SetLink,
-																	key,
-																	A2(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$LookUpLinkTarget, lookupID, lookupKey));
-															}))
-													]))),
-											elm$parser$Parser$succeed(
-											function (t) {
-												return jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$AddTag(t);
-											})
-										])))
-							]))),
-					elm$parser$Parser$succeed(
-					elm$parser$Parser$Done(acc))
-				]));
-	};
-	return A2(elm$parser$Parser$loop, _List_Nil, helper);
-}();
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$Update = F2(
-	function (a, b) {
-		return {$: 0, a: a, b: b};
-	});
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$UpdateAll = F2(
-	function (a, b) {
-		return {$: 1, a: a, b: b};
-	});
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$CompareLink = F2(
-	function (a, b) {
-		return {$: 1, a: a, b: b};
-	});
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$CompareStat = F2(
-	function (a, b) {
-		return {$: 1, a: a, b: b};
-	});
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$HasLink = F2(
-	function (a, b) {
-		return {$: 2, a: a, b: b};
-	});
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$HasStat = F3(
-	function (a, b, c) {
-		return {$: 1, a: a, b: b, c: c};
-	});
 var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$HasTag = function (a) {
 	return {$: 0, a: a};
 };
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$Match = F2(
-	function (a, b) {
-		return {$: 0, a: a, b: b};
-	});
 var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$Not = function (a) {
 	return {$: 3, a: a};
 };
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$SpecificLink = function (a) {
-	return {$: 0, a: a};
-};
 var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$SpecificStat = function (a) {
 	return {$: 0, a: a};
-};
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$MatchAny = function (a) {
-	return {$: 1, a: a};
 };
 var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$selectorParser = elm$parser$Parser$oneOf(
 	_List_fromArray(
@@ -6757,884 +7133,6 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$queriesParse
 jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$cyclic$queriesParser = function () {
 	return jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$queriesParser;
 };
-var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$updateTargetParser = elm$parser$Parser$oneOf(
-	_List_fromArray(
-		[
-			A2(
-			elm$parser$Parser$map,
-			elm$core$Basics$always(
-				jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$Update('$')),
-			elm$parser$Parser$symbol('$')),
-			A2(elm$parser$Parser$map, jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$Update, jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$idParser),
-			A2(
-			elm$parser$Parser$keeper,
-			A2(
-				elm$parser$Parser$ignorer,
-				A2(
-					elm$parser$Parser$ignorer,
-					elm$parser$Parser$succeed(elm$core$Basics$identity),
-					elm$parser$Parser$symbol('(')),
-				elm$parser$Parser$symbol('*')),
-			A2(
-				elm$parser$Parser$ignorer,
-				A2(
-					elm$parser$Parser$map,
-					function (queries) {
-						return jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$UpdateAll(queries);
-					},
-					jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$queriesParser),
-				elm$parser$Parser$symbol(')')))
-		]));
-var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$changesParser = function () {
-	var toChange = F2(
-		function (selector, updates) {
-			return selector(updates);
-		});
-	return A2(
-		elm$parser$Parser$keeper,
-		A2(
-			elm$parser$Parser$keeper,
-			elm$parser$Parser$succeed(toChange),
-			jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$updateTargetParser),
-		jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$changeEntityParser);
-}();
-var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$ruleParser = function () {
-	var toRule = F3(
-		function (trigger, conditions, changes) {
-			return {R: changes, ah: conditions, ac: trigger};
-		});
-	var specificTriggerParser = A2(
-		elm$parser$Parser$keeper,
-		A2(
-			elm$parser$Parser$ignorer,
-			elm$parser$Parser$succeed(elm$core$Basics$identity),
-			elm$parser$Parser$token('\"')),
-		A2(
-			elm$parser$Parser$ignorer,
-			elm$parser$Parser$getChompedString(
-				elm$parser$Parser$chompUntil('\"')),
-			elm$parser$Parser$symbol('\"')));
-	var triggerParser = A2(
-		elm$parser$Parser$keeper,
-		A2(
-			elm$parser$Parser$ignorer,
-			A2(
-				elm$parser$Parser$ignorer,
-				A2(
-					elm$parser$Parser$ignorer,
-					elm$parser$Parser$succeed(elm$core$Basics$identity),
-					elm$parser$Parser$spaces),
-				elm$parser$Parser$oneOf(
-					_List_fromArray(
-						[
-							elm$parser$Parser$keyword('ON:'),
-							elm$parser$Parser$keyword('ON')
-						]))),
-			elm$parser$Parser$spaces),
-		A2(
-			elm$parser$Parser$ignorer,
-			elm$parser$Parser$oneOf(
-				_List_fromArray(
-					[
-						A2(elm$parser$Parser$map, jschomay$elm_narrative_engine$NarrativeEngine$Core$Rules$SpecificTrigger, specificTriggerParser),
-						A2(elm$parser$Parser$map, jschomay$elm_narrative_engine$NarrativeEngine$Core$Rules$EntityTrigger, jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$matcherParser)
-					])),
-			elm$parser$Parser$spaces));
-	var conditionsParser = A2(
-		elm$parser$Parser$keeper,
-		A2(
-			elm$parser$Parser$ignorer,
-			A2(
-				elm$parser$Parser$ignorer,
-				elm$parser$Parser$succeed(elm$core$Basics$identity),
-				elm$parser$Parser$oneOf(
-					_List_fromArray(
-						[
-							elm$parser$Parser$keyword('IF:'),
-							elm$parser$Parser$keyword('IF'),
-							elm$parser$Parser$succeed(0)
-						]))),
-			elm$parser$Parser$spaces),
-		A2(
-			elm$parser$Parser$loop,
-			_List_Nil,
-			function (acc) {
-				return elm$parser$Parser$oneOf(
-					_List_fromArray(
-						[
-							A2(
-							elm$parser$Parser$map,
-							function (_n1) {
-								return elm$parser$Parser$Done(
-									elm$core$List$reverse(acc));
-							},
-							A2(
-								elm$parser$Parser$ignorer,
-								elm$parser$Parser$oneOf(
-									_List_fromArray(
-										[
-											elm$parser$Parser$keyword('DO:'),
-											elm$parser$Parser$keyword('DO'),
-											elm$parser$Parser$end
-										])),
-								elm$parser$Parser$spaces)),
-							A2(
-							elm$parser$Parser$map,
-							function (condition) {
-								return elm$parser$Parser$Loop(
-									A2(elm$core$List$cons, condition, acc));
-							},
-							A2(elm$parser$Parser$ignorer, jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$matcherParser, elm$parser$Parser$spaces))
-						]));
-			}));
-	var changesParser_ = A2(
-		elm$parser$Parser$loop,
-		_List_Nil,
-		function (acc) {
-			return elm$parser$Parser$oneOf(
-				_List_fromArray(
-					[
-						A2(
-						elm$parser$Parser$map,
-						function (_n0) {
-							return elm$parser$Parser$Done(
-								elm$core$List$reverse(acc));
-						},
-						elm$parser$Parser$end),
-						A2(
-						elm$parser$Parser$map,
-						function (condition) {
-							return elm$parser$Parser$Loop(
-								A2(elm$core$List$cons, condition, acc));
-						},
-						A2(elm$parser$Parser$ignorer, jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$changesParser, elm$parser$Parser$spaces))
-					]));
-		});
-	return A2(
-		elm$parser$Parser$keeper,
-		A2(
-			elm$parser$Parser$keeper,
-			A2(
-				elm$parser$Parser$keeper,
-				elm$parser$Parser$succeed(toRule),
-				triggerParser),
-			conditionsParser),
-		changesParser_);
-}();
-var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$parseRule = F2(
-	function (extendFn, _n0) {
-		var source = _n0.a;
-		var extraFields = _n0.b;
-		return A2(
-			elm$core$Result$mapError,
-			jschomay$elm_narrative_engine$NarrativeEngine$Syntax$Helpers$deadEndsToString,
-			A2(
-				elm$core$Result$map,
-				extendFn(extraFields),
-				A2(
-					elm$parser$Parser$run,
-					A2(elm$parser$Parser$ignorer, jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$ruleParser, elm$parser$Parser$end),
-					source)));
-	});
-var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$parseRules = F2(
-	function (extendFn, rules) {
-		var displayError = F3(
-			function (k, v, e) {
-				return _Utils_Tuple2('Rule: ' + (k + ('\n' + (v.a + ' '))), e);
-			});
-		var addParsedRule = F3(
-			function (id, ruleSpec, acc) {
-				var _n0 = A2(jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$parseRule, extendFn, ruleSpec);
-				if (!_n0.$) {
-					var parsedRule = _n0.a;
-					return A2(
-						elm$core$Result$map,
-						A2(elm$core$Dict$insert, id, parsedRule),
-						acc);
-				} else {
-					var err = _n0.a;
-					if (!acc.$) {
-						return elm$core$Result$Err(
-							_List_fromArray(
-								[
-									A3(displayError, id, ruleSpec, err)
-								]));
-					} else {
-						var errors = acc.a;
-						return elm$core$Result$Err(
-							A2(
-								elm$core$List$cons,
-								A3(displayError, id, ruleSpec, err),
-								errors));
-					}
-				}
-			});
-		return A3(
-			elm$core$Dict$foldl,
-			addParsedRule,
-			elm$core$Result$Ok(elm$core$Dict$empty),
-			rules);
-	});
-var author$project$Preview$parseRules = function (rules) {
-	var addExtraEntityFields = F2(
-		function (_n1, _n2) {
-			var narrative = _n1.B;
-			var changes = _n2.R;
-			var conditions = _n2.ah;
-			var trigger = _n2.ac;
-			return {R: changes, ah: conditions, B: narrative, ac: trigger};
-		});
-	return A2(
-		jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$parseRules,
-		addExtraEntityFields,
-		elm$core$Dict$fromList(
-			A2(
-				elm$core$List$map,
-				function (_n0) {
-					var rule_id = _n0.Z;
-					var rule = _n0.Y;
-					var narrative = _n0.B;
-					return _Utils_Tuple2(
-						rule_id,
-						_Utils_Tuple2(
-							rule,
-							{B: narrative}));
-				},
-				rules)));
-};
-var elm$core$Basics$composeL = F3(
-	function (g, f, x) {
-		return g(
-			f(x));
-	});
-var elm$core$Platform$Sub$batch = _Platform_batch;
-var author$project$Preview$subscriptions = function (_n0) {
-	return elm$core$Platform$Sub$batch(
-		_List_fromArray(
-			[
-				author$project$Preview$addEntities(
-				A2(elm$core$Basics$composeL, author$project$Preview$AddEntities, author$project$Preview$parseEntities)),
-				author$project$Preview$addRules(
-				A2(elm$core$Basics$composeL, author$project$Preview$AddRules, author$project$Preview$parseRules))
-			]));
-};
-var elm$core$Dict$get = F2(
-	function (targetKey, dict) {
-		get:
-		while (true) {
-			if (dict.$ === -2) {
-				return elm$core$Maybe$Nothing;
-			} else {
-				var key = dict.b;
-				var value = dict.c;
-				var left = dict.d;
-				var right = dict.e;
-				var _n1 = A2(elm$core$Basics$compare, targetKey, key);
-				switch (_n1) {
-					case 0:
-						var $temp$targetKey = targetKey,
-							$temp$dict = left;
-						targetKey = $temp$targetKey;
-						dict = $temp$dict;
-						continue get;
-					case 1:
-						return elm$core$Maybe$Just(value);
-					default:
-						var $temp$targetKey = targetKey,
-							$temp$dict = right;
-						targetKey = $temp$targetKey;
-						dict = $temp$dict;
-						continue get;
-				}
-			}
-		}
-	});
-var elm$core$List$head = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return elm$core$Maybe$Just(x);
-	} else {
-		return elm$core$Maybe$Nothing;
-	}
-};
-var elm$core$List$filter = F2(
-	function (isGood, list) {
-		return A3(
-			elm$core$List$foldr,
-			F2(
-				function (x, xs) {
-					return isGood(x) ? A2(elm$core$List$cons, x, xs) : xs;
-				}),
-			_List_Nil,
-			list);
-	});
-var elm$core$String$trim = _String_trim;
-var elm$core$Array$fromListHelp = F3(
-	function (list, nodeList, nodeListSize) {
-		fromListHelp:
-		while (true) {
-			var _n0 = A2(elm$core$Elm$JsArray$initializeFromList, elm$core$Array$branchFactor, list);
-			var jsArray = _n0.a;
-			var remainingItems = _n0.b;
-			if (_Utils_cmp(
-				elm$core$Elm$JsArray$length(jsArray),
-				elm$core$Array$branchFactor) < 0) {
-				return A2(
-					elm$core$Array$builderToArray,
-					true,
-					{i: nodeList, e: nodeListSize, g: jsArray});
-			} else {
-				var $temp$list = remainingItems,
-					$temp$nodeList = A2(
-					elm$core$List$cons,
-					elm$core$Array$Leaf(jsArray),
-					nodeList),
-					$temp$nodeListSize = nodeListSize + 1;
-				list = $temp$list;
-				nodeList = $temp$nodeList;
-				nodeListSize = $temp$nodeListSize;
-				continue fromListHelp;
-			}
-		}
-	});
-var elm$core$Array$fromList = function (list) {
-	if (!list.b) {
-		return elm$core$Array$empty;
-	} else {
-		return A3(elm$core$Array$fromListHelp, list, _List_Nil, 0);
-	}
-};
-var elm$core$Bitwise$shiftRightZfBy = _Bitwise_shiftRightZfBy;
-var elm$core$Array$bitMask = 4294967295 >>> (32 - elm$core$Array$shiftStep);
-var elm$core$Bitwise$and = _Bitwise_and;
-var elm$core$Elm$JsArray$unsafeGet = _JsArray_unsafeGet;
-var elm$core$Array$getHelp = F3(
-	function (shift, index, tree) {
-		getHelp:
-		while (true) {
-			var pos = elm$core$Array$bitMask & (index >>> shift);
-			var _n0 = A2(elm$core$Elm$JsArray$unsafeGet, pos, tree);
-			if (!_n0.$) {
-				var subTree = _n0.a;
-				var $temp$shift = shift - elm$core$Array$shiftStep,
-					$temp$index = index,
-					$temp$tree = subTree;
-				shift = $temp$shift;
-				index = $temp$index;
-				tree = $temp$tree;
-				continue getHelp;
-			} else {
-				var values = _n0.a;
-				return A2(elm$core$Elm$JsArray$unsafeGet, elm$core$Array$bitMask & index, values);
-			}
-		}
-	});
-var elm$core$Bitwise$shiftLeftBy = _Bitwise_shiftLeftBy;
-var elm$core$Array$tailIndex = function (len) {
-	return (len >>> 5) << 5;
-};
-var elm$core$Basics$ge = _Utils_ge;
-var elm$core$Array$get = F2(
-	function (index, _n0) {
-		var len = _n0.a;
-		var startShift = _n0.b;
-		var tree = _n0.c;
-		var tail = _n0.d;
-		return ((index < 0) || (_Utils_cmp(index, len) > -1)) ? elm$core$Maybe$Nothing : ((_Utils_cmp(
-			index,
-			elm$core$Array$tailIndex(len)) > -1) ? elm$core$Maybe$Just(
-			A2(elm$core$Elm$JsArray$unsafeGet, elm$core$Array$bitMask & index, tail)) : elm$core$Maybe$Just(
-			A3(elm$core$Array$getHelp, startShift, index, tree)));
-	});
-var elm$core$Basics$min = F2(
-	function (x, y) {
-		return (_Utils_cmp(x, y) < 0) ? x : y;
-	});
-var elm$core$Basics$modBy = _Basics_modBy;
-var elm$core$List$all = F2(
-	function (isOkay, list) {
-		return !A2(
-			elm$core$List$any,
-			A2(elm$core$Basics$composeL, elm$core$Basics$not, isOkay),
-			list);
-	});
-var elm$core$List$isEmpty = function (xs) {
-	if (!xs.b) {
-		return true;
-	} else {
-		return false;
-	}
-};
-var elm$parser$Parser$Advanced$backtrackable = function (_n0) {
-	var parse = _n0;
-	return function (s0) {
-		var _n1 = parse(s0);
-		if (_n1.$ === 1) {
-			var x = _n1.b;
-			return A2(elm$parser$Parser$Advanced$Bad, false, x);
-		} else {
-			var a = _n1.b;
-			var s1 = _n1.c;
-			return A3(elm$parser$Parser$Advanced$Good, false, a, s1);
-		}
-	};
-};
-var elm$parser$Parser$backtrackable = elm$parser$Parser$Advanced$backtrackable;
-var elm$parser$Parser$Advanced$commit = function (a) {
-	return function (s) {
-		return A3(elm$parser$Parser$Advanced$Good, true, a, s);
-	};
-};
-var elm$parser$Parser$commit = elm$parser$Parser$Advanced$commit;
-var elm$parser$Parser$Advanced$lazy = function (thunk) {
-	return function (s) {
-		var _n0 = thunk(0);
-		var parse = _n0;
-		return parse(s);
-	};
-};
-var elm$parser$Parser$lazy = elm$parser$Parser$Advanced$lazy;
-var elm$random$Random$Seed = F2(
-	function (a, b) {
-		return {$: 0, a: a, b: b};
-	});
-var elm$random$Random$next = function (_n0) {
-	var state0 = _n0.a;
-	var incr = _n0.b;
-	return A2(elm$random$Random$Seed, ((state0 * 1664525) + incr) >>> 0, incr);
-};
-var elm$random$Random$initialSeed = function (x) {
-	var _n0 = elm$random$Random$next(
-		A2(elm$random$Random$Seed, 0, 1013904223));
-	var state1 = _n0.a;
-	var incr = _n0.b;
-	var state2 = (state1 + x) >>> 0;
-	return elm$random$Random$next(
-		A2(elm$random$Random$Seed, state2, incr));
-};
-var elm$random$Random$Generator = elm$core$Basics$identity;
-var elm$core$Bitwise$xor = _Bitwise_xor;
-var elm$random$Random$peel = function (_n0) {
-	var state = _n0.a;
-	var word = (state ^ (state >>> ((state >>> 28) + 4))) * 277803737;
-	return ((word >>> 22) ^ word) >>> 0;
-};
-var elm$random$Random$int = F2(
-	function (a, b) {
-		return function (seed0) {
-			var _n0 = (_Utils_cmp(a, b) < 0) ? _Utils_Tuple2(a, b) : _Utils_Tuple2(b, a);
-			var lo = _n0.a;
-			var hi = _n0.b;
-			var range = (hi - lo) + 1;
-			if (!((range - 1) & range)) {
-				return _Utils_Tuple2(
-					(((range - 1) & elm$random$Random$peel(seed0)) >>> 0) + lo,
-					elm$random$Random$next(seed0));
-			} else {
-				var threshhold = (((-range) >>> 0) % range) >>> 0;
-				var accountForBias = function (seed) {
-					accountForBias:
-					while (true) {
-						var x = elm$random$Random$peel(seed);
-						var seedN = elm$random$Random$next(seed);
-						if (_Utils_cmp(x, threshhold) < 0) {
-							var $temp$seed = seedN;
-							seed = $temp$seed;
-							continue accountForBias;
-						} else {
-							return _Utils_Tuple2((x % range) + lo, seedN);
-						}
-					}
-				};
-				return accountForBias(seed0);
-			}
-		};
-	});
-var elm$random$Random$step = F2(
-	function (_n0, seed) {
-		var generator = _n0;
-		return generator(seed);
-	});
-var elm$core$Dict$filter = F2(
-	function (isGood, dict) {
-		return A3(
-			elm$core$Dict$foldl,
-			F3(
-				function (k, v, d) {
-					return A2(isGood, k, v) ? A3(elm$core$Dict$insert, k, v, d) : d;
-				}),
-			elm$core$Dict$empty,
-			dict);
-	});
-var elm$core$Maybe$andThen = F2(
-	function (callback, maybeValue) {
-		if (!maybeValue.$) {
-			var value = maybeValue.a;
-			return callback(value);
-		} else {
-			return elm$core$Maybe$Nothing;
-		}
-	});
-var elm$core$Maybe$map2 = F3(
-	function (func, ma, mb) {
-		if (ma.$ === 1) {
-			return elm$core$Maybe$Nothing;
-		} else {
-			var a = ma.a;
-			if (mb.$ === 1) {
-				return elm$core$Maybe$Nothing;
-			} else {
-				var b = mb.a;
-				return elm$core$Maybe$Just(
-					A2(func, a, b));
-			}
-		}
-	});
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$hasStat = F5(
-	function (key, comparator, statMatcher, store, entity) {
-		if (!statMatcher.$) {
-			var value = statMatcher.a;
-			return function (actual) {
-				return _Utils_eq(
-					A2(elm$core$Basics$compare, actual, value),
-					comparator);
-			}(
-				A2(
-					elm$core$Maybe$withDefault,
-					0,
-					A2(elm$core$Dict$get, key, entity.aN)));
-		} else {
-			var compareID = statMatcher.a;
-			var compareKey = statMatcher.b;
-			return A2(
-				elm$core$Maybe$withDefault,
-				false,
-				A2(
-					elm$core$Maybe$map,
-					elm$core$Basics$eq(comparator),
-					A3(
-						elm$core$Maybe$map2,
-						elm$core$Basics$compare,
-						A2(elm$core$Dict$get, key, entity.aN),
-						A2(
-							elm$core$Maybe$andThen,
-							A2(
-								elm$core$Basics$composeR,
-								function ($) {
-									return $.aN;
-								},
-								elm$core$Dict$get(compareKey)),
-							A2(elm$core$Dict$get, compareID, store)))));
-		}
-	});
-var elm$core$Dict$member = F2(
-	function (key, dict) {
-		var _n0 = A2(elm$core$Dict$get, key, dict);
-		if (!_n0.$) {
-			return true;
-		} else {
-			return false;
-		}
-	});
-var elm$core$Set$member = F2(
-	function (key, _n0) {
-		var dict = _n0;
-		return A2(elm$core$Dict$member, key, dict);
-	});
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$hasTag = F2(
-	function (value, entity) {
-		return A2(elm$core$Set$member, value, entity.aQ);
-	});
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$findSpecific = F3(
-	function (id, queries, store) {
-		var matchesQueries = function (entity) {
-			return A2(
-				elm$core$List$all,
-				function (q) {
-					return A3(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$queryFn, q, store, entity);
-				},
-				queries) ? _List_fromArray(
-				[
-					_Utils_Tuple2(id, entity)
-				]) : _List_Nil;
-		};
-		return A2(
-			elm$core$Maybe$withDefault,
-			_List_Nil,
-			A2(
-				elm$core$Maybe$map,
-				matchesQueries,
-				A2(elm$core$Dict$get, id, store)));
-	});
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$hasLink = F4(
-	function (key, linkMatcher, store, entity) {
-		var assertMatch = F2(
-			function (matcher, actualID) {
-				if (!matcher.$) {
-					var expectedID = matcher.a;
-					var qs = matcher.b;
-					return _Utils_eq(expectedID, actualID) && (!elm$core$List$isEmpty(
-						A3(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$findSpecific, actualID, qs, store)));
-				} else {
-					var qs = matcher.a;
-					return !elm$core$List$isEmpty(
-						A3(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$findSpecific, actualID, qs, store));
-				}
-			});
-		if (!linkMatcher.$) {
-			var entityMatcher = linkMatcher.a;
-			return A2(
-				elm$core$Maybe$withDefault,
-				false,
-				A2(
-					elm$core$Maybe$map,
-					assertMatch(entityMatcher),
-					A2(elm$core$Dict$get, key, entity.av)));
-		} else {
-			var compareID = linkMatcher.a;
-			var compareKey = linkMatcher.b;
-			return A2(
-				elm$core$Maybe$withDefault,
-				false,
-				A3(
-					elm$core$Maybe$map2,
-					elm$core$Basics$eq,
-					A2(elm$core$Dict$get, key, entity.av),
-					A2(
-						elm$core$Maybe$andThen,
-						A2(
-							elm$core$Basics$composeR,
-							function ($) {
-								return $.av;
-							},
-							elm$core$Dict$get(compareKey)),
-						A2(elm$core$Dict$get, compareID, store))));
-		}
-	});
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$queryFn = F2(
-	function (q, store) {
-		switch (q.$) {
-			case 0:
-				var value = q.a;
-				return jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$hasTag(value);
-			case 1:
-				var key = q.a;
-				var comparator = q.b;
-				var value = q.c;
-				return A4(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$hasStat, key, comparator, value, store);
-			case 2:
-				var key = q.a;
-				var value = q.b;
-				return A3(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$hasLink, key, value, store);
-			default:
-				var nestedQuery = q.a;
-				return A2(
-					elm$core$Basics$composeL,
-					elm$core$Basics$not,
-					A2(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$queryFn, nestedQuery, store));
-		}
-	});
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$findGeneral = F2(
-	function (queries, store) {
-		var gatherMatches = F2(
-			function (id, entity) {
-				return A2(
-					elm$core$List$all,
-					function (q) {
-						return A3(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$queryFn, q, store, entity);
-					},
-					queries);
-			});
-		return elm$core$Dict$toList(
-			A2(elm$core$Dict$filter, gatherMatches, store));
-	});
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$query = F2(
-	function (matcher, store) {
-		if (!matcher.$) {
-			var id = matcher.a;
-			var queries = matcher.b;
-			return A3(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$findSpecific, id, queries, store);
-		} else {
-			var queries = matcher.a;
-			return A2(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$findGeneral, queries, store);
-		}
-	});
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$replaceTrigger = F2(
-	function (trigger, matcher) {
-		var replaceInSelector = function (id) {
-			return (id === '$') ? trigger : id;
-		};
-		var replaceInQuery = function (q) {
-			_n1$3:
-			while (true) {
-				switch (q.$) {
-					case 1:
-						if ((q.c.$ === 1) && (q.c.a === '$')) {
-							var key = q.a;
-							var comparison = q.b;
-							var _n3 = q.c;
-							var compareKey = _n3.b;
-							return A3(
-								jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$HasStat,
-								key,
-								comparison,
-								A2(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$CompareStat, trigger, compareKey));
-						} else {
-							break _n1$3;
-						}
-					case 2:
-						if (!q.b.$) {
-							if ((!q.b.a.$) && (q.b.a.a === '$')) {
-								var key = q.a;
-								var _n2 = q.b.a;
-								var queries = _n2.b;
-								return A2(
-									jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$HasLink,
-									key,
-									jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$SpecificLink(
-										A2(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$Match, trigger, queries)));
-							} else {
-								break _n1$3;
-							}
-						} else {
-							if (q.b.a === '$') {
-								var key = q.a;
-								var _n4 = q.b;
-								var compareKey = _n4.b;
-								return A2(
-									jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$HasLink,
-									key,
-									A2(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$CompareLink, trigger, compareKey));
-							} else {
-								break _n1$3;
-							}
-						}
-					default:
-						break _n1$3;
-				}
-			}
-			return q;
-		};
-		if (matcher.$ === 1) {
-			var queries = matcher.a;
-			return jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$MatchAny(
-				A2(elm$core$List$map, replaceInQuery, queries));
-		} else {
-			var id = matcher.a;
-			var queries = matcher.b;
-			return A2(
-				jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$Match,
-				replaceInSelector(id),
-				A2(elm$core$List$map, replaceInQuery, queries));
-		}
-	});
-var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$Helpers$sequence = function (list) {
-	return A3(
-		elm$core$List$foldl,
-		F2(
-			function (r, acc) {
-				if (!r.$) {
-					var a = r.a;
-					return A2(
-						elm$core$Result$map,
-						elm$core$List$cons(a),
-						acc);
-				} else {
-					var e = r.a;
-					return elm$core$Result$Err(e);
-				}
-			}),
-		elm$core$Result$Ok(_List_Nil),
-		list);
-};
-var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$Helpers$parseMultiple = F2(
-	function (parser, strings) {
-		return jschomay$elm_narrative_engine$NarrativeEngine$Syntax$Helpers$sequence(
-			A2(elm$core$List$map, parser, strings));
-	});
-var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$Looping = 1;
-var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$Randomly = 2;
-var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$Sticking = 0;
-var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$break = elm$parser$Parser$symbol('|');
-var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$close = elm$parser$Parser$symbol('}');
-var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$open = elm$parser$Parser$symbol('{');
-var elm$core$String$replace = F3(
-	function (before, after, string) {
-		return A2(
-			elm$core$String$join,
-			after,
-			A2(elm$core$String$split, before, string));
-	});
-var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$fromResult = function (res) {
-	if (!res.$) {
-		var s = res.a;
-		return elm$parser$Parser$succeed(s);
-	} else {
-		var e = res.a;
-		return elm$parser$Parser$problem(e);
-	}
-};
-var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$propertyText = function (config) {
-	var keywords = A2(
-		elm$core$List$map,
-		function (_n0) {
-			var propName = _n0.a;
-			var fn = _n0.b;
-			return A2(
-				elm$parser$Parser$ignorer,
-				elm$parser$Parser$succeed(fn),
-				elm$parser$Parser$keyword(propName));
-		},
-		elm$core$Dict$toList(config.bb));
-	var getProp = F2(
-		function (id, propFn) {
-			return propFn(
-				A3(elm$core$String$replace, '$', config.ac, id));
-		});
-	return A2(
-		elm$parser$Parser$andThen,
-		jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$fromResult,
-		A2(
-			elm$parser$Parser$keeper,
-			A2(
-				elm$parser$Parser$keeper,
-				elm$parser$Parser$succeed(getProp),
-				A2(
-					elm$parser$Parser$ignorer,
-					A2(
-						elm$parser$Parser$andThen,
-						jschomay$elm_narrative_engine$NarrativeEngine$Syntax$Helpers$notEmpty,
-						elm$parser$Parser$getChompedString(
-							elm$parser$Parser$chompWhile(
-								function (c) {
-									return !A2(
-										elm$core$List$member,
-										c,
-										_List_fromArray(
-											['{', '.', '|', '}']));
-								}))),
-					elm$parser$Parser$symbol('.'))),
-			A2(
-				elm$parser$Parser$ignorer,
-				elm$parser$Parser$oneOf(keywords),
-				jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$close)));
-};
-var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$notReserved = function (_char) {
-	return !A2(
-		elm$core$List$member,
-		_char,
-		_List_fromArray(
-			['{', '}', '|']));
-};
-var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$staticText = A2(
-	elm$parser$Parser$andThen,
-	jschomay$elm_narrative_engine$NarrativeEngine$Syntax$Helpers$notEmpty,
-	elm$parser$Parser$getChompedString(
-		A2(
-			elm$parser$Parser$ignorer,
-			elm$parser$Parser$succeed(0),
-			elm$parser$Parser$chompWhile(jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$notReserved))));
 var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$parseMatcher = function (text) {
 	return A2(
 		elm$core$Result$mapError,
@@ -7897,6 +7395,585 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$top = f
 		jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$parseText(config),
 		elm$parser$Parser$end);
 };
+var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$parseMany = function (content) {
+	var emptyConfig = {a$: 0, bb: elm$core$Dict$empty, ac: '', h: elm$core$Dict$empty};
+	var displayError = F3(
+		function (k, v, e) {
+			return _Utils_Tuple2(
+				'Narrative content: ' + (k + ('\n' + (v + ' '))),
+				jschomay$elm_narrative_engine$NarrativeEngine$Syntax$Helpers$deadEndsToString(e));
+		});
+	return A3(
+		elm$core$Dict$foldl,
+		F3(
+			function (k, v, acc) {
+				var _n0 = A2(
+					elm$parser$Parser$run,
+					jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$top(emptyConfig),
+					v);
+				if (!_n0.$) {
+					return acc;
+				} else {
+					var e = _n0.a;
+					if (!acc.$) {
+						return elm$core$Result$Err(
+							_List_fromArray(
+								[
+									A3(displayError, k, v, e)
+								]));
+					} else {
+						var errors = acc.a;
+						return elm$core$Result$Err(
+							A2(
+								elm$core$List$cons,
+								A3(displayError, k, v, e),
+								errors));
+					}
+				}
+			}),
+		elm$core$Result$Ok(0),
+		content);
+};
+var author$project$Preview$parseEntities = function (entities) {
+	var parsedDescriptions = jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$parseMany(
+		elm$core$Dict$fromList(
+			A2(
+				elm$core$List$map,
+				function (_n3) {
+					var entity = _n3.R;
+					var description = _n3.s;
+					return _Utils_Tuple2(entity, description);
+				},
+				entities)));
+	var addExtraEntityFields = F2(
+		function (_n1, _n2) {
+			var description = _n1.s;
+			var name = _n1.o;
+			var tags = _n2.aQ;
+			var stats = _n2.aN;
+			var links = _n2.av;
+			return {s: description, av: links, o: name, aN: stats, aQ: tags};
+		});
+	var parsedEntities = A2(
+		jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$parseMany,
+		addExtraEntityFields,
+		A2(
+			elm$core$List$map,
+			function (_n0) {
+				var entity = _n0.R;
+				var description = _n0.s;
+				var name = _n0.o;
+				return _Utils_Tuple2(
+					entity,
+					{s: description, o: name});
+			},
+			entities));
+	return A2(
+		elm$core$Result$andThen,
+		elm$core$Basics$always(parsedEntities),
+		parsedDescriptions);
+};
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$Rules$EntityTrigger = function (a) {
+	return {$: 1, a: a};
+};
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$Rules$SpecificTrigger = function (a) {
+	return {$: 0, a: a};
+};
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$AddTag = function (a) {
+	return {$: 0, a: a};
+};
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$DecStat = F2(
+	function (a, b) {
+		return {$: 4, a: a, b: b};
+	});
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$IncStat = F2(
+	function (a, b) {
+		return {$: 3, a: a, b: b};
+	});
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$LookUpLinkTarget = F2(
+	function (a, b) {
+		return {$: 1, a: a, b: b};
+	});
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$RemoveTag = function (a) {
+	return {$: 1, a: a};
+};
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$SetLink = F2(
+	function (a, b) {
+		return {$: 5, a: a, b: b};
+	});
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$SetStat = F2(
+	function (a, b) {
+		return {$: 2, a: a, b: b};
+	});
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$SpecificLinkTarget = function (a) {
+	return {$: 0, a: a};
+};
+var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$changeEntityParser = function () {
+	var toUpdateEntity = F3(
+		function (acc, propName, updateConstructor) {
+			return elm$parser$Parser$Loop(
+				A2(
+					elm$core$List$cons,
+					updateConstructor(propName),
+					acc));
+		});
+	var lookupParser = function (mapper) {
+		return A2(
+			elm$parser$Parser$keeper,
+			A2(
+				elm$parser$Parser$keeper,
+				A2(
+					elm$parser$Parser$ignorer,
+					A2(
+						elm$parser$Parser$ignorer,
+						elm$parser$Parser$succeed(mapper),
+						elm$parser$Parser$keyword('(link')),
+					elm$parser$Parser$chompWhile(
+						elm$core$Basics$eq(' '))),
+				A2(
+					elm$parser$Parser$ignorer,
+					elm$parser$Parser$oneOf(
+						_List_fromArray(
+							[
+								A2(
+								elm$parser$Parser$map,
+								elm$core$Basics$always('$'),
+								elm$parser$Parser$token('$')),
+								jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$idParser
+							])),
+					elm$parser$Parser$symbol('.'))),
+			A2(
+				elm$parser$Parser$ignorer,
+				jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$propertyNameParser,
+				elm$parser$Parser$symbol(')')));
+	};
+	var helper = function (acc) {
+		return elm$parser$Parser$oneOf(
+			_List_fromArray(
+				[
+					A2(
+					elm$parser$Parser$keeper,
+					A2(
+						elm$parser$Parser$ignorer,
+						A2(
+							elm$parser$Parser$ignorer,
+							elm$parser$Parser$succeed(elm$core$Basics$identity),
+							elm$parser$Parser$chompWhile(
+								elm$core$Basics$eq(' '))),
+						elm$parser$Parser$symbol('.')),
+					elm$parser$Parser$oneOf(
+						_List_fromArray(
+							[
+								A2(
+								elm$parser$Parser$keeper,
+								A2(
+									elm$parser$Parser$ignorer,
+									elm$parser$Parser$succeed(
+										function (t) {
+											return elm$parser$Parser$Loop(
+												A2(
+													elm$core$List$cons,
+													jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$RemoveTag(t),
+													acc));
+										}),
+									elm$parser$Parser$symbol('-')),
+								jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$propertyNameParser),
+								A2(
+								elm$parser$Parser$keeper,
+								A2(
+									elm$parser$Parser$keeper,
+									elm$parser$Parser$succeed(
+										toUpdateEntity(acc)),
+									jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$propertyNameParser),
+								elm$parser$Parser$oneOf(
+									_List_fromArray(
+										[
+											A2(
+											elm$parser$Parser$keeper,
+											A2(
+												elm$parser$Parser$ignorer,
+												elm$parser$Parser$succeed(elm$core$Basics$identity),
+												elm$parser$Parser$symbol('+')),
+											A2(
+												elm$parser$Parser$map,
+												function (n) {
+													return function (key) {
+														return A2(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$IncStat, key, n);
+													};
+												},
+												jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$numberParser)),
+											A2(
+											elm$parser$Parser$keeper,
+											A2(
+												elm$parser$Parser$ignorer,
+												elm$parser$Parser$succeed(elm$core$Basics$identity),
+												elm$parser$Parser$symbol('-')),
+											A2(
+												elm$parser$Parser$map,
+												function (n) {
+													return function (key) {
+														return A2(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$DecStat, key, n);
+													};
+												},
+												jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$numberParser)),
+											A2(
+											elm$parser$Parser$keeper,
+											A2(
+												elm$parser$Parser$ignorer,
+												elm$parser$Parser$succeed(elm$core$Basics$identity),
+												elm$parser$Parser$symbol('=')),
+											elm$parser$Parser$oneOf(
+												_List_fromArray(
+													[
+														A2(
+														elm$parser$Parser$map,
+														function (n) {
+															return function (key) {
+																return A2(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$SetStat, key, n);
+															};
+														},
+														jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$numberParser),
+														A2(
+														elm$parser$Parser$map,
+														function (_n0) {
+															return function (key) {
+																return A2(
+																	jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$SetLink,
+																	key,
+																	jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$SpecificLinkTarget('$'));
+															};
+														},
+														elm$parser$Parser$symbol('$')),
+														A2(
+														elm$parser$Parser$map,
+														function (id) {
+															return function (key) {
+																return A2(
+																	jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$SetLink,
+																	key,
+																	jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$SpecificLinkTarget(id));
+															};
+														},
+														jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$idParser),
+														lookupParser(
+														F3(
+															function (lookupID, lookupKey, key) {
+																return A2(
+																	jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$SetLink,
+																	key,
+																	A2(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$LookUpLinkTarget, lookupID, lookupKey));
+															}))
+													]))),
+											elm$parser$Parser$succeed(
+											function (t) {
+												return jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$AddTag(t);
+											})
+										])))
+							]))),
+					elm$parser$Parser$succeed(
+					elm$parser$Parser$Done(acc))
+				]));
+	};
+	return A2(elm$parser$Parser$loop, _List_Nil, helper);
+}();
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$Update = F2(
+	function (a, b) {
+		return {$: 0, a: a, b: b};
+	});
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$UpdateAll = F2(
+	function (a, b) {
+		return {$: 1, a: a, b: b};
+	});
+var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$updateTargetParser = elm$parser$Parser$oneOf(
+	_List_fromArray(
+		[
+			A2(
+			elm$parser$Parser$map,
+			elm$core$Basics$always(
+				jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$Update('$')),
+			elm$parser$Parser$symbol('$')),
+			A2(elm$parser$Parser$map, jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$Update, jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$idParser),
+			A2(
+			elm$parser$Parser$keeper,
+			A2(
+				elm$parser$Parser$ignorer,
+				A2(
+					elm$parser$Parser$ignorer,
+					elm$parser$Parser$succeed(elm$core$Basics$identity),
+					elm$parser$Parser$symbol('(')),
+				elm$parser$Parser$symbol('*')),
+			A2(
+				elm$parser$Parser$ignorer,
+				A2(
+					elm$parser$Parser$map,
+					function (queries) {
+						return jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$UpdateAll(queries);
+					},
+					jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$queriesParser),
+				elm$parser$Parser$symbol(')')))
+		]));
+var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$changesParser = function () {
+	var toChange = F2(
+		function (selector, updates) {
+			return selector(updates);
+		});
+	return A2(
+		elm$parser$Parser$keeper,
+		A2(
+			elm$parser$Parser$keeper,
+			elm$parser$Parser$succeed(toChange),
+			jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$updateTargetParser),
+		jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$changeEntityParser);
+}();
+var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$ruleParser = function () {
+	var toRule = F3(
+		function (trigger, conditions, changes) {
+			return {T: changes, ah: conditions, ac: trigger};
+		});
+	var specificTriggerParser = A2(
+		elm$parser$Parser$keeper,
+		A2(
+			elm$parser$Parser$ignorer,
+			elm$parser$Parser$succeed(elm$core$Basics$identity),
+			elm$parser$Parser$token('\"')),
+		A2(
+			elm$parser$Parser$ignorer,
+			elm$parser$Parser$getChompedString(
+				elm$parser$Parser$chompUntil('\"')),
+			elm$parser$Parser$symbol('\"')));
+	var triggerParser = A2(
+		elm$parser$Parser$keeper,
+		A2(
+			elm$parser$Parser$ignorer,
+			A2(
+				elm$parser$Parser$ignorer,
+				A2(
+					elm$parser$Parser$ignorer,
+					elm$parser$Parser$succeed(elm$core$Basics$identity),
+					elm$parser$Parser$spaces),
+				elm$parser$Parser$oneOf(
+					_List_fromArray(
+						[
+							elm$parser$Parser$keyword('ON:'),
+							elm$parser$Parser$keyword('ON')
+						]))),
+			elm$parser$Parser$spaces),
+		A2(
+			elm$parser$Parser$ignorer,
+			elm$parser$Parser$oneOf(
+				_List_fromArray(
+					[
+						A2(elm$parser$Parser$map, jschomay$elm_narrative_engine$NarrativeEngine$Core$Rules$SpecificTrigger, specificTriggerParser),
+						A2(elm$parser$Parser$map, jschomay$elm_narrative_engine$NarrativeEngine$Core$Rules$EntityTrigger, jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$matcherParser)
+					])),
+			elm$parser$Parser$spaces));
+	var conditionsParser = A2(
+		elm$parser$Parser$keeper,
+		A2(
+			elm$parser$Parser$ignorer,
+			A2(
+				elm$parser$Parser$ignorer,
+				elm$parser$Parser$succeed(elm$core$Basics$identity),
+				elm$parser$Parser$oneOf(
+					_List_fromArray(
+						[
+							elm$parser$Parser$keyword('IF:'),
+							elm$parser$Parser$keyword('IF'),
+							elm$parser$Parser$succeed(0)
+						]))),
+			elm$parser$Parser$spaces),
+		A2(
+			elm$parser$Parser$loop,
+			_List_Nil,
+			function (acc) {
+				return elm$parser$Parser$oneOf(
+					_List_fromArray(
+						[
+							A2(
+							elm$parser$Parser$map,
+							function (_n1) {
+								return elm$parser$Parser$Done(
+									elm$core$List$reverse(acc));
+							},
+							A2(
+								elm$parser$Parser$ignorer,
+								elm$parser$Parser$oneOf(
+									_List_fromArray(
+										[
+											elm$parser$Parser$keyword('DO:'),
+											elm$parser$Parser$keyword('DO'),
+											elm$parser$Parser$end
+										])),
+								elm$parser$Parser$spaces)),
+							A2(
+							elm$parser$Parser$map,
+							function (condition) {
+								return elm$parser$Parser$Loop(
+									A2(elm$core$List$cons, condition, acc));
+							},
+							A2(elm$parser$Parser$ignorer, jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$matcherParser, elm$parser$Parser$spaces))
+						]));
+			}));
+	var changesParser_ = A2(
+		elm$parser$Parser$loop,
+		_List_Nil,
+		function (acc) {
+			return elm$parser$Parser$oneOf(
+				_List_fromArray(
+					[
+						A2(
+						elm$parser$Parser$map,
+						function (_n0) {
+							return elm$parser$Parser$Done(
+								elm$core$List$reverse(acc));
+						},
+						elm$parser$Parser$end),
+						A2(
+						elm$parser$Parser$map,
+						function (condition) {
+							return elm$parser$Parser$Loop(
+								A2(elm$core$List$cons, condition, acc));
+						},
+						A2(elm$parser$Parser$ignorer, jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$changesParser, elm$parser$Parser$spaces))
+					]));
+		});
+	return A2(
+		elm$parser$Parser$keeper,
+		A2(
+			elm$parser$Parser$keeper,
+			A2(
+				elm$parser$Parser$keeper,
+				elm$parser$Parser$succeed(toRule),
+				triggerParser),
+			conditionsParser),
+		changesParser_);
+}();
+var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$parseRule = F2(
+	function (extendFn, _n0) {
+		var source = _n0.a;
+		var extraFields = _n0.b;
+		return A2(
+			elm$core$Result$mapError,
+			jschomay$elm_narrative_engine$NarrativeEngine$Syntax$Helpers$deadEndsToString,
+			A2(
+				elm$core$Result$map,
+				extendFn(extraFields),
+				A2(
+					elm$parser$Parser$run,
+					A2(elm$parser$Parser$ignorer, jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$ruleParser, elm$parser$Parser$end),
+					source)));
+	});
+var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$parseRules = F2(
+	function (extendFn, rules) {
+		var displayError = F3(
+			function (k, v, e) {
+				return _Utils_Tuple2('Rule: ' + (k + ('\n' + (v.a + ' '))), e);
+			});
+		var addParsedRule = F3(
+			function (id, ruleSpec, acc) {
+				var _n0 = A2(jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$parseRule, extendFn, ruleSpec);
+				if (!_n0.$) {
+					var parsedRule = _n0.a;
+					return A2(
+						elm$core$Result$map,
+						A2(elm$core$Dict$insert, id, parsedRule),
+						acc);
+				} else {
+					var err = _n0.a;
+					if (!acc.$) {
+						return elm$core$Result$Err(
+							_List_fromArray(
+								[
+									A3(displayError, id, ruleSpec, err)
+								]));
+					} else {
+						var errors = acc.a;
+						return elm$core$Result$Err(
+							A2(
+								elm$core$List$cons,
+								A3(displayError, id, ruleSpec, err),
+								errors));
+					}
+				}
+			});
+		return A3(
+			elm$core$Dict$foldl,
+			addParsedRule,
+			elm$core$Result$Ok(elm$core$Dict$empty),
+			rules);
+	});
+var author$project$Preview$parseRules = function (rules) {
+	var parsedNarratives = jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$parseMany(
+		elm$core$Dict$fromList(
+			A2(
+				elm$core$List$map,
+				function (_n3) {
+					var rule_id = _n3.S;
+					var narrative = _n3.x;
+					return _Utils_Tuple2(rule_id, narrative);
+				},
+				rules)));
+	var addExtraEntityFields = F2(
+		function (_n1, _n2) {
+			var narrative = _n1.x;
+			var changes = _n2.T;
+			var conditions = _n2.ah;
+			var trigger = _n2.ac;
+			return {T: changes, ah: conditions, x: narrative, ac: trigger};
+		});
+	var parsedRules = A2(
+		jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$parseRules,
+		addExtraEntityFields,
+		elm$core$Dict$fromList(
+			A2(
+				elm$core$List$map,
+				function (_n0) {
+					var rule_id = _n0.S;
+					var rule = _n0.Z;
+					var narrative = _n0.x;
+					return _Utils_Tuple2(
+						rule_id,
+						_Utils_Tuple2(
+							rule,
+							{x: narrative}));
+				},
+				rules)));
+	return A2(
+		elm$core$Result$andThen,
+		elm$core$Basics$always(parsedRules),
+		parsedNarratives);
+};
+var elm$core$Platform$Sub$batch = _Platform_batch;
+var author$project$Preview$subscriptions = function (_n0) {
+	return elm$core$Platform$Sub$batch(
+		_List_fromArray(
+			[
+				author$project$Preview$addEntities(
+				A2(elm$core$Basics$composeL, author$project$Preview$AddEntities, author$project$Preview$parseEntities)),
+				author$project$Preview$addRules(
+				A2(elm$core$Basics$composeL, author$project$Preview$AddRules, author$project$Preview$parseRules))
+			]));
+};
+var elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return elm$core$Maybe$Just(x);
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2(elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
 var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$parse = F2(
 	function (config, text) {
 		var _n0 = A2(
@@ -7933,7 +8010,7 @@ var author$project$Preview$getDescription = F3(
 						A2(
 							elm$core$Maybe$map,
 							function ($) {
-								return $.v;
+								return $.s;
 							},
 							A2(elm$core$Dict$get, entityID, worldModel_))))));
 	});
@@ -8619,14 +8696,14 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Debug$setLastInteractionId = F
 		var state = _n0;
 		return _Utils_update(
 			state,
-			{T: id});
+			{U: id});
 	});
 var jschomay$elm_narrative_engine$NarrativeEngine$Debug$setLastMatchedRuleId = F2(
 	function (id, _n0) {
 		var state = _n0;
 		return _Utils_update(
 			state,
-			{U: id});
+			{V: id});
 	});
 var jschomay$elm_narrative_engine$NarrativeEngine$Debug$updateSearch = F2(
 	function (text, _n0) {
@@ -8644,8 +8721,8 @@ var author$project$Preview$update = F2(
 				if (!_n1.$) {
 					var _n2 = _n1.a;
 					var matchedRuleID = _n2.a;
-					var changes = _n2.b.R;
-					var narrative = _n2.b.B;
+					var changes = _n2.b.T;
+					var narrative = _n2.b.x;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -8654,7 +8731,7 @@ var author$project$Preview$update = F2(
 									jschomay$elm_narrative_engine$NarrativeEngine$Debug$setLastInteractionId,
 									trigger,
 									A2(jschomay$elm_narrative_engine$NarrativeEngine$Debug$setLastMatchedRuleId, matchedRuleID, model.r)),
-								y: A3(
+								z: A3(
 									elm$core$Dict$update,
 									matchedRuleID,
 									A2(
@@ -8665,14 +8742,14 @@ var author$project$Preview$update = F2(
 											elm$core$Basics$composeR,
 											elm$core$Maybe$withDefault(1),
 											elm$core$Maybe$Just)),
-									model.y),
+									model.z),
 								N: A2(
 									elm$core$Maybe$withDefault,
 									'ERROR parsing narrative content for ' + matchedRuleID,
 									elm$core$List$head(
 										A2(
 											jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$parse,
-											A4(author$project$Preview$makeConfig, trigger, matchedRuleID, model.y, model.h),
+											A4(author$project$Preview$makeConfig, trigger, matchedRuleID, model.z, model.h),
 											narrative))),
 								h: A3(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$applyChanges, changes, trigger, model.h)
 							}),
@@ -8686,7 +8763,7 @@ var author$project$Preview$update = F2(
 									jschomay$elm_narrative_engine$NarrativeEngine$Debug$setLastInteractionId,
 									trigger,
 									A2(jschomay$elm_narrative_engine$NarrativeEngine$Debug$setLastMatchedRuleId, trigger, model.r)),
-								y: A3(
+								z: A3(
 									elm$core$Dict$update,
 									trigger,
 									A2(
@@ -8697,10 +8774,10 @@ var author$project$Preview$update = F2(
 											elm$core$Basics$composeR,
 											elm$core$Maybe$withDefault(1),
 											elm$core$Maybe$Just)),
-									model.y),
+									model.z),
 								N: A3(
 									author$project$Preview$getDescription,
-									A4(author$project$Preview$makeConfig, trigger, trigger, model.y, model.h),
+									A4(author$project$Preview$makeConfig, trigger, trigger, model.z, model.h),
 									trigger,
 									model.h)
 							}),
@@ -8910,8 +8987,8 @@ var elm$html$Html$Events$onInput = function (tagger) {
 };
 var jschomay$elm_narrative_engine$NarrativeEngine$Debug$debugBar = F3(
 	function (msg, worldModel, _n0) {
-		var lastInteractionId = _n0.T;
-		var lastMatchedRuleId = _n0.U;
+		var lastInteractionId = _n0.U;
+		var lastMatchedRuleId = _n0.V;
 		var searchText = _n0._;
 		var fuzzyMatch = F2(
 			function (search, text) {
