@@ -6,17 +6,25 @@ window.ENE.Projects = {
     const $newProjectModal = $("#new-project-modal");
 
     // fetch projects
-    firebase
+    let ownerQuery = firebase
       .firestore()
       .collection("projects")
-      .where("owner", "==", user.uid)
-      .get()
-      .then((snapshot) => {
+      .where("owner", "==", user.email)
+      .get();
+    let collaboratorQuery = firebase
+      .firestore()
+      .collection("projects")
+      .where("collaborators", "array-contains", user.email)
+      .get();
+
+    Promise.all([ownerQuery, collaboratorQuery])
+      .then(([ownerSnapshot, collaboratorSnapshot]) => {
         $projects.empty();
-        snapshot.forEach(renderProject);
+        ownerSnapshot.forEach(renderProject);
+        collaboratorSnapshot.forEach(renderProject);
       })
       .catch((e) => {
-        console.error(e);
+        console.error("Error loading projects", e);
       });
 
     $("#create-new-project").click(function () {
@@ -32,7 +40,7 @@ window.ENE.Projects = {
           name,
           description,
           public: false,
-          owner: user.uid,
+          owner: user.email,
           collaborators: []
         })
         .then((doc) => {
