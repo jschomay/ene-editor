@@ -44,7 +44,9 @@ window.ENE.Editor = {
       })
       .catch((e) => {
         console.error(e);
-        window.location.href = window.location.origin + "/projects.html";
+        window.location.href =
+          location.href.slice(0, location.href.lastIndexOf("/") + 1) +
+          "projects.html";
       });
 
     // fetch and import manifest data

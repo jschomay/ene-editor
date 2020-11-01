@@ -42,8 +42,9 @@ window.ENE.Projects = {
           $(this).attr("disabled", false);
           $(this).text(originalButtonText);
           $newProjectModal.modal("hide");
-
-          window.location.href = `/edit.html?id=${doc.id}`;
+          window.location.href =
+            location.href.slice(0, location.href.lastIndexOf("/") + 1) +
+            `edit.html?id=${doc.id}`;
         })
         .catch((e) => {
           console.error("Error creating project", e);

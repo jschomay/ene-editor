@@ -20,6 +20,8 @@ firebase.auth().onAuthStateChanged(function (user) {
     // call page specific onAuth
     window.onAuth && window.onAuth(user);
   } else {
-    window.location.href = window.location.origin + "/sign-in.html";
+    window.location.href =
+      location.href.slice(0, location.href.lastIndexOf("/") + 1) +
+      "sign-in.html";
   }
 });
