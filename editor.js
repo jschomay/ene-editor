@@ -27,6 +27,25 @@ window.ENE.Editor = {
         window.open("preview.html?id=" + projectId, "_blank")
       );
 
+    document.querySelector("#save-settings").addEventListener("click", (e) => {
+      e.preventDefault();
+
+      projectRef
+        .update({
+          name: $("#projectName").val(),
+          description: $("#projectDescription").val(),
+          collaborators: $("#projectCollaborators")
+            .val()
+            .split(",")
+            .map((x) => x.trim()),
+          public: $("#projectPublic").prop("checked")
+        })
+        .then(() => {
+          alert("Settings have been saved.");
+        })
+        .catch((e) => console.error(e));
+    });
+
     const projectRef = firebase
       .firestore()
       .collection("projects")
@@ -41,6 +60,12 @@ window.ENE.Editor = {
         let name = doc.data().name;
         $("#project-title").text(`Editing "${name}"`);
         document.title += ` - editing "${name}"`;
+
+        // populate settings
+        $("#projectName").val(name);
+        $("#projectDescription").val(doc.data().description);
+        $("#projectCollaborators").val(doc.data().collaborators.join(", "));
+        $("#projectPublic").prop("checked", doc.data().public);
       })
       .catch((e) => {
         console.error(e);
