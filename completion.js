@@ -1,3 +1,4 @@
+window.ENE = window.ENE || {};
 window.ENE.Completion = (() => {
   var entities = new Set();
   var properties = new Set();

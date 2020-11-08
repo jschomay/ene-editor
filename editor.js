@@ -76,31 +76,32 @@ window.ENE.Editor = {
     );
 
     // fetch and import manifest data
-    manifestRef
-      .orderBy("createdAt")
-      .get()
-      .then((docs) => {
-        // entitiesTable will be defined by the time the promise returns
-        docs.forEach((doc) => {
+    manifestRef.orderBy("createdAt").onSnapshot((snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        let doc = change.doc;
+        if (change.type === "removed") {
+          entitiesTable.deleteRow(doc.id);
+          window.ENE.Completion.removeEntity(doc.data().entity);
+        } else {
           doc.data().entity &&
             window.ENE.Completion.parseEntity(doc.data().entity);
-          entitiesTable.addRow({ ...doc.data(), id: doc.id });
-        });
-      })
-      .catch((e) => console.error(e));
+          entitiesTable.updateOrAddRow(doc.id, { ...doc.data(), id: doc.id });
+        }
+      });
+    }, console.error);
 
     // fetch and import rules data
-    rulesRef
-      .orderBy("createdAt")
-      .get()
-      .then((docs) => {
-        // rulesTable will be defined by the time the promise returns
-        docs.forEach((doc) => {
+    rulesRef.orderBy("createdAt").onSnapshot((snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        let doc = change.doc;
+        if (change.type === "removed") {
+          rulesTable.deleteRow(doc.id);
+        } else {
           doc.data().rule && window.ENE.Completion.parseRule(doc.data().rule);
-          rulesTable.addRow({ ...doc.data(), id: doc.id });
-        });
-      })
-      .catch((e) => console.error(e));
+          rulesTable.updateOrAddRow(doc.id, { ...doc.data(), id: doc.id });
+        }
+      });
+    }, console.error);
 
     // --- Editor ---
 
@@ -256,7 +257,7 @@ window.ENE.Editor = {
     const onRowDelete = (ref) => (e, cell) => {
       if (confirm("Are you sure you want to delete this entity?")) {
         showSaving();
-        cell.getRow().delete();
+        // table row removed in firebase snapshot callback
         ref
           .doc(cell.getData().id)
           .delete()
@@ -318,12 +319,7 @@ window.ENE.Editor = {
           formatter: "buttonCross",
           width: 10,
           align: "center",
-          cellClick: (e, cell) => {
-            window.ENE.Completion.removeEntity(
-              cell.getRow().getCell("entity").getValue()
-            );
-            onRowDelete(manifestRef)(e, cell);
-          }
+          cellClick: onRowDelete(manifestRef)
         }
       ]
     });
