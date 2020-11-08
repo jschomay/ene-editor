@@ -54,25 +54,26 @@ window.ENE.Editor = {
     const rulesRef = projectRef.collection("rules");
 
     // fetch project data
-    projectRef
-      .get()
-      .then((doc) => {
-        let name = doc.data().name;
+    projectRef.onSnapshot(
+      (snapshot) => {
+        let doc = snapshot.data();
+        let name = doc.name;
         $("#project-title").text(`Editing "${name}"`);
         document.title += ` - editing "${name}"`;
 
         // populate settings
         $("#projectName").val(name);
-        $("#projectDescription").val(doc.data().description);
-        $("#projectCollaborators").val(doc.data().collaborators.join(", "));
-        $("#projectPublic").prop("checked", doc.data().public);
-      })
-      .catch((e) => {
+        $("#projectDescription").val(doc.description);
+        $("#projectCollaborators").val(doc.collaborators.join(", "));
+        $("#projectPublic").prop("checked", doc.public);
+      },
+      (e) => {
         console.error(e);
         window.location.href =
           location.href.slice(0, location.href.lastIndexOf("/") + 1) +
           "projects.html";
-      });
+      }
+    );
 
     // fetch and import manifest data
     manifestRef

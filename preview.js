@@ -34,11 +34,11 @@ window.ENE.Preivew = {
 
     // fetch and import manifest data
     manifestRef.onSnapshot(
-      (snapshop) => {
+      (snapshot) => {
         // TODO check if change type is "remove" and respond accordingly
         // for now this just sends any new/changed docs
         app.ports.addEntities.send(
-          snapshop
+          snapshot
             .docChanges()
             .map((c) => c.doc.data())
             .filter(({ entity }) => !!entity)
@@ -49,11 +49,11 @@ window.ENE.Preivew = {
 
     // fetch and import rules data
     rulesRef.onSnapshot(
-      (snapshop) => {
+      (snapshot) => {
         // TODO check if change type is "remove" and respond accordingly
         // for now this just sends any new/changed docs
         app.ports.addRules.send(
-          snapshop
+          snapshot
             .docChanges()
             .map((c) => c.doc.data())
             .filter(({ rule_id }) => !!rule_id)
