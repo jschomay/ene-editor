@@ -71,7 +71,7 @@ window.ENE.Editor = {
         console.error(e);
         window.location.href =
           location.href.slice(0, location.href.lastIndexOf("/") + 1) +
-          "projects.html";
+          "index.html";
       }
     );
 

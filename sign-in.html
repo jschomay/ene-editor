@@ -50,7 +50,7 @@
           // See https://github.com/firebase/firebaseui-web
           var ui = new firebaseui.auth.AuthUI(firebase.auth());
           ui.start('#sign-in', {
-            signInSuccessUrl: location.href.slice(0, location.href.lastIndexOf('/') + 1) + "projects.html",
+            signInSuccessUrl: location.href.slice(0, location.href.lastIndexOf('/') + 1) + "index.html",
               signInOptions: [
               firebase.auth.GoogleAuthProvider.PROVIDER_ID,
               //firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
@@ -59,7 +59,7 @@
 
           firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
-              window.location.href = location.href.slice(0, location.href.lastIndexOf('/') + 1) + "projects.html";
+              window.location.href = location.href.slice(0, location.href.lastIndexOf('/') + 1) + "index.html";
             }
           });
         </script>

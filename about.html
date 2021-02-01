@@ -4,15 +4,12 @@
         <title>Elm Narrative Engine Platform</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <script type="text/javascript" src="elm-code/preview-elm.js"></script>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
     </head>
     <body>
         <!-- Nav -->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
             <a href="index.html" class="navbar-brand">Elm Narrative Engine Platform</a>
-            <span id="project-title" class="navbar-text"></span>
-
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -20,30 +17,27 @@
                 <div class="navbar-nav mr-0 ml-auto">
                     <a class="nav-item nav-link" href="http://elmnarrativeengine.com/">About</a>
                     <a class="nav-item nav-link" href="https://package.elm-lang.org/packages/jschomay/elm-narrative-engine/latest/">Documentation</a>
-                    <div class="border-left border-light ml-2 pl-2 d-none" id="user-profile">
-                      <a href="index.html"><img width="40" height="40" class="rounded-circle" /></a>
-                      <a id="sign-out" class="nav-item nav-link d-inline" href="javascript:void(0)">Sign out</a>
-                    </div>
                 </div>
             </div>
         </nav>
 
+        <!-- Main -->
+        <div class="container">
+          <div class="jumbotron">
+            <h1 class="display-4">Browse, Play, and Create interactive story games</h1>
+            <p class="lead">The official Elm Narrative Engine editor to create and share your games.</p>
+            <hr class="my-4">
+            <p>Public games coming soon.</p>
+            <a class="btn btn-primary btn-lg" href="projects.html" role="button">Make a game</a>
+          </div>
+        </div>
 
-        <div id="game"></div>
 
         <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous" ></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous" ></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.17.0/js/md5.min.js" integrity="sha512-Hmp6qDy9imQmd15Ds1WQJ3uoyGCUz5myyr5ijainC1z+tP7wuXcze5ZZR3dF7+rkRALfNy7jcfgS5hH8wJ/2dQ==" crossorigin="anonymous"></script>
         <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-analytics.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-auth.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-firestore.js"></script>
 
-        <script src="firebase.js"></script>
-        <script src="authenticate.js"></script>
-        <script src="preview.js"></script>
-        <script>
-            window.onAuth = ENE.Preivew.init;
-        </script>
     </body>
 </html>

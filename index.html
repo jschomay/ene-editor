@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Elm Narrative Engine Platform</title>
+        <title>Elm Narrative Engine Platform - My Projects</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
@@ -17,27 +17,63 @@
                 <div class="navbar-nav mr-0 ml-auto">
                     <a class="nav-item nav-link" href="http://elmnarrativeengine.com/">About</a>
                     <a class="nav-item nav-link" href="https://package.elm-lang.org/packages/jschomay/elm-narrative-engine/latest/">Documentation</a>
+                    <div class="border-left border-light ml-2 pl-2 d-none" id="user-profile">
+                      <img width="40" height="40" class="rounded-circle" />
+                      <a id="sign-out" class="nav-item nav-link d-inline" href="javascript:void(0)">Sign out</a>
+                    </div>
                 </div>
             </div>
         </nav>
 
         <!-- Main -->
         <div class="container">
-          <div class="jumbotron">
-            <h1 class="display-4">Browse, Play, and Create interactive story games</h1>
-            <p class="lead">The official Elm Narrative Engine editor to create and share your games.</p>
-            <hr class="my-4">
-            <p>Public games coming soon.</p>
-            <a class="btn btn-primary btn-lg" href="projects.html" role="button">Make a game</a>
+          <h2>My Projects</h2>
+
+          <div id="projects" class="list-group mb-2"><em>Loading...</em></div>
+
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new-project-modal">New Project</button>
+
+          <em id="cloud-status" class="small float-right text-warning">Offline</em>
+        </div>
+
+        <!-- New project modal -->
+        <div class="modal fade" id="new-project-modal" tabindex="-1" role="dialog" aria-labelledby="newProjectModal" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="newProjectModalLabel">Create a new project</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div id="project-details">
+                  <input id="project-name" class="form-control mb-3" type="text" placeholder="Project name">
+                  <input id="project-description" class="form-control" type="text" placeholder="Description">
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="create-new-project" type="button" class="btn btn-primary">Create</button>
+              </div>
+            </div>
           </div>
         </div>
 
-
         <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous" ></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous" ></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.17.0/js/md5.min.js" integrity="sha512-Hmp6qDy9imQmd15Ds1WQJ3uoyGCUz5myyr5ijainC1z+tP7wuXcze5ZZR3dF7+rkRALfNy7jcfgS5hH8wJ/2dQ==" crossorigin="anonymous"></script>
         <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-analytics.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-firestore.js"></script>
 
+
+        <script src="firebase.js"></script>
+        <script src="authenticate.js"></script>
+        <script src="projects.js"></script>
+        <script>
+          window.onAuth = window.ENE.Projects.init;
+        </script>
     </body>
 </html>
