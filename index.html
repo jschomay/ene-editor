@@ -27,13 +27,22 @@
 
         <!-- Main -->
         <div class="container">
-          <h2>My Projects</h2>
+          <div id="loading" class="mb-2"><em>Loading...</em></div>
+          <h2 class="d-none mb-4 signed-in">My Projects</h2>
+          <span class="d-none signed-out">
+              <div class="alert alert-info" role="alert">
+                  <h4>Welcome to the Elm Narrative Engine editor</h4>
+                  <p>A tool for writing, previewing, and publishing text-based interactive story games!</p>
+              </div>
+              <p>Get started by clicking "New Project" below, or sign in to access your projects from any computer and collaborate on projects.</p>
+          </span>
 
-          <div id="projects" class="list-group mb-2"><em>Loading...</em></div>
+          <button type="button" class="d-none btn btn-primary signed-out signed-in" data-toggle="modal" data-target="#new-project-modal">New Project</button>
+          <a type="button" class="d-none btn btn-primary signed-out" href="sign-in.html">Sign in</a>
 
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new-project-modal">New Project</button>
+          <div id="projects" class="d-none list-group mb-2 mt-2 signed-in"><em>Loading...</em></div>
 
-          <em id="cloud-status" class="small float-right text-warning">Offline</em>
+          <em id="cloud-status" class="d-none small float-right text-warning signed-in">Offline</em>
         </div>
 
         <!-- New project modal -->
@@ -74,6 +83,11 @@
         <script src="projects.js"></script>
         <script>
           window.onAuth = window.ENE.Projects.init;
+          window.onNoAuth = () => {
+              if(window.signingOut) return
+              $(".signed-out").removeClass("d-none");
+              $("#loading").addClass("d-none");
+          }
         </script>
     </body>
 </html>

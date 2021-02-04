@@ -14,14 +14,28 @@ firebase.auth().onAuthStateChanged(function (user) {
       img.alt = "Signed in as " + user.displayName;
       img.title = "Signed in as " + user.displayName;
       let signOut = userProfileEL.querySelector("#sign-out");
-      signOut.addEventListener("click", () => firebase.auth().signOut());
+      signOut.addEventListener("click", () => {
+        window.signingOut = true;
+        firebase
+          .auth()
+          .signOut()
+          .then(
+            () =>
+              (window.location.href = location.href.slice(
+                0,
+                location.href.lastIndexOf("/") + 1
+              ))
+          );
+      });
     }
 
-    // call page specific onAuth
     window.onAuth && window.onAuth(user);
   } else {
-    window.location.href =
-      location.href.slice(0, location.href.lastIndexOf("/") + 1) +
-      "sign-in.html";
+    window.onNoAuth
+      ? window.onNoAuth()
+      : (window.location.href = location.href.slice(
+          0,
+          location.href.lastIndexOf("/") + 1
+        ));
   }
 });

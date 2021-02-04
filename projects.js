@@ -1,6 +1,8 @@
 window.ENE = window.ENE || {};
 window.ENE.Projects = {
   init: (user) => {
+    $(".signed-in").removeClass("d-none");
+    $("#loading").addClass("d-none");
     const $projects = $("#projects");
     const $projectDetails = $("#project-details");
     const $newProjectModal = $("#new-project-modal");
