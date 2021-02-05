@@ -34,10 +34,13 @@
                   <h4>Welcome to the Elm Narrative Engine editor</h4>
                   <p>A tool for writing, previewing, and publishing text-based interactive story games!</p>
               </div>
-              <p>Get started by clicking "New Project" below, or sign in to access your projects from any computer and collaborate on projects.</p>
+              <p>Get started by clicking "New Project" below, or sign in to access your projects from any computer and collaborate on other projects.</p>
           </span>
+          <div class="alert alert-warning text-center signed-in-as-guest d-none" role="alert">Signed in as guest. Click "Sign in" to access your projects from any computer and collaborate on other projects.
+              <a type="button" class="btn btn-primary ml-2" href="sign-in.html">Sign in</a>
+          </div>
 
-          <button type="button" class="d-none btn btn-primary signed-out signed-in" data-toggle="modal" data-target="#new-project-modal">New Project</button>
+          <button id="new-project" type="button" class="d-none btn btn-primary signed-out signed-in signed-in-as-guest" data-toggle="modal" data-target="#new-project-modal">New Project</button>
           <a type="button" class="d-none btn btn-primary signed-out" href="sign-in.html">Sign in</a>
 
           <div id="projects" class="d-none list-group mb-2 mt-2 signed-in"><em>Loading...</em></div>
@@ -82,12 +85,13 @@
         <script src="authenticate.js"></script>
         <script src="projects.js"></script>
         <script>
-          window.onAuth = window.ENE.Projects.init;
-          window.onNoAuth = () => {
-              if(window.signingOut) return
-              $(".signed-out").removeClass("d-none");
-              $("#loading").addClass("d-none");
-          }
+            $("#new-project").click(() => window.ENE.Projects.startGuestAuthFlow());
+            window.onAuth = window.ENE.Projects.init;
+            window.onNoAuth = () => {
+                if(window.signingOut) return
+                $(".signed-out").removeClass("d-none");
+                $("#loading").addClass("d-none");
+            }
         </script>
     </body>
 </html>

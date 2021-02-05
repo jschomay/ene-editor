@@ -1,8 +1,26 @@
 window.ENE = window.ENE || {};
 window.ENE.Projects = {
+  startGuestAuthFlow: () => {
+    $("#new-project").off("click");
+    $("#create-new-project").attr("disabled", true);
+    firebase
+      .auth()
+      .signInAnonymously()
+      .then(() => {
+        $("#create-new-project").attr("disabled", false);
+      })
+      .catch((e) => {
+        console.error("Error signing user in anonymously", e);
+      });
+  },
   init: (user) => {
+    if (user.isAnonymous) {
+      $(".signed-in-as-guest").removeClass("d-none");
+    }
+    $(".signed-out").addClass("d-none");
     $(".signed-in").removeClass("d-none");
     $("#loading").addClass("d-none");
+
     const $projects = $("#projects");
     const $projectDetails = $("#project-details");
     const $newProjectModal = $("#new-project-modal");
@@ -11,15 +29,19 @@ window.ENE.Projects = {
     let ownerQuery = firebase
       .firestore()
       .collection("projects")
-      .where("owner", "==", user.email)
+      .where("owner", "==", user.uid)
       .get();
-    let collaboratorQuery = firebase
-      .firestore()
-      .collection("projects")
-      .where("collaborators", "array-contains", user.email)
-      .get();
+    let collaboratorQuery = user.email
+      ? firebase
+          .firestore()
+          .collection("projects")
+          .where("collaborators", "array-contains", user.email)
+          .get()
+      : Promise.resolve([]);
 
-    Promise.all([ownerQuery, collaboratorQuery])
+    let projectLoadQueries = [ownerQuery, collaboratorQuery];
+
+    Promise.all(projectLoadQueries)
       .then(([ownerSnapshot, collaboratorSnapshot]) => {
         $projects.empty();
         ownerSnapshot.forEach(renderProject);
@@ -42,7 +64,7 @@ window.ENE.Projects = {
           name,
           description,
           public: false,
-          owner: user.email,
+          owner: user.uid,
           collaborators: []
         })
         .then((doc) => {

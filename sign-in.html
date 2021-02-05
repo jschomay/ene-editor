@@ -29,7 +29,7 @@
 
 
           <div class="alert alert-info" role="alert">
-            Sign in to access your projects from any computer and collaborate on projects.
+            Sign in to access your projects from any computer and collaborate on other projects.
           </div>
 
           <em id="cloud-status" class="small float-right text-warning">Offline</em>
@@ -52,13 +52,12 @@
           ui.start('#sign-in', {
             signInSuccessUrl: location.href.slice(0, location.href.lastIndexOf('/') + 1) + "index.html",
               signInOptions: [
-              firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-              //firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
+              firebase.auth.GoogleAuthProvider.PROVIDER_ID
             ]
           });
 
           firebase.auth().onAuthStateChanged(function(user) {
-            if (user) {
+            if (user && !user.isAnonymous) {
               window.location.href = location.href.slice(0, location.href.lastIndexOf('/') + 1) + "index.html";
             }
           });

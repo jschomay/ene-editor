@@ -1,6 +1,9 @@
 firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
-    // User is signed in, set up profile
+    window.onAuth && window.onAuth(user);
+    if (user.isAnonymous) return;
+
+    // Non-anonymous user is signed in, set up profile
     let userProfileEL = document.querySelector("#user-profile");
     if (userProfileEL) {
       let gravatar =
@@ -28,8 +31,6 @@ firebase.auth().onAuthStateChanged(function (user) {
           );
       });
     }
-
-    window.onAuth && window.onAuth(user);
   } else {
     window.onNoAuth
       ? window.onNoAuth()
