@@ -85,10 +85,10 @@
         <script src="authenticate.js"></script>
         <script src="projects.js"></script>
         <script>
-            $("#new-project").click(() => window.ENE.Projects.startGuestAuthFlow());
             window.onAuth = window.ENE.Projects.init;
             window.onNoAuth = () => {
                 if(window.signingOut) return
+                $("#new-project").click(() => window.ENE.Projects.startGuestAuthFlow());
                 $(".signed-out").removeClass("d-none");
                 $("#loading").addClass("d-none");
             }

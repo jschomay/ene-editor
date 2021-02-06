@@ -50,10 +50,15 @@
           // See https://github.com/firebase/firebaseui-web
           var ui = new firebaseui.auth.AuthUI(firebase.auth());
           ui.start('#sign-in', {
-            signInSuccessUrl: location.href.slice(0, location.href.lastIndexOf('/') + 1) + "index.html",
+              signInSuccessUrl: location.href.slice(0, location.href.lastIndexOf('/') + 1) + "index.html",
               signInOptions: [
-              firebase.auth.GoogleAuthProvider.PROVIDER_ID
-            ]
+                  firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+                  firebase.auth.GithubAuthProvider.PROVIDER_ID,
+                  {
+                      provider: firebase.auth.EmailAuthProvider.PROVIDER_ID ,
+                      signInMethod: firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD
+                  },
+              ]
           });
 
           firebase.auth().onAuthStateChanged(function(user) {
