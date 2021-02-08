@@ -14,8 +14,8 @@ firebase.auth().onAuthStateChanged(function (user) {
       userProfileEL.classList.remove("d-none");
       let img = userProfileEL.querySelector("img");
       img.src = gravatar;
-      img.alt = "Signed in as " + user.displayName;
-      img.title = "Signed in as " + user.displayName;
+      img.alt = "Signed in as " + user.email;
+      img.title = "Signed in as " + user.email;
       let signOut = userProfileEL.querySelector("#sign-out");
       signOut.addEventListener("click", () => {
         window.signingOut = true;

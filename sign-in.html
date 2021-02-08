@@ -30,6 +30,7 @@
 
           <div class="alert alert-info" role="alert">
             Sign in to access your projects from any computer and collaborate on other projects.
+            <span id="access-data-msg" class="d-none">Your current projects will be transfered to this new account.</span>
           </div>
 
           <em id="cloud-status" class="small float-right text-warning">Offline</em>
@@ -39,9 +40,10 @@
 
         <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous" ></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous" ></script>
-        <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-app.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-analytics.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-analytics.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-firestore.js"></script>
 
 
         <script src="firebase.js"></script>
@@ -49,7 +51,9 @@
           // Initialize the FirebaseUI Widget using Firebase.
           // See https://github.com/firebase/firebaseui-web
           var ui = new firebaseui.auth.AuthUI(firebase.auth());
+          var ignoreAuthStateCallback = false;
           ui.start('#sign-in', {
+              autoUpgradeAnonymousUsers: true,
               signInSuccessUrl: location.href.slice(0, location.href.lastIndexOf('/') + 1) + "index.html",
               signInOptions: [
                   firebase.auth.GoogleAuthProvider.PROVIDER_ID,
@@ -58,13 +62,76 @@
                       provider: firebase.auth.EmailAuthProvider.PROVIDER_ID ,
                       signInMethod: firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD
                   },
-              ]
+              ],
+              callbacks: {
+                  // signInFailure callback must be provided to handle merge conflicts which
+                  // occur when an existing credential is linked to an anonymous user.
+                  signInFailure: function(error) {
+                      // For merge conflicts, the error.code will be
+                      // 'firebaseui/anonymous-upgrade-merge-conflict'.
+                      if (error.code != 'firebaseui/anonymous-upgrade-merge-conflict') {
+                          console.warn(error)
+                          return Promise.resolve();
+                      }
+                      // queue up accounts to transfer
+                      var anonUser, credUserUid;
+                      anonUser = firebase.auth().currentUser;
+                      return firebase
+                          .firestore()
+                          .collection("projects")
+                          .where("owner", "==", firebase.auth().currentUser.uid)
+                          .get()
+                          .then(snapshot => {
+                              if(snapshot.empty) {
+                                  // nothing to transfer, delete anon user and continue sign in
+                                  return firebase.auth().currentUser.delete()
+                                      .then(() => firebase.auth().signInWithCredential(error.credential))
+                              } else {
+                                  // grab the uid of the cred user, then swap back to anon user to update projects, then continue sign in
+                                  // wish there was as smoother way to do this, but can't think of any
+                                  ignoreAuthStateCallback = true;
+                                  return firebase.auth().signInWithCredential(error.credential)
+                                      .then((res) => {
+                                          credUserUid = res.user.uid
+                                          return firebase.auth().updateCurrentUser(anonUser)
+                                      })
+                                      .then(() => {
+                                          var updates = [];
+                                          // as anon user
+                                          snapshot.forEach(project => {
+                                              console.log('updating', project.id)
+                                              return updates.push(firebase
+                                                  .firestore()
+                                                  .collection("projects")
+                                                  .doc(project.id)
+                                                  .update({owner: credUserUid})
+                                              )
+                                          })
+                                          return Promise.all(updates)
+                                      })
+                                      .then(() => firebase.auth().currentUser.delete())
+                                      .then(() => {
+                                          ignoreAuthStateCallback = false;
+                                          return firebase.auth().signInWithCredential(error.credential)
+                                      })
+                              }
+                          })
+                          .catch(e => console.error(e))
+                  }
+              }
+
           });
 
           firebase.auth().onAuthStateChanged(function(user) {
-            if (user && !user.isAnonymous) {
-              window.location.href = location.href.slice(0, location.href.lastIndexOf('/') + 1) + "index.html";
-            }
+              if(ignoreAuthStateCallback) return;
+
+              if (user) {
+                  if(user.isAnonymous) {
+                      $("#access-data-msg").removeClass("d-none");
+                  } else {
+                      window.location.href = location.href.slice(0, location.href.lastIndexOf('/') + 1);
+                  }
+              }
           });
         </script>
     </body>
