@@ -1,16 +1,37 @@
 window.ENE = window.ENE || {};
 window.ENE.Projects = {
   startGuestAuthFlow: () => {
-    $("#new-project").off("click");
-    $("#create-new-project").attr("disabled", true);
+    $("#get-started").off("click");
     firebase
       .auth()
       .signInAnonymously()
-      .then(() => {
-        $("#create-new-project").attr("disabled", false);
-      })
-      .catch((e) => {
-        console.error("Error signing user in anonymously", e);
+      .then((cred) => {
+        // TODO create sample project
+        firebase
+          .firestore()
+          .collection("projects")
+          .add({
+            name: "Tutorial project",
+            description:
+              "An interactive example project to learn how to write your own stories",
+            public: false,
+            owner: cred.user.uid,
+            collaborators: []
+          })
+          .then((doc) => {
+            let createdAt = new Date().getTime();
+            doc
+              .collection("manifest")
+              .add({
+                name: "test entity",
+                description: "created as part of tutorial project",
+                entity: "TEST",
+                createdAt
+              });
+          })
+          .catch((e) => {
+            console.error("Error signing user in anonymously", e);
+          });
       });
   },
   init: (user) => {
