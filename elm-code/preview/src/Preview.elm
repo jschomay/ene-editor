@@ -62,6 +62,7 @@ type alias Model =
     { parseErrors : Maybe SyntaxHelpers.ParseErrors
     , worldModel : MyWorldModel
     , rules : MyRules
+    , started : Bool
     , story : String
     , ruleCounts : Dict String Int
     , debug : NarrativeEngine.Debug.State
@@ -73,6 +74,7 @@ initialModel =
     ( { parseErrors = Nothing
       , worldModel = Dict.empty
       , rules = Dict.empty
+      , started = False
       , story = ""
       , ruleCounts = Dict.empty
       , debug = NarrativeEngine.Debug.init
@@ -242,7 +244,14 @@ update msg model =
                     ( { model | parseErrors = Just errors }, Cmd.none )
 
                 Ok newRules ->
-                    ( { model | parseErrors = Nothing, rules = Dict.union newRules model.rules }, Cmd.none )
+                    { model | parseErrors = Nothing, rules = Dict.union newRules model.rules }
+                        |> (\m ->
+                                if m.started then
+                                    ( m, Cmd.none )
+
+                                else
+                                    update (InteractWith "start") { m | started = True }
+                           )
 
 
 query : String -> MyWorldModel -> List ( WorldModel.ID, MyEntity )
