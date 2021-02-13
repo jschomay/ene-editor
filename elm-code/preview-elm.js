@@ -784,11 +784,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.ab.K === region.ak.K)
+	if (region.ab.K === region.al.K)
 	{
 		return 'on line ' + region.ab.K;
 	}
-	return 'on lines ' + region.ab.K + ' through ' + region.ak.K;
+	return 'on lines ' + region.ab.K + ' through ' + region.al.K;
 }
 
 
@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.a7,
-		impl.bg,
-		impl.be,
+		impl.bc,
+		impl.bm,
+		impl.bj,
 		function() { return function() {} }
 	);
 });
@@ -4085,6 +4085,105 @@ function _VirtualDom_dekey(keyedNode)
 
 
 
+// VIRTUAL-DOM WIDGETS
+
+
+var _Markdown_toHtml = F3(function(options, factList, rawMarkdown)
+{
+	return _VirtualDom_custom(
+		factList,
+		{
+			a: options,
+			b: rawMarkdown
+		},
+		_Markdown_render,
+		_Markdown_diff
+	);
+});
+
+
+
+// WIDGET IMPLEMENTATION
+
+
+function _Markdown_render(model)
+{
+	return A2(_Markdown_replace, model, _VirtualDom_doc.createElement('div'));
+}
+
+
+function _Markdown_diff(x, y)
+{
+	return x.b === y.b && x.a === y.a
+		? false
+		: _Markdown_replace(y);
+}
+
+
+var _Markdown_replace = F2(function(model, div)
+{
+	div.innerHTML = _Markdown_marked(model.b, _Markdown_formatOptions(model.a));
+	return div;
+});
+
+
+
+// ACTUAL MARKDOWN PARSER
+
+
+var _Markdown_marked = function() {
+	// catch the `marked` object regardless of the outer environment.
+	// (ex. a CommonJS module compatible environment.)
+	// note that this depends on marked's implementation of environment detection.
+	var module = {};
+	var exports = module.exports = {};
+
+	/**
+	 * marked - a markdown parser
+	 * Copyright (c) 2011-2014, Christopher Jeffrey. (MIT Licensed)
+	 * https://github.com/chjj/marked
+	 * commit cd2f6f5b7091154c5526e79b5f3bfb4d15995a51
+	 */
+	(function(){var block={newline:/^\n+/,code:/^( {4}[^\n]+\n*)+/,fences:noop,hr:/^( *[-*_]){3,} *(?:\n+|$)/,heading:/^ *(#{1,6}) *([^\n]+?) *#* *(?:\n+|$)/,nptable:noop,lheading:/^([^\n]+)\n *(=|-){2,} *(?:\n+|$)/,blockquote:/^( *>[^\n]+(\n(?!def)[^\n]+)*\n*)+/,list:/^( *)(bull) [\s\S]+?(?:hr|def|\n{2,}(?! )(?!\1bull )\n*|\s*$)/,html:/^ *(?:comment *(?:\n|\s*$)|closed *(?:\n{2,}|\s*$)|closing *(?:\n{2,}|\s*$))/,def:/^ *\[([^\]]+)\]: *<?([^\s>]+)>?(?: +["(]([^\n]+)[")])? *(?:\n+|$)/,table:noop,paragraph:/^((?:[^\n]+\n?(?!hr|heading|lheading|blockquote|tag|def))+)\n*/,text:/^[^\n]+/};block.bullet=/(?:[*+-]|\d+\.)/;block.item=/^( *)(bull) [^\n]*(?:\n(?!\1bull )[^\n]*)*/;block.item=replace(block.item,"gm")(/bull/g,block.bullet)();block.list=replace(block.list)(/bull/g,block.bullet)("hr","\\n+(?=\\1?(?:[-*_] *){3,}(?:\\n+|$))")("def","\\n+(?="+block.def.source+")")();block.blockquote=replace(block.blockquote)("def",block.def)();block._tag="(?!(?:"+"a|em|strong|small|s|cite|q|dfn|abbr|data|time|code"+"|var|samp|kbd|sub|sup|i|b|u|mark|ruby|rt|rp|bdi|bdo"+"|span|br|wbr|ins|del|img)\\b)\\w+(?!:/|[^\\w\\s@]*@)\\b";block.html=replace(block.html)("comment",/<!--[\s\S]*?-->/)("closed",/<(tag)[\s\S]+?<\/\1>/)("closing",/<tag(?:"[^"]*"|'[^']*'|[^'">])*?>/)(/tag/g,block._tag)();block.paragraph=replace(block.paragraph)("hr",block.hr)("heading",block.heading)("lheading",block.lheading)("blockquote",block.blockquote)("tag","<"+block._tag)("def",block.def)();block.normal=merge({},block);block.gfm=merge({},block.normal,{fences:/^ *(`{3,}|~{3,})[ \.]*(\S+)? *\n([\s\S]*?)\s*\1 *(?:\n+|$)/,paragraph:/^/,heading:/^ *(#{1,6}) +([^\n]+?) *#* *(?:\n+|$)/});block.gfm.paragraph=replace(block.paragraph)("(?!","(?!"+block.gfm.fences.source.replace("\\1","\\2")+"|"+block.list.source.replace("\\1","\\3")+"|")();block.tables=merge({},block.gfm,{nptable:/^ *(\S.*\|.*)\n *([-:]+ *\|[-| :]*)\n((?:.*\|.*(?:\n|$))*)\n*/,table:/^ *\|(.+)\n *\|( *[-:]+[-| :]*)\n((?: *\|.*(?:\n|$))*)\n*/});function Lexer(options){this.tokens=[];this.tokens.links={};this.options=options||marked.defaults;this.rules=block.normal;if(this.options.gfm){if(this.options.tables){this.rules=block.tables}else{this.rules=block.gfm}}}Lexer.rules=block;Lexer.lex=function(src,options){var lexer=new Lexer(options);return lexer.lex(src)};Lexer.prototype.lex=function(src){src=src.replace(/\r\n|\r/g,"\n").replace(/\t/g,"    ").replace(/\u00a0/g," ").replace(/\u2424/g,"\n");return this.token(src,true)};Lexer.prototype.token=function(src,top,bq){var src=src.replace(/^ +$/gm,""),next,loose,cap,bull,b,item,space,i,l;while(src){if(cap=this.rules.newline.exec(src)){src=src.substring(cap[0].length);if(cap[0].length>1){this.tokens.push({type:"space"})}}if(cap=this.rules.code.exec(src)){src=src.substring(cap[0].length);cap=cap[0].replace(/^ {4}/gm,"");this.tokens.push({type:"code",text:!this.options.pedantic?cap.replace(/\n+$/,""):cap});continue}if(cap=this.rules.fences.exec(src)){src=src.substring(cap[0].length);this.tokens.push({type:"code",lang:cap[2],text:cap[3]||""});continue}if(cap=this.rules.heading.exec(src)){src=src.substring(cap[0].length);this.tokens.push({type:"heading",depth:cap[1].length,text:cap[2]});continue}if(top&&(cap=this.rules.nptable.exec(src))){src=src.substring(cap[0].length);item={type:"table",header:cap[1].replace(/^ *| *\| *$/g,"").split(/ *\| */),align:cap[2].replace(/^ *|\| *$/g,"").split(/ *\| */),cells:cap[3].replace(/\n$/,"").split("\n")};for(i=0;i<item.align.length;i++){if(/^ *-+: *$/.test(item.align[i])){item.align[i]="right"}else if(/^ *:-+: *$/.test(item.align[i])){item.align[i]="center"}else if(/^ *:-+ *$/.test(item.align[i])){item.align[i]="left"}else{item.align[i]=null}}for(i=0;i<item.cells.length;i++){item.cells[i]=item.cells[i].split(/ *\| */)}this.tokens.push(item);continue}if(cap=this.rules.lheading.exec(src)){src=src.substring(cap[0].length);this.tokens.push({type:"heading",depth:cap[2]==="="?1:2,text:cap[1]});continue}if(cap=this.rules.hr.exec(src)){src=src.substring(cap[0].length);this.tokens.push({type:"hr"});continue}if(cap=this.rules.blockquote.exec(src)){src=src.substring(cap[0].length);this.tokens.push({type:"blockquote_start"});cap=cap[0].replace(/^ *> ?/gm,"");this.token(cap,top,true);this.tokens.push({type:"blockquote_end"});continue}if(cap=this.rules.list.exec(src)){src=src.substring(cap[0].length);bull=cap[2];this.tokens.push({type:"list_start",ordered:bull.length>1});cap=cap[0].match(this.rules.item);next=false;l=cap.length;i=0;for(;i<l;i++){item=cap[i];space=item.length;item=item.replace(/^ *([*+-]|\d+\.) +/,"");if(~item.indexOf("\n ")){space-=item.length;item=!this.options.pedantic?item.replace(new RegExp("^ {1,"+space+"}","gm"),""):item.replace(/^ {1,4}/gm,"")}if(this.options.smartLists&&i!==l-1){b=block.bullet.exec(cap[i+1])[0];if(bull!==b&&!(bull.length>1&&b.length>1)){src=cap.slice(i+1).join("\n")+src;i=l-1}}loose=next||/\n\n(?!\s*$)/.test(item);if(i!==l-1){next=item.charAt(item.length-1)==="\n";if(!loose)loose=next}this.tokens.push({type:loose?"loose_item_start":"list_item_start"});this.token(item,false,bq);this.tokens.push({type:"list_item_end"})}this.tokens.push({type:"list_end"});continue}if(cap=this.rules.html.exec(src)){src=src.substring(cap[0].length);this.tokens.push({type:this.options.sanitize?"paragraph":"html",pre:!this.options.sanitizer&&(cap[1]==="pre"||cap[1]==="script"||cap[1]==="style"),text:cap[0]});continue}if(!bq&&top&&(cap=this.rules.def.exec(src))){src=src.substring(cap[0].length);this.tokens.links[cap[1].toLowerCase()]={href:cap[2],title:cap[3]};continue}if(top&&(cap=this.rules.table.exec(src))){src=src.substring(cap[0].length);item={type:"table",header:cap[1].replace(/^ *| *\| *$/g,"").split(/ *\| */),align:cap[2].replace(/^ *|\| *$/g,"").split(/ *\| */),cells:cap[3].replace(/(?: *\| *)?\n$/,"").split("\n")};for(i=0;i<item.align.length;i++){if(/^ *-+: *$/.test(item.align[i])){item.align[i]="right"}else if(/^ *:-+: *$/.test(item.align[i])){item.align[i]="center"}else if(/^ *:-+ *$/.test(item.align[i])){item.align[i]="left"}else{item.align[i]=null}}for(i=0;i<item.cells.length;i++){item.cells[i]=item.cells[i].replace(/^ *\| *| *\| *$/g,"").split(/ *\| */)}this.tokens.push(item);continue}if(top&&(cap=this.rules.paragraph.exec(src))){src=src.substring(cap[0].length);this.tokens.push({type:"paragraph",text:cap[1].charAt(cap[1].length-1)==="\n"?cap[1].slice(0,-1):cap[1]});continue}if(cap=this.rules.text.exec(src)){src=src.substring(cap[0].length);this.tokens.push({type:"text",text:cap[0]});continue}if(src){throw new Error("Infinite loop on byte: "+src.charCodeAt(0))}}return this.tokens};var inline={escape:/^\\([\\`*{}\[\]()#+\-.!_>])/,autolink:/^<([^ >]+(@|:\/)[^ >]+)>/,url:noop,tag:/^<!--[\s\S]*?-->|^<\/?\w+(?:"[^"]*"|'[^']*'|[^'">])*?>/,link:/^!?\[(inside)\]\(href\)/,reflink:/^!?\[(inside)\]\s*\[([^\]]*)\]/,nolink:/^!?\[((?:\[[^\]]*\]|[^\[\]])*)\]/,strong:/^_\_([\s\S]+?)_\_(?!_)|^\*\*([\s\S]+?)\*\*(?!\*)/,em:/^\b_((?:[^_]|_\_)+?)_\b|^\*((?:\*\*|[\s\S])+?)\*(?!\*)/,code:/^(`+)\s*([\s\S]*?[^`])\s*\1(?!`)/,br:/^ {2,}\n(?!\s*$)/,del:noop,text:/^[\s\S]+?(?=[\\<!\[_*`]| {2,}\n|$)/};inline._inside=/(?:\[[^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*/;inline._href=/\s*<?([\s\S]*?)>?(?:\s+['"]([\s\S]*?)['"])?\s*/;inline.link=replace(inline.link)("inside",inline._inside)("href",inline._href)();inline.reflink=replace(inline.reflink)("inside",inline._inside)();inline.normal=merge({},inline);inline.pedantic=merge({},inline.normal,{strong:/^_\_(?=\S)([\s\S]*?\S)_\_(?!_)|^\*\*(?=\S)([\s\S]*?\S)\*\*(?!\*)/,em:/^_(?=\S)([\s\S]*?\S)_(?!_)|^\*(?=\S)([\s\S]*?\S)\*(?!\*)/});inline.gfm=merge({},inline.normal,{escape:replace(inline.escape)("])","~|])")(),url:/^(https?:\/\/[^\s<]+[^<.,:;"')\]\s])/,del:/^~~(?=\S)([\s\S]*?\S)~~/,text:replace(inline.text)("]|","~]|")("|","|https?://|")()});inline.breaks=merge({},inline.gfm,{br:replace(inline.br)("{2,}","*")(),text:replace(inline.gfm.text)("{2,}","*")()});function InlineLexer(links,options){this.options=options||marked.defaults;this.links=links;this.rules=inline.normal;this.renderer=this.options.renderer||new Renderer;this.renderer.options=this.options;if(!this.links){throw new Error("Tokens array requires a `links` property.")}if(this.options.gfm){if(this.options.breaks){this.rules=inline.breaks}else{this.rules=inline.gfm}}else if(this.options.pedantic){this.rules=inline.pedantic}}InlineLexer.rules=inline;InlineLexer.output=function(src,links,options){var inline=new InlineLexer(links,options);return inline.output(src)};InlineLexer.prototype.output=function(src){var out="",link,text,href,cap;while(src){if(cap=this.rules.escape.exec(src)){src=src.substring(cap[0].length);out+=cap[1];continue}if(cap=this.rules.autolink.exec(src)){src=src.substring(cap[0].length);if(cap[2]==="@"){text=cap[1].charAt(6)===":"?this.mangle(cap[1].substring(7)):this.mangle(cap[1]);href=this.mangle("mailto:")+text}else{text=escape(cap[1]);href=text}out+=this.renderer.link(href,null,text);continue}if(!this.inLink&&(cap=this.rules.url.exec(src))){src=src.substring(cap[0].length);text=escape(cap[1]);href=text;out+=this.renderer.link(href,null,text);continue}if(cap=this.rules.tag.exec(src)){if(!this.inLink&&/^<a /i.test(cap[0])){this.inLink=true}else if(this.inLink&&/^<\/a>/i.test(cap[0])){this.inLink=false}src=src.substring(cap[0].length);out+=this.options.sanitize?this.options.sanitizer?this.options.sanitizer(cap[0]):escape(cap[0]):cap[0];continue}if(cap=this.rules.link.exec(src)){src=src.substring(cap[0].length);this.inLink=true;out+=this.outputLink(cap,{href:cap[2],title:cap[3]});this.inLink=false;continue}if((cap=this.rules.reflink.exec(src))||(cap=this.rules.nolink.exec(src))){src=src.substring(cap[0].length);link=(cap[2]||cap[1]).replace(/\s+/g," ");link=this.links[link.toLowerCase()];if(!link||!link.href){out+=cap[0].charAt(0);src=cap[0].substring(1)+src;continue}this.inLink=true;out+=this.outputLink(cap,link);this.inLink=false;continue}if(cap=this.rules.strong.exec(src)){src=src.substring(cap[0].length);out+=this.renderer.strong(this.output(cap[2]||cap[1]));continue}if(cap=this.rules.em.exec(src)){src=src.substring(cap[0].length);out+=this.renderer.em(this.output(cap[2]||cap[1]));continue}if(cap=this.rules.code.exec(src)){src=src.substring(cap[0].length);out+=this.renderer.codespan(escape(cap[2],true));continue}if(cap=this.rules.br.exec(src)){src=src.substring(cap[0].length);out+=this.renderer.br();continue}if(cap=this.rules.del.exec(src)){src=src.substring(cap[0].length);out+=this.renderer.del(this.output(cap[1]));continue}if(cap=this.rules.text.exec(src)){src=src.substring(cap[0].length);out+=this.renderer.text(escape(this.smartypants(cap[0])));continue}if(src){throw new Error("Infinite loop on byte: "+src.charCodeAt(0))}}return out};InlineLexer.prototype.outputLink=function(cap,link){var href=escape(link.href),title=link.title?escape(link.title):null;return cap[0].charAt(0)!=="!"?this.renderer.link(href,title,this.output(cap[1])):this.renderer.image(href,title,escape(cap[1]))};InlineLexer.prototype.smartypants=function(text){if(!this.options.smartypants)return text;return text.replace(/---/g,"—").replace(/--/g,"–").replace(/(^|[-\u2014\/(\[{"\s])'/g,"$1‘").replace(/'/g,"’").replace(/(^|[-\u2014\/(\[{\u2018\s])"/g,"$1“").replace(/"/g,"”").replace(/\.{3}/g,"…")};InlineLexer.prototype.mangle=function(text){if(!this.options.mangle)return text;var out="",l=text.length,i=0,ch;for(;i<l;i++){ch=text.charCodeAt(i);if(Math.random()>.5){ch="x"+ch.toString(16)}out+="&#"+ch+";"}return out};function Renderer(options){this.options=options||{}}Renderer.prototype.code=function(code,lang,escaped){if(this.options.highlight){var out=this.options.highlight(code,lang);if(out!=null&&out!==code){escaped=true;code=out}}if(!lang){return"<pre><code>"+(escaped?code:escape(code,true))+"\n</code></pre>"}return'<pre><code class="'+this.options.langPrefix+escape(lang,true)+'">'+(escaped?code:escape(code,true))+"\n</code></pre>\n"};Renderer.prototype.blockquote=function(quote){return"<blockquote>\n"+quote+"</blockquote>\n"};Renderer.prototype.html=function(html){return html};Renderer.prototype.heading=function(text,level,raw){return"<h"+level+' id="'+this.options.headerPrefix+raw.toLowerCase().replace(/[^\w]+/g,"-")+'">'+text+"</h"+level+">\n"};Renderer.prototype.hr=function(){return this.options.xhtml?"<hr/>\n":"<hr>\n"};Renderer.prototype.list=function(body,ordered){var type=ordered?"ol":"ul";return"<"+type+">\n"+body+"</"+type+">\n"};Renderer.prototype.listitem=function(text){return"<li>"+text+"</li>\n"};Renderer.prototype.paragraph=function(text){return"<p>"+text+"</p>\n"};Renderer.prototype.table=function(header,body){return"<table>\n"+"<thead>\n"+header+"</thead>\n"+"<tbody>\n"+body+"</tbody>\n"+"</table>\n"};Renderer.prototype.tablerow=function(content){return"<tr>\n"+content+"</tr>\n"};Renderer.prototype.tablecell=function(content,flags){var type=flags.header?"th":"td";var tag=flags.align?"<"+type+' style="text-align:'+flags.align+'">':"<"+type+">";return tag+content+"</"+type+">\n"};Renderer.prototype.strong=function(text){return"<strong>"+text+"</strong>"};Renderer.prototype.em=function(text){return"<em>"+text+"</em>"};Renderer.prototype.codespan=function(text){return"<code>"+text+"</code>"};Renderer.prototype.br=function(){return this.options.xhtml?"<br/>":"<br>"};Renderer.prototype.del=function(text){return"<del>"+text+"</del>"};Renderer.prototype.link=function(href,title,text){if(this.options.sanitize){try{var prot=decodeURIComponent(unescape(href)).replace(/[^\w:]/g,"").toLowerCase()}catch(e){return""}if(prot.indexOf("javascript:")===0||prot.indexOf("vbscript:")===0||prot.indexOf("data:")===0){return""}}var out='<a href="'+href+'"';if(title){out+=' title="'+title+'"'}out+=">"+text+"</a>";return out};Renderer.prototype.image=function(href,title,text){var out='<img src="'+href+'" alt="'+text+'"';if(title){out+=' title="'+title+'"'}out+=this.options.xhtml?"/>":">";return out};Renderer.prototype.text=function(text){return text};function Parser(options){this.tokens=[];this.token=null;this.options=options||marked.defaults;this.options.renderer=this.options.renderer||new Renderer;this.renderer=this.options.renderer;this.renderer.options=this.options}Parser.parse=function(src,options,renderer){var parser=new Parser(options,renderer);return parser.parse(src)};Parser.prototype.parse=function(src){this.inline=new InlineLexer(src.links,this.options,this.renderer);this.tokens=src.reverse();var out="";while(this.next()){out+=this.tok()}return out};Parser.prototype.next=function(){return this.token=this.tokens.pop()};Parser.prototype.peek=function(){return this.tokens[this.tokens.length-1]||0};Parser.prototype.parseText=function(){var body=this.token.text;while(this.peek().type==="text"){body+="\n"+this.next().text}return this.inline.output(body)};Parser.prototype.tok=function(){switch(this.token.type){case"space":{return""}case"hr":{return this.renderer.hr()}case"heading":{return this.renderer.heading(this.inline.output(this.token.text),this.token.depth,this.token.text)}case"code":{return this.renderer.code(this.token.text,this.token.lang,this.token.escaped)}case"table":{var header="",body="",i,row,cell,flags,j;cell="";for(i=0;i<this.token.header.length;i++){flags={header:true,align:this.token.align[i]};cell+=this.renderer.tablecell(this.inline.output(this.token.header[i]),{header:true,align:this.token.align[i]})}header+=this.renderer.tablerow(cell);for(i=0;i<this.token.cells.length;i++){row=this.token.cells[i];cell="";for(j=0;j<row.length;j++){cell+=this.renderer.tablecell(this.inline.output(row[j]),{header:false,align:this.token.align[j]})}body+=this.renderer.tablerow(cell)}return this.renderer.table(header,body)}case"blockquote_start":{var body="";while(this.next().type!=="blockquote_end"){body+=this.tok()}return this.renderer.blockquote(body)}case"list_start":{var body="",ordered=this.token.ordered;while(this.next().type!=="list_end"){body+=this.tok()}return this.renderer.list(body,ordered)}case"list_item_start":{var body="";while(this.next().type!=="list_item_end"){body+=this.token.type==="text"?this.parseText():this.tok()}return this.renderer.listitem(body)}case"loose_item_start":{var body="";while(this.next().type!=="list_item_end"){body+=this.tok()}return this.renderer.listitem(body)}case"html":{var html=!this.token.pre&&!this.options.pedantic?this.inline.output(this.token.text):this.token.text;return this.renderer.html(html)}case"paragraph":{return this.renderer.paragraph(this.inline.output(this.token.text))}case"text":{return this.renderer.paragraph(this.parseText())}}};function escape(html,encode){return html.replace(!encode?/&(?!#?\w+;)/g:/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;")}function unescape(html){return html.replace(/&(#(?:\d+)|(?:#x[0-9A-Fa-f]+)|(?:\w+));?/g,function(_,n){n=n.toLowerCase();if(n==="colon")return":";if(n.charAt(0)==="#"){return n.charAt(1)==="x"?String.fromCharCode(parseInt(n.substring(2),16)):String.fromCharCode(+n.substring(1))}return""})}function replace(regex,opt){regex=regex.source;opt=opt||"";return function self(name,val){if(!name)return new RegExp(regex,opt);val=val.source||val;val=val.replace(/(^|[^\[])\^/g,"$1");regex=regex.replace(name,val);return self}}function noop(){}noop.exec=noop;function merge(obj){var i=1,target,key;for(;i<arguments.length;i++){target=arguments[i];for(key in target){if(Object.prototype.hasOwnProperty.call(target,key)){obj[key]=target[key]}}}return obj}function marked(src,opt,callback){if(callback||typeof opt==="function"){if(!callback){callback=opt;opt=null}opt=merge({},marked.defaults,opt||{});var highlight=opt.highlight,tokens,pending,i=0;try{tokens=Lexer.lex(src,opt)}catch(e){return callback(e)}pending=tokens.length;var done=function(err){if(err){opt.highlight=highlight;return callback(err)}var out;try{out=Parser.parse(tokens,opt)}catch(e){err=e}opt.highlight=highlight;return err?callback(err):callback(null,out)};if(!highlight||highlight.length<3){return done()}delete opt.highlight;if(!pending)return done();for(;i<tokens.length;i++){(function(token){if(token.type!=="code"){return--pending||done()}return highlight(token.text,token.lang,function(err,code){if(err)return done(err);if(code==null||code===token.text){return--pending||done()}token.text=code;token.escaped=true;--pending||done()})})(tokens[i])}return}try{if(opt)opt=merge({},marked.defaults,opt);return Parser.parse(Lexer.lex(src,opt),opt)}catch(e){e.message+="\nPlease report this to https://github.com/chjj/marked.";if((opt||marked.defaults).silent){return"<p>An error occured:</p><pre>"+escape(e.message+"",true)+"</pre>"}throw e}}marked.options=marked.setOptions=function(opt){merge(marked.defaults,opt);return marked};marked.defaults={gfm:true,tables:true,breaks:false,pedantic:false,sanitize:false,sanitizer:null,mangle:true,smartLists:false,silent:false,highlight:null,langPrefix:"lang-",smartypants:false,headerPrefix:"",renderer:new Renderer,xhtml:false};marked.Parser=Parser;marked.parser=Parser.parse;marked.Renderer=Renderer;marked.Lexer=Lexer;marked.lexer=Lexer.lex;marked.InlineLexer=InlineLexer;marked.inlineLexer=InlineLexer.output;marked.parse=marked;if(typeof module!=="undefined"&&typeof exports==="object"){module.exports=marked}else if(typeof define==="function"&&define.amd){define(function(){return marked})}else{this.marked=marked}}).call(function(){return this||(typeof window!=="undefined"?window:global)}());
+
+	return module.exports;
+}();
+
+
+// FORMAT OPTIONS FOR MARKED IMPLEMENTATION
+
+function _Markdown_formatOptions(options)
+{
+	function toHighlight(code, lang)
+	{
+		if (!lang && elm$core$Maybe$isJust(options.ak))
+		{
+			lang = options.ak.a;
+		}
+
+		if (typeof hljs !== 'undefined' && lang && hljs.listLanguages().indexOf(lang) >= 0)
+		{
+			return hljs.highlight(lang, code, true).value;
+		}
+
+		return code;
+	}
+
+	var gfm = options.aq.a;
+
+	return {
+		highlight: toHighlight,
+		gfm: gfm,
+		tables: gfm && gfm.bk,
+		breaks: gfm && gfm.a2,
+		sanitize: options.aN,
+		smartypants: options.aQ
+	};
+}
+
+
+
+
 // ELEMENT
 
 
@@ -4095,11 +4194,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.a7,
-		impl.bg,
-		impl.be,
+		impl.bc,
+		impl.bm,
+		impl.bj,
 		function(sendToApp, initialModel) {
-			var view = impl.bi;
+			var view = impl.bo;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -4131,12 +4230,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.a7,
-		impl.bg,
-		impl.be,
+		impl.bc,
+		impl.bm,
+		impl.bj,
 		function(sendToApp, initialModel) {
 			var divertHrefToApp = impl.M && impl.M(sendToApp)
-			var view = impl.bi;
+			var view = impl.bo;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -4144,12 +4243,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.aZ);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.a1);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.bf) && (_VirtualDom_doc.title = title = doc.bf);
+				(title !== doc.bl) && (_VirtualDom_doc.title = title = doc.bl);
 			});
 		}
 	);
@@ -4205,8 +4304,8 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.a9;
-	var onUrlRequest = impl.ba;
+	var onUrlChange = impl.be;
+	var onUrlRequest = impl.bf;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
@@ -4226,9 +4325,9 @@ function _Browser_application(impl)
 					var next = elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.aF === next.aF
-							&& curr.ar === next.ar
-							&& curr.aB.a === next.aB.a
+							&& curr.aH === next.aH
+							&& curr.at === next.at
+							&& curr.aD.a === next.aD.a
 						)
 							? elm$browser$Browser$Internal(next)
 							: elm$browser$Browser$External(href)
@@ -4236,13 +4335,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		a7: function(flags)
+		bc: function(flags)
 		{
-			return A3(impl.a7, flags, _Browser_getUrl(), key);
+			return A3(impl.bc, flags, _Browser_getUrl(), key);
 		},
-		bi: impl.bi,
-		bg: impl.bg,
-		be: impl.be
+		bo: impl.bo,
+		bm: impl.bm,
+		bj: impl.bj
 	});
 }
 
@@ -4308,17 +4407,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { a5: 'hidden', a_: 'visibilitychange' }
+		? { ba: 'hidden', a3: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { a5: 'mozHidden', a_: 'mozvisibilitychange' }
+		? { ba: 'mozHidden', a3: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { a5: 'msHidden', a_: 'msvisibilitychange' }
+		? { ba: 'msHidden', a3: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { a5: 'webkitHidden', a_: 'webkitvisibilitychange' }
-		: { a5: 'hidden', a_: 'visibilitychange' };
+		? { ba: 'webkitHidden', a3: 'webkitvisibilitychange' }
+		: { ba: 'hidden', a3: 'visibilitychange' };
 }
 
 
@@ -4399,12 +4498,12 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		aL: _Browser_getScene(),
-		aT: {
-			aV: _Browser_window.pageXOffset,
-			aW: _Browser_window.pageYOffset,
-			aU: _Browser_doc.documentElement.clientWidth,
-			ap: _Browser_doc.documentElement.clientHeight
+		aO: _Browser_getScene(),
+		aX: {
+			aZ: _Browser_window.pageXOffset,
+			a_: _Browser_window.pageYOffset,
+			aY: _Browser_doc.documentElement.clientWidth,
+			ar: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4414,8 +4513,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		aU: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		ap: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		aY: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		ar: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4438,15 +4537,15 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			aL: {
-				aU: node.scrollWidth,
-				ap: node.scrollHeight
+			aO: {
+				aY: node.scrollWidth,
+				ar: node.scrollHeight
 			},
-			aT: {
-				aV: node.scrollLeft,
-				aW: node.scrollTop,
-				aU: node.clientWidth,
-				ap: node.clientHeight
+			aX: {
+				aZ: node.scrollLeft,
+				a_: node.scrollTop,
+				aY: node.clientWidth,
+				ar: node.clientHeight
 			}
 		};
 	});
@@ -4476,18 +4575,18 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			aL: _Browser_getScene(),
-			aT: {
-				aV: x,
-				aW: y,
-				aU: _Browser_doc.documentElement.clientWidth,
-				ap: _Browser_doc.documentElement.clientHeight
+			aO: _Browser_getScene(),
+			aX: {
+				aZ: x,
+				a_: y,
+				aY: _Browser_doc.documentElement.clientWidth,
+				ar: _Browser_doc.documentElement.clientHeight
 			},
-			a2: {
-				aV: x + rect.left,
-				aW: y + rect.top,
-				aU: rect.width,
-				ap: rect.height
+			a7: {
+				aZ: x + rect.left,
+				a_: y + rect.top,
+				aY: rect.width,
+				ar: rect.height
 			}
 		};
 	});
@@ -5296,10 +5395,10 @@ var elm$core$Tuple$mapSecond = F2(
 	});
 var elm$parser$Parser$DeadEnd = F3(
 	function (row, col, problem) {
-		return {ah: col, aC: problem, aK: row};
+		return {ah: col, aE: problem, aM: row};
 	});
 var elm$parser$Parser$problemToDeadEnd = function (p) {
-	return A3(elm$parser$Parser$DeadEnd, p.aK, p.ah, p.aC);
+	return A3(elm$parser$Parser$DeadEnd, p.aM, p.ah, p.aE);
 };
 var elm$parser$Parser$Advanced$bagToList = F2(
 	function (bag, list) {
@@ -5331,7 +5430,7 @@ var elm$parser$Parser$Advanced$run = F2(
 	function (_n0, src) {
 		var parse = _n0;
 		var _n1 = parse(
-			{ah: 1, c: _List_Nil, d: 1, b: 0, aK: 1, a: src});
+			{ah: 1, c: _List_Nil, d: 1, b: 0, aM: 1, a: src});
 		if (!_n1.$) {
 			var value = _n1.b;
 			return elm$core$Result$Ok(value);
@@ -5370,7 +5469,7 @@ var elm$parser$Parser$Advanced$AddRight = F2(
 	});
 var elm$parser$Parser$Advanced$DeadEnd = F4(
 	function (row, col, problem, contextStack) {
-		return {ah: col, a$: contextStack, aC: problem, aK: row};
+		return {ah: col, a4: contextStack, aE: problem, aM: row};
 	});
 var elm$parser$Parser$Advanced$Empty = {$: 0};
 var elm$parser$Parser$Advanced$fromState = F2(
@@ -5378,7 +5477,7 @@ var elm$parser$Parser$Advanced$fromState = F2(
 		return A2(
 			elm$parser$Parser$Advanced$AddRight,
 			elm$parser$Parser$Advanced$Empty,
-			A4(elm$parser$Parser$Advanced$DeadEnd, s.aK, s.ah, x, s.c));
+			A4(elm$parser$Parser$Advanced$DeadEnd, s.aM, s.ah, x, s.c));
 	});
 var elm$parser$Parser$Advanced$end = function (x) {
 	return function (s) {
@@ -5515,11 +5614,11 @@ var elm$parser$Parser$Advanced$chompIf = F2(
 				elm$parser$Parser$Advanced$Good,
 				true,
 				0,
-				{ah: 1, c: s.c, d: s.d, b: s.b + 1, aK: s.aK + 1, a: s.a}) : A3(
+				{ah: 1, c: s.c, d: s.d, b: s.b + 1, aM: s.aM + 1, a: s.a}) : A3(
 				elm$parser$Parser$Advanced$Good,
 				true,
 				0,
-				{ah: s.ah + 1, c: s.c, d: s.d, b: newOffset, aK: s.aK, a: s.a}));
+				{ah: s.ah + 1, c: s.c, d: s.d, b: newOffset, aM: s.aM, a: s.a}));
 		};
 	});
 var elm$parser$Parser$chompIf = function (isGood) {
@@ -5535,7 +5634,7 @@ var elm$parser$Parser$Advanced$chompWhileHelp = F5(
 					elm$parser$Parser$Advanced$Good,
 					_Utils_cmp(s0.b, offset) < 0,
 					0,
-					{ah: col, c: s0.c, d: s0.d, b: offset, aK: row, a: s0.a});
+					{ah: col, c: s0.c, d: s0.d, b: offset, aM: row, a: s0.a});
 			} else {
 				if (_Utils_eq(newOffset, -2)) {
 					var $temp$isGood = isGood,
@@ -5567,7 +5666,7 @@ var elm$parser$Parser$Advanced$chompWhileHelp = F5(
 	});
 var elm$parser$Parser$Advanced$chompWhile = function (isGood) {
 	return function (s) {
-		return A5(elm$parser$Parser$Advanced$chompWhileHelp, isGood, s.b, s.aK, s.ah, s);
+		return A5(elm$parser$Parser$Advanced$chompWhileHelp, isGood, s.b, s.aM, s.ah, s);
 	};
 };
 var elm$parser$Parser$chompWhile = elm$parser$Parser$Advanced$chompWhile;
@@ -5796,7 +5895,7 @@ var elm$parser$Parser$Advanced$token = function (_n0) {
 	var expecting = _n0.b;
 	var progress = !elm$core$String$isEmpty(str);
 	return function (s) {
-		var _n1 = A5(elm$parser$Parser$Advanced$isSubString, str, s.b, s.aK, s.ah, s.a);
+		var _n1 = A5(elm$parser$Parser$Advanced$isSubString, str, s.b, s.aM, s.ah, s.a);
 		var newOffset = _n1.a;
 		var newRow = _n1.b;
 		var newCol = _n1.c;
@@ -5807,7 +5906,7 @@ var elm$parser$Parser$Advanced$token = function (_n0) {
 			elm$parser$Parser$Advanced$Good,
 			progress,
 			0,
-			{ah: newCol, c: s.c, d: s.d, b: newOffset, aK: newRow, a: s.a});
+			{ah: newCol, c: s.c, d: s.d, b: newOffset, aM: newRow, a: s.a});
 	};
 };
 var elm$parser$Parser$Advanced$symbol = elm$parser$Parser$Advanced$token;
@@ -5829,7 +5928,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$addTag = F2(
 		return _Utils_update(
 			entity,
 			{
-				aR: A2(elm$core$Set$insert, value, entity.aR)
+				aV: A2(elm$core$Set$insert, value, entity.aV)
 			});
 	});
 var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$emptyLinks = elm$core$Dict$empty;
@@ -5841,7 +5940,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$setLink = F3(
 		return _Utils_update(
 			entity,
 			{
-				aw: A3(elm$core$Dict$insert, key, value, entity.aw)
+				ay: A3(elm$core$Dict$insert, key, value, entity.ay)
 			});
 	});
 var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$setStat = F3(
@@ -5849,7 +5948,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$setStat = F3(
 		return _Utils_update(
 			entity,
 			{
-				aO: A3(elm$core$Dict$insert, key, value, entity.aO)
+				aS: A3(elm$core$Dict$insert, key, value, entity.aS)
 			});
 	});
 var elm$core$Basics$composeR = F3(
@@ -5982,7 +6081,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$propsParse
 					elm$parser$Parser$Done(acc))
 				]));
 	};
-	var emptyNarrativeComponent = {aw: jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$emptyLinks, aO: jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$emptyStats, aR: jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$emptyTags};
+	var emptyNarrativeComponent = {ay: jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$emptyLinks, aS: jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$emptyStats, aV: jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$emptyTags};
 	return A2(elm$parser$Parser$loop, emptyNarrativeComponent, helper);
 }();
 var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$entityParser = function () {
@@ -6057,7 +6156,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$Helpers$deadEndsToStrin
 		}
 	};
 	var deadEndToString = function (deadend) {
-		return problemToString(deadend.aC) + (' at row ' + (elm$core$String$fromInt(deadend.aK) + (', col ' + elm$core$String$fromInt(deadend.ah))));
+		return problemToString(deadend.aE) + (' at row ' + (elm$core$String$fromInt(deadend.aM) + (', col ' + elm$core$String$fromInt(deadend.ah))));
 	};
 	return elm$core$String$concat(
 		A2(
@@ -6284,7 +6383,7 @@ var elm$parser$Parser$Advanced$chompUntil = function (_n0) {
 	var str = _n0.a;
 	var expecting = _n0.b;
 	return function (s) {
-		var _n1 = A5(elm$parser$Parser$Advanced$findSubString, str, s.b, s.aK, s.ah, s.a);
+		var _n1 = A5(elm$parser$Parser$Advanced$findSubString, str, s.b, s.aM, s.ah, s.a);
 		var newOffset = _n1.a;
 		var newRow = _n1.b;
 		var newCol = _n1.c;
@@ -6295,7 +6394,7 @@ var elm$parser$Parser$Advanced$chompUntil = function (_n0) {
 			elm$parser$Parser$Advanced$Good,
 			_Utils_cmp(s.b, newOffset) < 0,
 			0,
-			{ah: newCol, c: s.c, d: s.d, b: newOffset, aK: newRow, a: s.a});
+			{ah: newCol, c: s.c, d: s.d, b: newOffset, aM: newRow, a: s.a});
 	};
 };
 var elm$parser$Parser$chompUntil = function (str) {
@@ -6455,7 +6554,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$hasStat = F5(
 				A2(
 					elm$core$Maybe$withDefault,
 					0,
-					A2(elm$core$Dict$get, key, entity.aO)));
+					A2(elm$core$Dict$get, key, entity.aS)));
 		} else {
 			var compareID = statMatcher.a;
 			var compareKey = statMatcher.b;
@@ -6468,13 +6567,13 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$hasStat = F5(
 					A3(
 						elm$core$Maybe$map2,
 						elm$core$Basics$compare,
-						A2(elm$core$Dict$get, key, entity.aO),
+						A2(elm$core$Dict$get, key, entity.aS),
 						A2(
 							elm$core$Maybe$andThen,
 							A2(
 								elm$core$Basics$composeR,
 								function ($) {
-									return $.aO;
+									return $.aS;
 								},
 								elm$core$Dict$get(compareKey)),
 							A2(elm$core$Dict$get, compareID, store)))));
@@ -6496,7 +6595,7 @@ var elm$core$Set$member = F2(
 	});
 var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$hasTag = F2(
 	function (value, entity) {
-		return A2(elm$core$Set$member, value, entity.aR);
+		return A2(elm$core$Set$member, value, entity.aV);
 	});
 var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$findSpecific = F3(
 	function (id, queries, store) {
@@ -6542,7 +6641,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$hasLink = F4(
 				A2(
 					elm$core$Maybe$map,
 					assertMatch(entityMatcher),
-					A2(elm$core$Dict$get, key, entity.aw)));
+					A2(elm$core$Dict$get, key, entity.ay)));
 		} else {
 			var compareID = linkMatcher.a;
 			var compareKey = linkMatcher.b;
@@ -6552,13 +6651,13 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$hasLink = F4(
 				A3(
 					elm$core$Maybe$map2,
 					elm$core$Basics$eq,
-					A2(elm$core$Dict$get, key, entity.aw),
+					A2(elm$core$Dict$get, key, entity.ay),
 					A2(
 						elm$core$Maybe$andThen,
 						A2(
 							elm$core$Basics$composeR,
 							function ($) {
-								return $.aw;
+								return $.ay;
 							},
 							elm$core$Dict$get(compareKey)),
 						A2(elm$core$Dict$get, compareID, store))));
@@ -6752,7 +6851,7 @@ var elm$parser$Parser$Advanced$keyword = function (_n0) {
 	var expecting = _n0.b;
 	var progress = !elm$core$String$isEmpty(kwd);
 	return function (s) {
-		var _n1 = A5(elm$parser$Parser$Advanced$isSubString, kwd, s.b, s.aK, s.ah, s.a);
+		var _n1 = A5(elm$parser$Parser$Advanced$isSubString, kwd, s.b, s.aM, s.ah, s.a);
 		var newOffset = _n1.a;
 		var newRow = _n1.b;
 		var newCol = _n1.c;
@@ -6769,7 +6868,7 @@ var elm$parser$Parser$Advanced$keyword = function (_n0) {
 			elm$parser$Parser$Advanced$Good,
 			progress,
 			0,
-			{ah: newCol, c: s.c, d: s.d, b: newOffset, aK: newRow, a: s.a});
+			{ah: newCol, c: s.c, d: s.d, b: newOffset, aM: newRow, a: s.a});
 	};
 };
 var elm$parser$Parser$keyword = function (kwd) {
@@ -6799,7 +6898,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$propert
 				elm$parser$Parser$succeed(fn),
 				elm$parser$Parser$keyword(propName));
 		},
-		elm$core$Dict$toList(config.bc));
+		elm$core$Dict$toList(config.bh));
 	var getProp = F2(
 		function (id, propFn) {
 			return propFn(
@@ -7300,7 +7399,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$cycling
 									elm$random$Random$step,
 									A2(elm$random$Random$int, 0, 200),
 									elm$random$Random$initialSeed(
-										config.a0 * elm$core$String$length(config.ad))).a)));
+										config.a5 * elm$core$String$length(config.ad))).a)));
 				case 1:
 					return A2(
 						elm$core$Maybe$withDefault,
@@ -7310,7 +7409,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$cycling
 							A2(
 								elm$core$Basics$modBy,
 								elm$core$List$length(l),
-								config.a0),
+								config.a5),
 							elm$core$Array$fromList(l)));
 				default:
 					return A2(
@@ -7321,7 +7420,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$cycling
 							A2(
 								elm$core$Basics$min,
 								elm$core$List$length(l) - 1,
-								config.a0),
+								config.a5),
 							elm$core$Array$fromList(l)));
 			}
 		});
@@ -7396,7 +7495,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$top = f
 		elm$parser$Parser$end);
 };
 var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$parseMany = function (content) {
-	var emptyConfig = {a0: 0, bc: elm$core$Dict$empty, ad: '', h: elm$core$Dict$empty};
+	var emptyConfig = {a5: 0, bh: elm$core$Dict$empty, ad: '', h: elm$core$Dict$empty};
 	var displayError = F3(
 		function (k, v, e) {
 			return _Utils_Tuple2(
@@ -7449,10 +7548,10 @@ var author$project$Preview$parseEntities = function (entities) {
 		function (_n1, _n2) {
 			var description = _n1.s;
 			var name = _n1.o;
-			var tags = _n2.aR;
-			var stats = _n2.aO;
-			var links = _n2.aw;
-			return {s: description, aw: links, o: name, aO: stats, aR: tags};
+			var tags = _n2.aV;
+			var stats = _n2.aS;
+			var links = _n2.ay;
+			return {s: description, ay: links, o: name, aS: stats, aV: tags};
 		});
 	var parsedEntities = A2(
 		jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$parseMany,
@@ -8036,11 +8135,11 @@ var elm$core$Dict$singleton = F2(
 var author$project$Preview$makeConfig = F4(
 	function (trigger, matchedRule, ruleCounts, worldModel) {
 		return {
-			a0: A2(
+			a5: A2(
 				elm$core$Maybe$withDefault,
 				0,
 				A2(elm$core$Dict$get, matchedRule, ruleCounts)),
-			bc: A2(
+			bh: A2(
 				elm$core$Dict$singleton,
 				'name',
 				function (id) {
@@ -8527,11 +8626,11 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$decStat = F3(
 		var current = A2(
 			elm$core$Maybe$withDefault,
 			0,
-			A2(elm$core$Dict$get, key, entity.aO));
+			A2(elm$core$Dict$get, key, entity.aS));
 		return _Utils_update(
 			entity,
 			{
-				aO: A3(elm$core$Dict$insert, key, current - delta, entity.aO)
+				aS: A3(elm$core$Dict$insert, key, current - delta, entity.aS)
 			});
 	});
 var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$incStat = F3(
@@ -8539,11 +8638,11 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$incStat = F3(
 		var current = A2(
 			elm$core$Maybe$withDefault,
 			0,
-			A2(elm$core$Dict$get, key, entity.aO));
+			A2(elm$core$Dict$get, key, entity.aS));
 		return _Utils_update(
 			entity,
 			{
-				aO: A3(elm$core$Dict$insert, key, current + delta, entity.aO)
+				aS: A3(elm$core$Dict$insert, key, current + delta, entity.aS)
 			});
 	});
 var elm$core$Set$remove = F2(
@@ -8556,7 +8655,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$removeTag = F2
 		return _Utils_update(
 			entity,
 			{
-				aR: A2(elm$core$Set$remove, value, entity.aR)
+				aV: A2(elm$core$Set$remove, value, entity.aV)
 			});
 	});
 var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$update = F3(
@@ -8651,7 +8750,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$applyChanges =
 										A2(
 											elm$core$Basics$composeR,
 											function ($) {
-												return $.aw;
+												return $.ay;
 											},
 											elm$core$Dict$get(linkKey)),
 										A2(
@@ -8747,13 +8846,12 @@ var author$project$Preview$update = F2(
 											elm$core$Maybe$Just)),
 									model.z),
 								N: A2(
-									elm$core$Maybe$withDefault,
-									'ERROR parsing narrative content for ' + matchedRuleID,
-									elm$core$List$head(
-										A2(
-											jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$parse,
-											A4(author$project$Preview$makeConfig, trigger, matchedRuleID, model.z, model.h),
-											narrative))),
+									elm$core$String$join,
+									'\n\n',
+									A2(
+										jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$parse,
+										A4(author$project$Preview$makeConfig, trigger, matchedRuleID, model.z, model.h),
+										narrative)),
 								h: A3(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$applyChanges, changes, trigger, model.h)
 							}),
 						elm$core$Platform$Cmd$none);
@@ -8831,7 +8929,7 @@ var author$project$Preview$update = F2(
 				} else {
 					var newRules = parsedRules.a;
 					return function (m) {
-						return m.T ? _Utils_Tuple2(model, elm$core$Platform$Cmd$none) : A2(
+						return m.T ? _Utils_Tuple2(m, elm$core$Platform$Cmd$none) : A2(
 							author$project$Preview$update,
 							author$project$Preview$InteractWith('start'),
 							_Utils_update(
@@ -8926,9 +9024,24 @@ var author$project$Preview$query = F2(
 var elm$core$Basics$neq = _Utils_notEqual;
 var elm$html$Html$b = _VirtualDom_node('b');
 var elm$html$Html$div = _VirtualDom_node('div');
-var elm$html$Html$em = _VirtualDom_node('em');
 var elm$html$Html$span = _VirtualDom_node('span');
 var elm$html$Html$ul = _VirtualDom_node('ul');
+var elm_explorations$markdown$Markdown$defaultOptions = {
+	ak: elm$core$Maybe$Nothing,
+	aq: elm$core$Maybe$Just(
+		{a2: false, bk: false}),
+	aN: true,
+	aQ: false
+};
+var elm$core$Maybe$isJust = function (maybe) {
+	if (!maybe.$) {
+		return true;
+	} else {
+		return false;
+	}
+};
+var elm_explorations$markdown$Markdown$toHtmlWith = _Markdown_toHtml;
+var elm_explorations$markdown$Markdown$toHtml = elm_explorations$markdown$Markdown$toHtmlWith(elm_explorations$markdown$Markdown$defaultOptions);
 var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$getLink = F3(
 	function (id, key, store) {
 		return A2(
@@ -8941,7 +9054,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$getLink = F3(
 				A2(
 					elm$core$Basics$composeR,
 					function ($) {
-						return $.aw;
+						return $.ay;
 					},
 					elm$core$Dict$get(key)),
 				A2(elm$core$Dict$get, id, store)));
@@ -9005,9 +9118,9 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Debug$debugBar = F3(
 			});
 		var displayEntity = function (_n3) {
 			var id = _n3.a;
-			var tags = _n3.b.aR;
-			var stats = _n3.b.aO;
-			var links = _n3.b.aw;
+			var tags = _n3.b.aV;
+			var stats = _n3.b.aS;
+			var links = _n3.b.ay;
 			return A2(
 				elm$core$String$join,
 				'.',
@@ -9163,26 +9276,6 @@ var author$project$Preview$view = function (model) {
 			[
 				A3(jschomay$elm_narrative_engine$NarrativeEngine$Debug$debugBar, author$project$Preview$UpdateDebugSearchText, model.h, model.r),
 				A2(
-				elm$core$Maybe$withDefault,
-				elm$html$Html$text(''),
-				A2(
-					elm$core$Maybe$map,
-					function (l) {
-						return A2(
-							section,
-							'Current location',
-							_List_fromArray(
-								[
-									author$project$Preview$entityView(
-									_Utils_Tuple2(
-										l,
-										{
-											o: A2(author$project$Preview$getName, l, model.h)
-										}))
-								]));
-					},
-					currentLocation)),
-				A2(
 				elm$html$Html$div,
 				_List_fromArray(
 					[
@@ -9198,6 +9291,26 @@ var author$project$Preview$view = function (model) {
 							]),
 						_List_fromArray(
 							[
+								A2(
+								elm$core$Maybe$withDefault,
+								elm$html$Html$text(''),
+								A2(
+									elm$core$Maybe$map,
+									function (l) {
+										return A2(
+											section,
+											'Current location',
+											_List_fromArray(
+												[
+													author$project$Preview$entityView(
+													_Utils_Tuple2(
+														l,
+														{
+															o: A2(author$project$Preview$getName, l, model.h)
+														}))
+												]));
+									},
+									currentLocation)),
 								A2(
 								ifNotEmpty,
 								locations,
@@ -9231,17 +9344,12 @@ var author$project$Preview$view = function (model) {
 						elm$html$Html$div,
 						_List_fromArray(
 							[
-								A2(elm$html$Html$Attributes$style, 'flex', '1 0 auto')
+								A2(elm$html$Html$Attributes$style, 'flex', '1 0 50%'),
+								A2(elm$html$Html$Attributes$style, 'padding', '0 5em')
 							]),
 						_List_fromArray(
 							[
-								A2(
-								elm$html$Html$em,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text(model.N)
-									]))
+								A2(elm_explorations$markdown$Markdown$toHtml, _List_Nil, model.N)
 							]))
 					]))
 			]));
@@ -9354,7 +9462,7 @@ var elm$core$String$left = F2(
 	});
 var elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {ao: fragment, ar: host, az: path, aB: port_, aF: protocol, aG: query};
+		return {ap: fragment, at: host, aB: path, aD: port_, aH: protocol, aI: query};
 	});
 var elm$url$Url$chompBeforePath = F5(
 	function (protocol, path, params, frag, str) {
@@ -9531,12 +9639,12 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$Helpers$parseErrorsView
 };
 var author$project$Preview$main = elm$browser$Browser$element(
 	{
-		a7: function (f) {
+		bc: function (f) {
 			return author$project$Preview$initialModel;
 		},
-		be: author$project$Preview$subscriptions,
-		bg: author$project$Preview$update,
-		bi: function (model) {
+		bj: author$project$Preview$subscriptions,
+		bm: author$project$Preview$update,
+		bo: function (model) {
 			var _n0 = model.D;
 			if (!_n0.$) {
 				var errors = _n0.a;

@@ -5,6 +5,7 @@ import Dict exposing (Dict)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
+import Markdown
 import NarrativeEngine.Core.Rules as Rules
 import NarrativeEngine.Core.WorldModel as WorldModel
 import NarrativeEngine.Debug
@@ -204,8 +205,7 @@ update msg model =
                         , story =
                             narrative
                                 |> NarrativeParser.parse (makeConfig trigger matchedRuleID model.ruleCounts model.worldModel)
-                                |> List.head
-                                |> Maybe.withDefault ("ERROR parsing narrative content for " ++ matchedRuleID)
+                                |> String.join "\n\n"
                         , ruleCounts = Dict.update matchedRuleID (Maybe.map ((+) 1) >> Maybe.withDefault 1 >> Just) model.ruleCounts
                         , debug =
                             model.debug
@@ -300,22 +300,21 @@ view model =
     in
     div [ style "width" "90%", style "margin" "auto" ] <|
         [ NarrativeEngine.Debug.debugBar UpdateDebugSearchText model.worldModel model.debug
-        , currentLocation
-            |> Maybe.map
-                (\l ->
-                    section "Current location" <| [ entityView ( l, { name = getName l model.worldModel } ) ]
-                )
-            |> Maybe.withDefault (text "")
         , div [ style "display" "flex" ]
             [ div [ style "flex" "1 0 auto" ]
-                [ ifNotEmpty locations (section "Other locations" << List.map entityView)
+                [ currentLocation
+                    |> Maybe.map
+                        (\l ->
+                            section "Current location" <| [ entityView ( l, { name = getName l model.worldModel } ) ]
+                        )
+                    |> Maybe.withDefault (text "")
+                , ifNotEmpty locations (section "Other locations" << List.map entityView)
                 , ifNotEmpty items (section "Nearby items" << List.map entityView)
                 , ifNotEmpty characters (section "Nearby characters" << List.map entityView)
                 , ifNotEmpty inventory (section "Inventory" << List.map entityView)
                 ]
-            , div [ style "flex" "1 0 auto" ]
-                [ em [] [ text model.story ]
-                ]
+            , div [ style "flex" "1 0 50%", style "padding" "0 5em" ]
+                [ Markdown.toHtml [] model.story ]
             ]
         ]
 
