@@ -372,11 +372,56 @@ window.ENE.Editor = {
       onRowAdd(rulesRef, rulesTable, { rule: "", narrative: "" })
     );
 
+    $("#export").click(() => {
+      Promise.all([
+        projectRef.get().then((p) => ({ id: p.id, settings: p.data() })),
+        manifestRef.get().then((s) => s.docs.map((d) => d.data())),
+        rulesRef.get().then((s) => s.docs.map((d) => d.data()))
+      ]).then(([{ id, settings }, manifest, rules]) => {
+        let export_data = { id, settings, manifest, rules };
+        downloadFile(settings.name + ".json", JSON.stringify(export_data));
+      });
+    });
+
     window.addEventListener(
       "resize",
       () => entitiesTable.redraw(true) && rulesTable.redraw(true)
     );
 
     return { entitiesTable, rulesTable };
+
+    // taken directly from
+    // https://github.com/le-doux/bitsy/blob/master/editor/script/exporter.js#L131
+    function downloadFile(filename, text) {
+      if (!!new Blob() && (URL != undefined || webkitURL != undefined)) {
+        let makeURL = URL || webkitURL;
+        // new blob version
+        var a = document.createElement("a");
+        var blob = new Blob([text]);
+        a.download = filename;
+        a.href = makeURL.createObjectURL(blob);
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      } else {
+        // old version
+        var element = document.createElement("a");
+
+        element.setAttribute(
+          "href",
+          "data:attachment/file;charset=utf-8," + encodeURIComponent(text)
+        );
+
+        element.setAttribute("download", filename);
+        element.setAttribute("target", "_blank");
+
+        element.style.display = "none";
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
+      }
+    }
   }
 };
