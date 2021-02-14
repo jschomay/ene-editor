@@ -6734,6 +6734,9 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$Match = F2(
 var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$MatchAny = function (a) {
 	return {$: 1, a: a};
 };
+var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$Not = function (a) {
+	return {$: 3, a: a};
+};
 var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$SpecificLink = function (a) {
 	return {$: 0, a: a};
 };
@@ -6743,52 +6746,56 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$replaceTrigger
 			return (id === '$') ? trigger : id;
 		};
 		var replaceInQuery = function (q) {
-			_n1$3:
+			_n0$4:
 			while (true) {
 				switch (q.$) {
 					case 1:
 						if ((q.c.$ === 1) && (q.c.a === '$')) {
 							var key = q.a;
 							var comparison = q.b;
-							var _n3 = q.c;
-							var compareKey = _n3.b;
+							var _n2 = q.c;
+							var compareKey = _n2.b;
 							return A3(
 								jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$HasStat,
 								key,
 								comparison,
 								A2(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$CompareStat, trigger, compareKey));
 						} else {
-							break _n1$3;
+							break _n0$4;
 						}
 					case 2:
 						if (!q.b.$) {
 							if ((!q.b.a.$) && (q.b.a.a === '$')) {
 								var key = q.a;
-								var _n2 = q.b.a;
-								var queries = _n2.b;
+								var _n1 = q.b.a;
+								var queries = _n1.b;
 								return A2(
 									jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$HasLink,
 									key,
 									jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$SpecificLink(
 										A2(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$Match, trigger, queries)));
 							} else {
-								break _n1$3;
+								break _n0$4;
 							}
 						} else {
 							if (q.b.a === '$') {
 								var key = q.a;
-								var _n4 = q.b;
-								var compareKey = _n4.b;
+								var _n3 = q.b;
+								var compareKey = _n3.b;
 								return A2(
 									jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$HasLink,
 									key,
 									A2(jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$CompareLink, trigger, compareKey));
 							} else {
-								break _n1$3;
+								break _n0$4;
 							}
 						}
+					case 3:
+						var q1 = q.a;
+						return jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$Not(
+							replaceInQuery(q1));
 					default:
-						break _n1$3;
+						break _n0$4;
 				}
 			}
 			return q;
@@ -6953,9 +6960,6 @@ var elm$parser$Parser$token = function (str) {
 };
 var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$HasTag = function (a) {
 	return {$: 0, a: a};
-};
-var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$Not = function (a) {
-	return {$: 3, a: a};
 };
 var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$SpecificStat = function (a) {
 	return {$: 0, a: a};
