@@ -205,7 +205,7 @@ window.ENE.Editor = {
       //set focus on the select box when the editor is selected (timeout allows for editor to be added to DOM)
       onRendered(function () {
         editor.style.height = "100%";
-        editor.style.minHeight = "7em";
+        editor.style.minHeight = "20em";
         cell.getRow().normalizeHeight();
         editor.focus();
       });
