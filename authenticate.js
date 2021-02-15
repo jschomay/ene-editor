@@ -24,19 +24,17 @@ firebase.auth().onAuthStateChanged(function (user) {
           .signOut()
           .then(
             () =>
-              (window.location.href = location.href.slice(
-                0,
-                location.href.lastIndexOf("/") + 1
-              ))
+              (window.location.href =
+                location.href.slice(0, location.href.lastIndexOf("/") + 1) +
+                "index.html")
           );
       });
     }
   } else {
     window.onNoAuth
       ? window.onNoAuth()
-      : (window.location.href = location.href.slice(
-          0,
-          location.href.lastIndexOf("/") + 1
-        ));
+      : (window.location.href =
+          location.href.slice(0, location.href.lastIndexOf("/") + 1) +
+          "index.html");
   }
 });
