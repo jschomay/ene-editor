@@ -784,11 +784,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.ab.K === region.al.K)
+	if (region.ac.L === region.am.L)
 	{
-		return 'on line ' + region.ab.K;
+		return 'on line ' + region.ac.L;
 	}
-	return 'on lines ' + region.ab.K + ' through ' + region.al.K;
+	return 'on lines ' + region.ac.L + ' through ' + region.am.L;
 }
 
 
@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.bc,
-		impl.bm,
-		impl.bj,
+		impl.bd,
+		impl.bn,
+		impl.bk,
 		function() { return function() {} }
 	);
 });
@@ -2872,8 +2872,8 @@ var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
 		w: func(record.w),
-		ac: record.ac,
-		Z: record.Z
+		ad: record.ad,
+		_: record._
 	}
 });
 
@@ -3142,10 +3142,10 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 
 		var value = result.a;
 		var message = !tag ? value : tag < 3 ? value.a : value.w;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.ac;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.ad;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.Z) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value._) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -4156,9 +4156,9 @@ function _Markdown_formatOptions(options)
 {
 	function toHighlight(code, lang)
 	{
-		if (!lang && elm$core$Maybe$isJust(options.ak))
+		if (!lang && elm$core$Maybe$isJust(options.al))
 		{
-			lang = options.ak.a;
+			lang = options.al.a;
 		}
 
 		if (typeof hljs !== 'undefined' && lang && hljs.listLanguages().indexOf(lang) >= 0)
@@ -4169,15 +4169,15 @@ function _Markdown_formatOptions(options)
 		return code;
 	}
 
-	var gfm = options.aq.a;
+	var gfm = options.ar.a;
 
 	return {
 		highlight: toHighlight,
 		gfm: gfm,
-		tables: gfm && gfm.bk,
-		breaks: gfm && gfm.a2,
-		sanitize: options.aN,
-		smartypants: options.aQ
+		tables: gfm && gfm.bl,
+		breaks: gfm && gfm.a3,
+		sanitize: options.aO,
+		smartypants: options.aR
 	};
 }
 
@@ -4194,11 +4194,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.bc,
-		impl.bm,
-		impl.bj,
+		impl.bd,
+		impl.bn,
+		impl.bk,
 		function(sendToApp, initialModel) {
-			var view = impl.bo;
+			var view = impl.bp;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -4230,12 +4230,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.bc,
-		impl.bm,
-		impl.bj,
+		impl.bd,
+		impl.bn,
+		impl.bk,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.M && impl.M(sendToApp)
-			var view = impl.bo;
+			var divertHrefToApp = impl.N && impl.N(sendToApp)
+			var view = impl.bp;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -4243,12 +4243,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.a1);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.a2);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.bl) && (_VirtualDom_doc.title = title = doc.bl);
+				(title !== doc.bm) && (_VirtualDom_doc.title = title = doc.bm);
 			});
 		}
 	);
@@ -4304,12 +4304,12 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.be;
-	var onUrlRequest = impl.bf;
+	var onUrlChange = impl.bf;
+	var onUrlRequest = impl.bg;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		M: function(sendToApp)
+		N: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4325,9 +4325,9 @@ function _Browser_application(impl)
 					var next = elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.aH === next.aH
-							&& curr.at === next.at
-							&& curr.aD.a === next.aD.a
+							&& curr.aI === next.aI
+							&& curr.au === next.au
+							&& curr.aE.a === next.aE.a
 						)
 							? elm$browser$Browser$Internal(next)
 							: elm$browser$Browser$External(href)
@@ -4335,13 +4335,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		bc: function(flags)
+		bd: function(flags)
 		{
-			return A3(impl.bc, flags, _Browser_getUrl(), key);
+			return A3(impl.bd, flags, _Browser_getUrl(), key);
 		},
-		bo: impl.bo,
-		bm: impl.bm,
-		bj: impl.bj
+		bp: impl.bp,
+		bn: impl.bn,
+		bk: impl.bk
 	});
 }
 
@@ -4407,17 +4407,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { ba: 'hidden', a3: 'visibilitychange' }
+		? { bb: 'hidden', a4: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { ba: 'mozHidden', a3: 'mozvisibilitychange' }
+		? { bb: 'mozHidden', a4: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { ba: 'msHidden', a3: 'msvisibilitychange' }
+		? { bb: 'msHidden', a4: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { ba: 'webkitHidden', a3: 'webkitvisibilitychange' }
-		: { ba: 'hidden', a3: 'visibilitychange' };
+		? { bb: 'webkitHidden', a4: 'webkitvisibilitychange' }
+		: { bb: 'hidden', a4: 'visibilitychange' };
 }
 
 
@@ -4498,12 +4498,12 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		aO: _Browser_getScene(),
-		aX: {
-			aZ: _Browser_window.pageXOffset,
-			a_: _Browser_window.pageYOffset,
-			aY: _Browser_doc.documentElement.clientWidth,
-			ar: _Browser_doc.documentElement.clientHeight
+		aP: _Browser_getScene(),
+		aY: {
+			a_: _Browser_window.pageXOffset,
+			a$: _Browser_window.pageYOffset,
+			aZ: _Browser_doc.documentElement.clientWidth,
+			as: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4513,8 +4513,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		aY: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		ar: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		aZ: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		as: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4537,15 +4537,15 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			aO: {
-				aY: node.scrollWidth,
-				ar: node.scrollHeight
+			aP: {
+				aZ: node.scrollWidth,
+				as: node.scrollHeight
 			},
-			aX: {
-				aZ: node.scrollLeft,
-				a_: node.scrollTop,
-				aY: node.clientWidth,
-				ar: node.clientHeight
+			aY: {
+				a_: node.scrollLeft,
+				a$: node.scrollTop,
+				aZ: node.clientWidth,
+				as: node.clientHeight
 			}
 		};
 	});
@@ -4575,18 +4575,18 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			aO: _Browser_getScene(),
-			aX: {
-				aZ: x,
-				a_: y,
-				aY: _Browser_doc.documentElement.clientWidth,
-				ar: _Browser_doc.documentElement.clientHeight
+			aP: _Browser_getScene(),
+			aY: {
+				a_: x,
+				a$: y,
+				aZ: _Browser_doc.documentElement.clientWidth,
+				as: _Browser_doc.documentElement.clientHeight
 			},
-			a7: {
-				aZ: x + rect.left,
-				a_: y + rect.top,
-				aY: rect.width,
-				ar: rect.height
+			a8: {
+				a_: x + rect.left,
+				a$: y + rect.top,
+				aZ: rect.width,
+				as: rect.height
 			}
 		};
 	});
@@ -5104,10 +5104,12 @@ var elm$core$Basics$identity = function (x) {
 	return x;
 };
 var jschomay$elm_narrative_engine$NarrativeEngine$Debug$State = elm$core$Basics$identity;
-var jschomay$elm_narrative_engine$NarrativeEngine$Debug$init = {V: 'Start', W: 'Begin', aa: ''};
-var author$project$Preview$initialModel = _Utils_Tuple2(
-	{r: jschomay$elm_narrative_engine$NarrativeEngine$Debug$init, D: elm$core$Maybe$Nothing, z: elm$core$Dict$empty, L: elm$core$Dict$empty, T: false, N: '', h: elm$core$Dict$empty},
-	elm$core$Platform$Cmd$none);
+var jschomay$elm_narrative_engine$NarrativeEngine$Debug$init = {W: 'Start', X: 'Begin', ab: ''};
+var author$project$Preview$initialModel = function (flags) {
+	return _Utils_Tuple2(
+		{r: jschomay$elm_narrative_engine$NarrativeEngine$Debug$init, D: elm$core$Maybe$Nothing, z: elm$core$Dict$empty, M: elm$core$Dict$empty, H: flags.H, U: false, O: '', h: elm$core$Dict$empty},
+		elm$core$Platform$Cmd$none);
+};
 var author$project$Preview$AddEntities = function (a) {
 	return {$: 2, a: a};
 };
@@ -5132,7 +5134,7 @@ var author$project$Preview$addEntities = _Platform_incomingPort(
 							elm$json$Json$Decode$andThen,
 							function (description) {
 								return elm$json$Json$Decode$succeed(
-									{s: description, R: entity, o: name});
+									{s: description, S: entity, o: name});
 							},
 							A2(elm$json$Json$Decode$field, 'description', elm$json$Json$Decode$string));
 					},
@@ -5152,7 +5154,7 @@ var author$project$Preview$addRules = _Platform_incomingPort(
 							elm$json$Json$Decode$andThen,
 							function (narrative) {
 								return elm$json$Json$Decode$succeed(
-									{x: narrative, _: rule, S: rule_id});
+									{x: narrative, aa: rule, T: rule_id});
 							},
 							A2(elm$json$Json$Decode$field, 'narrative', elm$json$Json$Decode$string));
 					},
@@ -5395,10 +5397,10 @@ var elm$core$Tuple$mapSecond = F2(
 	});
 var elm$parser$Parser$DeadEnd = F3(
 	function (row, col, problem) {
-		return {ah: col, aE: problem, aM: row};
+		return {ai: col, aF: problem, aN: row};
 	});
 var elm$parser$Parser$problemToDeadEnd = function (p) {
-	return A3(elm$parser$Parser$DeadEnd, p.aM, p.ah, p.aE);
+	return A3(elm$parser$Parser$DeadEnd, p.aN, p.ai, p.aF);
 };
 var elm$parser$Parser$Advanced$bagToList = F2(
 	function (bag, list) {
@@ -5430,7 +5432,7 @@ var elm$parser$Parser$Advanced$run = F2(
 	function (_n0, src) {
 		var parse = _n0;
 		var _n1 = parse(
-			{ah: 1, c: _List_Nil, d: 1, b: 0, aM: 1, a: src});
+			{ai: 1, c: _List_Nil, d: 1, b: 0, aN: 1, a: src});
 		if (!_n1.$) {
 			var value = _n1.b;
 			return elm$core$Result$Ok(value);
@@ -5469,7 +5471,7 @@ var elm$parser$Parser$Advanced$AddRight = F2(
 	});
 var elm$parser$Parser$Advanced$DeadEnd = F4(
 	function (row, col, problem, contextStack) {
-		return {ah: col, a4: contextStack, aE: problem, aM: row};
+		return {ai: col, a5: contextStack, aF: problem, aN: row};
 	});
 var elm$parser$Parser$Advanced$Empty = {$: 0};
 var elm$parser$Parser$Advanced$fromState = F2(
@@ -5477,7 +5479,7 @@ var elm$parser$Parser$Advanced$fromState = F2(
 		return A2(
 			elm$parser$Parser$Advanced$AddRight,
 			elm$parser$Parser$Advanced$Empty,
-			A4(elm$parser$Parser$Advanced$DeadEnd, s.aM, s.ah, x, s.c));
+			A4(elm$parser$Parser$Advanced$DeadEnd, s.aN, s.ai, x, s.c));
 	});
 var elm$parser$Parser$Advanced$end = function (x) {
 	return function (s) {
@@ -5614,11 +5616,11 @@ var elm$parser$Parser$Advanced$chompIf = F2(
 				elm$parser$Parser$Advanced$Good,
 				true,
 				0,
-				{ah: 1, c: s.c, d: s.d, b: s.b + 1, aM: s.aM + 1, a: s.a}) : A3(
+				{ai: 1, c: s.c, d: s.d, b: s.b + 1, aN: s.aN + 1, a: s.a}) : A3(
 				elm$parser$Parser$Advanced$Good,
 				true,
 				0,
-				{ah: s.ah + 1, c: s.c, d: s.d, b: newOffset, aM: s.aM, a: s.a}));
+				{ai: s.ai + 1, c: s.c, d: s.d, b: newOffset, aN: s.aN, a: s.a}));
 		};
 	});
 var elm$parser$Parser$chompIf = function (isGood) {
@@ -5634,7 +5636,7 @@ var elm$parser$Parser$Advanced$chompWhileHelp = F5(
 					elm$parser$Parser$Advanced$Good,
 					_Utils_cmp(s0.b, offset) < 0,
 					0,
-					{ah: col, c: s0.c, d: s0.d, b: offset, aM: row, a: s0.a});
+					{ai: col, c: s0.c, d: s0.d, b: offset, aN: row, a: s0.a});
 			} else {
 				if (_Utils_eq(newOffset, -2)) {
 					var $temp$isGood = isGood,
@@ -5666,7 +5668,7 @@ var elm$parser$Parser$Advanced$chompWhileHelp = F5(
 	});
 var elm$parser$Parser$Advanced$chompWhile = function (isGood) {
 	return function (s) {
-		return A5(elm$parser$Parser$Advanced$chompWhileHelp, isGood, s.b, s.aM, s.ah, s);
+		return A5(elm$parser$Parser$Advanced$chompWhileHelp, isGood, s.b, s.aN, s.ai, s);
 	};
 };
 var elm$parser$Parser$chompWhile = elm$parser$Parser$Advanced$chompWhile;
@@ -5895,7 +5897,7 @@ var elm$parser$Parser$Advanced$token = function (_n0) {
 	var expecting = _n0.b;
 	var progress = !elm$core$String$isEmpty(str);
 	return function (s) {
-		var _n1 = A5(elm$parser$Parser$Advanced$isSubString, str, s.b, s.aM, s.ah, s.a);
+		var _n1 = A5(elm$parser$Parser$Advanced$isSubString, str, s.b, s.aN, s.ai, s.a);
 		var newOffset = _n1.a;
 		var newRow = _n1.b;
 		var newCol = _n1.c;
@@ -5906,7 +5908,7 @@ var elm$parser$Parser$Advanced$token = function (_n0) {
 			elm$parser$Parser$Advanced$Good,
 			progress,
 			0,
-			{ah: newCol, c: s.c, d: s.d, b: newOffset, aM: newRow, a: s.a});
+			{ai: newCol, c: s.c, d: s.d, b: newOffset, aN: newRow, a: s.a});
 	};
 };
 var elm$parser$Parser$Advanced$symbol = elm$parser$Parser$Advanced$token;
@@ -5928,7 +5930,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$addTag = F2(
 		return _Utils_update(
 			entity,
 			{
-				aV: A2(elm$core$Set$insert, value, entity.aV)
+				aW: A2(elm$core$Set$insert, value, entity.aW)
 			});
 	});
 var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$emptyLinks = elm$core$Dict$empty;
@@ -5940,7 +5942,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$setLink = F3(
 		return _Utils_update(
 			entity,
 			{
-				ay: A3(elm$core$Dict$insert, key, value, entity.ay)
+				az: A3(elm$core$Dict$insert, key, value, entity.az)
 			});
 	});
 var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$setStat = F3(
@@ -5948,7 +5950,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$setStat = F3(
 		return _Utils_update(
 			entity,
 			{
-				aS: A3(elm$core$Dict$insert, key, value, entity.aS)
+				aT: A3(elm$core$Dict$insert, key, value, entity.aT)
 			});
 	});
 var elm$core$Basics$composeR = F3(
@@ -6081,7 +6083,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$propsParse
 					elm$parser$Parser$Done(acc))
 				]));
 	};
-	var emptyNarrativeComponent = {ay: jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$emptyLinks, aS: jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$emptyStats, aV: jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$emptyTags};
+	var emptyNarrativeComponent = {az: jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$emptyLinks, aT: jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$emptyStats, aW: jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$emptyTags};
 	return A2(elm$parser$Parser$loop, emptyNarrativeComponent, helper);
 }();
 var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$entityParser = function () {
@@ -6156,7 +6158,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$Helpers$deadEndsToStrin
 		}
 	};
 	var deadEndToString = function (deadend) {
-		return problemToString(deadend.aE) + (' at row ' + (elm$core$String$fromInt(deadend.aM) + (', col ' + elm$core$String$fromInt(deadend.ah))));
+		return problemToString(deadend.aF) + (' at row ' + (elm$core$String$fromInt(deadend.aN) + (', col ' + elm$core$String$fromInt(deadend.ai))));
 	};
 	return elm$core$String$concat(
 		A2(
@@ -6383,7 +6385,7 @@ var elm$parser$Parser$Advanced$chompUntil = function (_n0) {
 	var str = _n0.a;
 	var expecting = _n0.b;
 	return function (s) {
-		var _n1 = A5(elm$parser$Parser$Advanced$findSubString, str, s.b, s.aM, s.ah, s.a);
+		var _n1 = A5(elm$parser$Parser$Advanced$findSubString, str, s.b, s.aN, s.ai, s.a);
 		var newOffset = _n1.a;
 		var newRow = _n1.b;
 		var newCol = _n1.c;
@@ -6394,7 +6396,7 @@ var elm$parser$Parser$Advanced$chompUntil = function (_n0) {
 			elm$parser$Parser$Advanced$Good,
 			_Utils_cmp(s.b, newOffset) < 0,
 			0,
-			{ah: newCol, c: s.c, d: s.d, b: newOffset, aM: newRow, a: s.a});
+			{ai: newCol, c: s.c, d: s.d, b: newOffset, aN: newRow, a: s.a});
 	};
 };
 var elm$parser$Parser$chompUntil = function (str) {
@@ -6554,7 +6556,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$hasStat = F5(
 				A2(
 					elm$core$Maybe$withDefault,
 					0,
-					A2(elm$core$Dict$get, key, entity.aS)));
+					A2(elm$core$Dict$get, key, entity.aT)));
 		} else {
 			var compareID = statMatcher.a;
 			var compareKey = statMatcher.b;
@@ -6567,13 +6569,13 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$hasStat = F5(
 					A3(
 						elm$core$Maybe$map2,
 						elm$core$Basics$compare,
-						A2(elm$core$Dict$get, key, entity.aS),
+						A2(elm$core$Dict$get, key, entity.aT),
 						A2(
 							elm$core$Maybe$andThen,
 							A2(
 								elm$core$Basics$composeR,
 								function ($) {
-									return $.aS;
+									return $.aT;
 								},
 								elm$core$Dict$get(compareKey)),
 							A2(elm$core$Dict$get, compareID, store)))));
@@ -6595,7 +6597,7 @@ var elm$core$Set$member = F2(
 	});
 var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$hasTag = F2(
 	function (value, entity) {
-		return A2(elm$core$Set$member, value, entity.aV);
+		return A2(elm$core$Set$member, value, entity.aW);
 	});
 var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$findSpecific = F3(
 	function (id, queries, store) {
@@ -6641,7 +6643,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$hasLink = F4(
 				A2(
 					elm$core$Maybe$map,
 					assertMatch(entityMatcher),
-					A2(elm$core$Dict$get, key, entity.ay)));
+					A2(elm$core$Dict$get, key, entity.az)));
 		} else {
 			var compareID = linkMatcher.a;
 			var compareKey = linkMatcher.b;
@@ -6651,13 +6653,13 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$hasLink = F4(
 				A3(
 					elm$core$Maybe$map2,
 					elm$core$Basics$eq,
-					A2(elm$core$Dict$get, key, entity.ay),
+					A2(elm$core$Dict$get, key, entity.az),
 					A2(
 						elm$core$Maybe$andThen,
 						A2(
 							elm$core$Basics$composeR,
 							function ($) {
-								return $.ay;
+								return $.az;
 							},
 							elm$core$Dict$get(compareKey)),
 						A2(elm$core$Dict$get, compareID, store))));
@@ -6858,7 +6860,7 @@ var elm$parser$Parser$Advanced$keyword = function (_n0) {
 	var expecting = _n0.b;
 	var progress = !elm$core$String$isEmpty(kwd);
 	return function (s) {
-		var _n1 = A5(elm$parser$Parser$Advanced$isSubString, kwd, s.b, s.aM, s.ah, s.a);
+		var _n1 = A5(elm$parser$Parser$Advanced$isSubString, kwd, s.b, s.aN, s.ai, s.a);
 		var newOffset = _n1.a;
 		var newRow = _n1.b;
 		var newCol = _n1.c;
@@ -6875,7 +6877,7 @@ var elm$parser$Parser$Advanced$keyword = function (_n0) {
 			elm$parser$Parser$Advanced$Good,
 			progress,
 			0,
-			{ah: newCol, c: s.c, d: s.d, b: newOffset, aM: newRow, a: s.a});
+			{ai: newCol, c: s.c, d: s.d, b: newOffset, aN: newRow, a: s.a});
 	};
 };
 var elm$parser$Parser$keyword = function (kwd) {
@@ -6905,11 +6907,11 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$propert
 				elm$parser$Parser$succeed(fn),
 				elm$parser$Parser$keyword(propName));
 		},
-		elm$core$Dict$toList(config.bh));
+		elm$core$Dict$toList(config.bi));
 	var getProp = F2(
 		function (id, propFn) {
 			return propFn(
-				A3(elm$core$String$replace, '$', config.ad, id));
+				A3(elm$core$String$replace, '$', config.ae, id));
 		});
 	return A2(
 		elm$parser$Parser$andThen,
@@ -7271,7 +7273,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$conditi
 				elm$core$List$all(
 					A2(
 						elm$core$Basics$composeR,
-						jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$replaceTrigger(config.ad),
+						jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$replaceTrigger(config.ae),
 						assert)),
 				A2(
 					jschomay$elm_narrative_engine$NarrativeEngine$Syntax$Helpers$parseMultiple,
@@ -7403,7 +7405,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$cycling
 									elm$random$Random$step,
 									A2(elm$random$Random$int, 0, 200),
 									elm$random$Random$initialSeed(
-										config.a5 * elm$core$String$length(config.ad))).a)));
+										config.a6 * elm$core$String$length(config.ae))).a)));
 				case 1:
 					return A2(
 						elm$core$Maybe$withDefault,
@@ -7413,7 +7415,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$cycling
 							A2(
 								elm$core$Basics$modBy,
 								elm$core$List$length(l),
-								config.a5),
+								config.a6),
 							elm$core$Array$fromList(l)));
 				default:
 					return A2(
@@ -7424,7 +7426,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$cycling
 							A2(
 								elm$core$Basics$min,
 								elm$core$List$length(l) - 1,
-								config.a5),
+								config.a6),
 							elm$core$Array$fromList(l)));
 			}
 		});
@@ -7499,7 +7501,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$top = f
 		elm$parser$Parser$end);
 };
 var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$NarrativeParser$parseMany = function (content) {
-	var emptyConfig = {a5: 0, bh: elm$core$Dict$empty, ad: '', h: elm$core$Dict$empty};
+	var emptyConfig = {a6: 0, bi: elm$core$Dict$empty, ae: '', h: elm$core$Dict$empty};
 	var displayError = F3(
 		function (k, v, e) {
 			return _Utils_Tuple2(
@@ -7543,7 +7545,7 @@ var author$project$Preview$parseEntities = function (entities) {
 			A2(
 				elm$core$List$map,
 				function (_n3) {
-					var entity = _n3.R;
+					var entity = _n3.S;
 					var description = _n3.s;
 					return _Utils_Tuple2(entity, description);
 				},
@@ -7552,10 +7554,10 @@ var author$project$Preview$parseEntities = function (entities) {
 		function (_n1, _n2) {
 			var description = _n1.s;
 			var name = _n1.o;
-			var tags = _n2.aV;
-			var stats = _n2.aS;
-			var links = _n2.ay;
-			return {s: description, ay: links, o: name, aS: stats, aV: tags};
+			var tags = _n2.aW;
+			var stats = _n2.aT;
+			var links = _n2.az;
+			return {s: description, az: links, o: name, aT: stats, aW: tags};
 		});
 	var parsedEntities = A2(
 		jschomay$elm_narrative_engine$NarrativeEngine$Syntax$EntityParser$parseMany,
@@ -7563,7 +7565,7 @@ var author$project$Preview$parseEntities = function (entities) {
 		A2(
 			elm$core$List$map,
 			function (_n0) {
-				var entity = _n0.R;
+				var entity = _n0.S;
 				var description = _n0.s;
 				var name = _n0.o;
 				return _Utils_Tuple2(
@@ -7831,7 +7833,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$changesParse
 var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$ruleParser = function () {
 	var toRule = F3(
 		function (trigger, conditions, changes) {
-			return {U: changes, ai: conditions, ad: trigger};
+			return {V: changes, aj: conditions, ae: trigger};
 		});
 	var specificTriggerParser = A2(
 		elm$parser$Parser$keeper,
@@ -8011,7 +8013,7 @@ var author$project$Preview$parseRules = function (rules) {
 			A2(
 				elm$core$List$map,
 				function (_n3) {
-					var rule_id = _n3.S;
+					var rule_id = _n3.T;
 					var narrative = _n3.x;
 					return _Utils_Tuple2(rule_id, narrative);
 				},
@@ -8019,10 +8021,10 @@ var author$project$Preview$parseRules = function (rules) {
 	var addExtraEntityFields = F2(
 		function (_n1, _n2) {
 			var narrative = _n1.x;
-			var changes = _n2.U;
-			var conditions = _n2.ai;
-			var trigger = _n2.ad;
-			return {U: changes, ai: conditions, x: narrative, ad: trigger};
+			var changes = _n2.V;
+			var conditions = _n2.aj;
+			var trigger = _n2.ae;
+			return {V: changes, aj: conditions, x: narrative, ae: trigger};
 		});
 	var parsedRules = A2(
 		jschomay$elm_narrative_engine$NarrativeEngine$Syntax$RuleParser$parseRules,
@@ -8031,8 +8033,8 @@ var author$project$Preview$parseRules = function (rules) {
 			A2(
 				elm$core$List$map,
 				function (_n0) {
-					var rule_id = _n0.S;
-					var rule = _n0._;
+					var rule_id = _n0.T;
+					var rule = _n0.aa;
 					var narrative = _n0.x;
 					return _Utils_Tuple2(
 						rule_id,
@@ -8139,18 +8141,18 @@ var elm$core$Dict$singleton = F2(
 var author$project$Preview$makeConfig = F4(
 	function (trigger, matchedRule, ruleCounts, worldModel) {
 		return {
-			a5: A2(
+			a6: A2(
 				elm$core$Maybe$withDefault,
 				0,
 				A2(elm$core$Dict$get, matchedRule, ruleCounts)),
-			bh: A2(
+			bi: A2(
 				elm$core$Dict$singleton,
 				'name',
 				function (id) {
 					return elm$core$Result$Ok(
 						A2(author$project$Preview$getName, id, worldModel));
 				}),
-			ad: trigger,
+			ae: trigger,
 			h: worldModel
 		};
 	});
@@ -8567,8 +8569,8 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$Rules$matchTrigger = F3(
 		}
 	});
 var jschomay$elm_narrative_engine$NarrativeEngine$Core$Rules$weight = function (_n0) {
-	var trigger = _n0.ad;
-	var conditions = _n0.ai;
+	var trigger = _n0.ae;
+	var conditions = _n0.aj;
 	var queryScore = function (matcher) {
 		if (!matcher.$) {
 			var id = matcher.a;
@@ -8618,10 +8620,10 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$Rules$findMatchingRule = 
 							elm$core$Dict$filter,
 							F2(
 								function (ruleId, rule) {
-									return A3(jschomay$elm_narrative_engine$NarrativeEngine$Core$Rules$matchTrigger, store, trigger, rule.ad) && A2(
+									return A3(jschomay$elm_narrative_engine$NarrativeEngine$Core$Rules$matchTrigger, store, trigger, rule.ae) && A2(
 										elm$core$List$all,
 										A2(jschomay$elm_narrative_engine$NarrativeEngine$Core$Rules$matchCondition, trigger, store),
-										rule.ai);
+										rule.aj);
 								}),
 							rules)))));
 	});
@@ -8630,11 +8632,11 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$decStat = F3(
 		var current = A2(
 			elm$core$Maybe$withDefault,
 			0,
-			A2(elm$core$Dict$get, key, entity.aS));
+			A2(elm$core$Dict$get, key, entity.aT));
 		return _Utils_update(
 			entity,
 			{
-				aS: A3(elm$core$Dict$insert, key, current - delta, entity.aS)
+				aT: A3(elm$core$Dict$insert, key, current - delta, entity.aT)
 			});
 	});
 var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$incStat = F3(
@@ -8642,11 +8644,11 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$incStat = F3(
 		var current = A2(
 			elm$core$Maybe$withDefault,
 			0,
-			A2(elm$core$Dict$get, key, entity.aS));
+			A2(elm$core$Dict$get, key, entity.aT));
 		return _Utils_update(
 			entity,
 			{
-				aS: A3(elm$core$Dict$insert, key, current + delta, entity.aS)
+				aT: A3(elm$core$Dict$insert, key, current + delta, entity.aT)
 			});
 	});
 var elm$core$Set$remove = F2(
@@ -8659,7 +8661,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$removeTag = F2
 		return _Utils_update(
 			entity,
 			{
-				aV: A2(elm$core$Set$remove, value, entity.aV)
+				aW: A2(elm$core$Set$remove, value, entity.aW)
 			});
 	});
 var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$update = F3(
@@ -8754,7 +8756,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$applyChanges =
 										A2(
 											elm$core$Basics$composeR,
 											function ($) {
-												return $.ay;
+												return $.az;
 											},
 											elm$core$Dict$get(linkKey)),
 										A2(
@@ -8802,32 +8804,32 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Debug$setLastInteractionId = F
 		var state = _n0;
 		return _Utils_update(
 			state,
-			{V: id});
+			{W: id});
 	});
 var jschomay$elm_narrative_engine$NarrativeEngine$Debug$setLastMatchedRuleId = F2(
 	function (id, _n0) {
 		var state = _n0;
 		return _Utils_update(
 			state,
-			{W: id});
+			{X: id});
 	});
 var jschomay$elm_narrative_engine$NarrativeEngine$Debug$updateSearch = F2(
 	function (text, _n0) {
 		var state = _n0;
 		return _Utils_update(
 			state,
-			{aa: text});
+			{ab: text});
 	});
 var author$project$Preview$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
 			case 0:
 				var trigger = msg.a;
-				var _n1 = A3(jschomay$elm_narrative_engine$NarrativeEngine$Core$Rules$findMatchingRule, trigger, model.L, model.h);
+				var _n1 = A3(jschomay$elm_narrative_engine$NarrativeEngine$Core$Rules$findMatchingRule, trigger, model.M, model.h);
 				if (!_n1.$) {
 					var _n2 = _n1.a;
 					var matchedRuleID = _n2.a;
-					var changes = _n2.b.U;
+					var changes = _n2.b.V;
 					var narrative = _n2.b.x;
 					return _Utils_Tuple2(
 						_Utils_update(
@@ -8849,7 +8851,7 @@ var author$project$Preview$update = F2(
 											elm$core$Maybe$withDefault(1),
 											elm$core$Maybe$Just)),
 									model.z),
-								N: A2(
+								O: A2(
 									elm$core$String$join,
 									'\n\n',
 									A2(
@@ -8880,7 +8882,7 @@ var author$project$Preview$update = F2(
 											elm$core$Maybe$withDefault(1),
 											elm$core$Maybe$Just)),
 									model.z),
-								N: A3(
+								O: A3(
 									author$project$Preview$getDescription,
 									A4(author$project$Preview$makeConfig, trigger, trigger, model.z, model.h),
 									trigger,
@@ -8933,18 +8935,18 @@ var author$project$Preview$update = F2(
 				} else {
 					var newRules = parsedRules.a;
 					return function (m) {
-						return m.T ? _Utils_Tuple2(m, elm$core$Platform$Cmd$none) : A2(
+						return m.U ? _Utils_Tuple2(m, elm$core$Platform$Cmd$none) : A2(
 							author$project$Preview$update,
 							author$project$Preview$InteractWith('start'),
 							_Utils_update(
 								m,
-								{T: true}));
+								{U: true}));
 					}(
 						_Utils_update(
 							model,
 							{
 								D: elm$core$Maybe$Nothing,
-								L: A2(elm$core$Dict$union, newRules, model.L)
+								M: A2(elm$core$Dict$union, newRules, model.M)
 							}));
 				}
 		}
@@ -9030,12 +9032,21 @@ var elm$html$Html$b = _VirtualDom_node('b');
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$span = _VirtualDom_node('span');
 var elm$html$Html$ul = _VirtualDom_node('ul');
+var elm$json$Json$Encode$string = _Json_wrap;
+var elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			elm$json$Json$Encode$string(string));
+	});
+var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
 var elm_explorations$markdown$Markdown$defaultOptions = {
-	ak: elm$core$Maybe$Nothing,
-	aq: elm$core$Maybe$Just(
-		{a2: false, bk: false}),
-	aN: true,
-	aQ: false
+	al: elm$core$Maybe$Nothing,
+	ar: elm$core$Maybe$Just(
+		{a3: false, bl: false}),
+	aO: true,
+	aR: false
 };
 var elm$core$Maybe$isJust = function (maybe) {
 	if (!maybe.$) {
@@ -9058,7 +9069,7 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Core$WorldModel$getLink = F3(
 				A2(
 					elm$core$Basics$composeR,
 					function ($) {
-						return $.ay;
+						return $.az;
 					},
 					elm$core$Dict$get(key)),
 				A2(elm$core$Dict$get, id, store)));
@@ -9067,14 +9078,6 @@ var elm$core$String$contains = _String_contains;
 var elm$core$String$startsWith = _String_startsWith;
 var elm$core$String$toLower = _String_toLower;
 var elm$html$Html$input = _VirtualDom_node('input');
-var elm$json$Json$Encode$string = _Json_wrap;
-var elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			elm$json$Json$Encode$string(string));
-	});
 var elm$html$Html$Attributes$placeholder = elm$html$Html$Attributes$stringProperty('placeholder');
 var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
 var elm$html$Html$Events$alwaysStop = function (x) {
@@ -9110,9 +9113,9 @@ var elm$html$Html$Events$onInput = function (tagger) {
 };
 var jschomay$elm_narrative_engine$NarrativeEngine$Debug$debugBar = F3(
 	function (msg, worldModel, _n0) {
-		var lastInteractionId = _n0.V;
-		var lastMatchedRuleId = _n0.W;
-		var searchText = _n0.aa;
+		var lastInteractionId = _n0.W;
+		var lastMatchedRuleId = _n0.X;
+		var searchText = _n0.ab;
 		var fuzzyMatch = F2(
 			function (search, text) {
 				return A2(
@@ -9122,9 +9125,9 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Debug$debugBar = F3(
 			});
 		var displayEntity = function (_n3) {
 			var id = _n3.a;
-			var tags = _n3.b.aV;
-			var stats = _n3.b.aS;
-			var links = _n3.b.ay;
+			var tags = _n3.b.aW;
+			var stats = _n3.b.aT;
+			var links = _n3.b.az;
 			return A2(
 				elm$core$String$join,
 				'.',
@@ -9235,11 +9238,14 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Debug$debugBar = F3(
 				]));
 	});
 var author$project$Preview$view = function (model) {
-	var section = F2(
-		function (heading, entities) {
+	var section = F3(
+		function (heading, _class, entities) {
 			return A2(
 				elm$html$Html$span,
-				_List_Nil,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class(_class)
+					]),
 				_List_fromArray(
 					[
 						A2(
@@ -9252,8 +9258,8 @@ var author$project$Preview$view = function (model) {
 						A2(elm$html$Html$ul, _List_Nil, entities)
 					]));
 		});
-	var items = A2(author$project$Preview$query, '*.item.current_location=(link PLAYER.current_location)', model.h);
-	var inventory = A2(author$project$Preview$query, '*.item.current_location=PLAYER', model.h);
+	var items = A2(author$project$Preview$query, '*.item.!hidden.current_location=(link PLAYER.current_location)', model.h);
+	var inventory = A2(author$project$Preview$query, '*.item.!hidden.current_location=PLAYER', model.h);
 	var ifNotEmpty = F2(
 		function (l, v) {
 			return elm$core$List$isEmpty(l) ? elm$html$Html$text('') : v(l);
@@ -9267,22 +9273,24 @@ var author$project$Preview$view = function (model) {
 				elm$core$Maybe$Just(locationID),
 				currentLocation);
 		},
-		A2(author$project$Preview$query, '*.location', model.h));
-	var characters = A2(author$project$Preview$query, '*.character.current_location=(link PLAYER.current_location)', model.h);
+		A2(author$project$Preview$query, '*.location.!hidden', model.h));
+	var characters = A2(author$project$Preview$query, '*.character.!hidden.current_location=(link PLAYER.current_location)', model.h);
 	return A2(
 		elm$html$Html$div,
 		_List_fromArray(
 			[
+				elm$html$Html$Attributes$class('container'),
 				A2(elm$html$Html$Attributes$style, 'width', '90%'),
 				A2(elm$html$Html$Attributes$style, 'margin', 'auto')
 			]),
 		_List_fromArray(
 			[
-				A3(jschomay$elm_narrative_engine$NarrativeEngine$Debug$debugBar, author$project$Preview$UpdateDebugSearchText, model.h, model.r),
+				model.H ? A3(jschomay$elm_narrative_engine$NarrativeEngine$Debug$debugBar, author$project$Preview$UpdateDebugSearchText, model.h, model.r) : elm$html$Html$text(''),
 				A2(
 				elm$html$Html$div,
 				_List_fromArray(
 					[
+						elm$html$Html$Attributes$class('game'),
 						A2(elm$html$Html$Attributes$style, 'display', 'flex')
 					]),
 				_List_fromArray(
@@ -9291,6 +9299,7 @@ var author$project$Preview$view = function (model) {
 						elm$html$Html$div,
 						_List_fromArray(
 							[
+								elm$html$Html$Attributes$class('world'),
 								A2(elm$html$Html$Attributes$style, 'flex', '1 0 auto')
 							]),
 						_List_fromArray(
@@ -9301,9 +9310,10 @@ var author$project$Preview$view = function (model) {
 								A2(
 									elm$core$Maybe$map,
 									function (l) {
-										return A2(
+										return A3(
 											section,
 											'Current location',
+											'current_location',
 											_List_fromArray(
 												[
 													author$project$Preview$entityView(
@@ -9320,40 +9330,41 @@ var author$project$Preview$view = function (model) {
 								locations,
 								A2(
 									elm$core$Basics$composeL,
-									section('Other locations'),
+									A2(section, 'Other locations', 'other_locations'),
 									elm$core$List$map(author$project$Preview$entityView))),
 								A2(
 								ifNotEmpty,
 								items,
 								A2(
 									elm$core$Basics$composeL,
-									section('Nearby items'),
+									A2(section, 'Nearby items', 'nearby_items'),
 									elm$core$List$map(author$project$Preview$entityView))),
 								A2(
 								ifNotEmpty,
 								characters,
 								A2(
 									elm$core$Basics$composeL,
-									section('Nearby characters'),
+									A2(section, 'Nearby characters', 'nearby_characters'),
 									elm$core$List$map(author$project$Preview$entityView))),
 								A2(
 								ifNotEmpty,
 								inventory,
 								A2(
 									elm$core$Basics$composeL,
-									section('Inventory'),
+									A2(section, 'Inventory', 'inventory'),
 									elm$core$List$map(author$project$Preview$entityView)))
 							])),
 						A2(
 						elm$html$Html$div,
 						_List_fromArray(
 							[
+								elm$html$Html$Attributes$class('narrative'),
 								A2(elm$html$Html$Attributes$style, 'flex', '1 0 50%'),
 								A2(elm$html$Html$Attributes$style, 'padding', '0 5em')
 							]),
 						_List_fromArray(
 							[
-								A2(elm_explorations$markdown$Markdown$toHtml, _List_Nil, model.N)
+								A2(elm_explorations$markdown$Markdown$toHtml, _List_Nil, model.O)
 							]))
 					]))
 			]));
@@ -9466,7 +9477,7 @@ var elm$core$String$left = F2(
 	});
 var elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {ap: fragment, at: host, aB: path, aD: port_, aH: protocol, aI: query};
+		return {aq: fragment, au: host, aC: path, aE: port_, aI: protocol, aJ: query};
 	});
 var elm$url$Url$chompBeforePath = F5(
 	function (protocol, path, params, frag, str) {
@@ -9571,6 +9582,7 @@ var elm$url$Url$fromString = function (str) {
 		A2(elm$core$String$dropLeft, 8, str)) : elm$core$Maybe$Nothing);
 };
 var elm$browser$Browser$element = _Browser_element;
+var elm$json$Json$Decode$bool = _Json_decodeBool;
 var elm$html$Html$code = _VirtualDom_node('code');
 var elm$html$Html$h1 = _VirtualDom_node('h1');
 var elm$html$Html$pre = _VirtualDom_node('pre');
@@ -9643,12 +9655,10 @@ var jschomay$elm_narrative_engine$NarrativeEngine$Syntax$Helpers$parseErrorsView
 };
 var author$project$Preview$main = elm$browser$Browser$element(
 	{
-		bc: function (f) {
-			return author$project$Preview$initialModel;
-		},
-		bj: author$project$Preview$subscriptions,
-		bm: author$project$Preview$update,
-		bo: function (model) {
+		bd: author$project$Preview$initialModel,
+		bk: author$project$Preview$subscriptions,
+		bn: author$project$Preview$update,
+		bp: function (model) {
 			var _n0 = model.D;
 			if (!_n0.$) {
 				var errors = _n0.a;
@@ -9659,4 +9669,10 @@ var author$project$Preview$main = elm$browser$Browser$element(
 		}
 	});
 _Platform_export({'Preview':{'init':author$project$Preview$main(
-	elm$json$Json$Decode$succeed(0))(0)}});}(this));
+	A2(
+		elm$json$Json$Decode$andThen,
+		function (showDebug) {
+			return elm$json$Json$Decode$succeed(
+				{H: showDebug});
+		},
+		A2(elm$json$Json$Decode$field, 'showDebug', elm$json$Json$Decode$bool)))(0)}});}(this));

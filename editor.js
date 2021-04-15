@@ -372,7 +372,23 @@ window.ENE.Editor = {
       onRowAdd(rulesRef, rulesTable, { rule: "", narrative: "" })
     );
 
-    $("#export").click(() => {
+    $("#export-html").click(() => {
+      Promise.all([
+        projectRef.get().then((p) => ({ id: p.id, settings: p.data() })),
+        manifestRef.get().then((s) => s.docs.map((d) => d.data())),
+        rulesRef.get().then((s) => s.docs.map((d) => d.data())),
+        fetch("./export-template.html").then((response) => response.text())
+      ]).then(([{ id, settings }, manifest, rules, template]) => {
+        let gameData = { manifest, rules };
+        let html = template
+          .substr()
+          .replace("{{TITLE}}", settings.name)
+          .replace("{{GAME_DATA}}", JSON.stringify(gameData));
+        downloadFile(settings.name + ".html", html);
+      });
+    });
+
+    $("#export-json").click(() => {
       Promise.all([
         projectRef.get().then((p) => ({ id: p.id, settings: p.data() })),
         manifestRef.get().then((s) => s.docs.map((d) => d.data())),

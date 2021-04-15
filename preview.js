@@ -29,7 +29,8 @@ window.ENE.Preivew = {
 
     // start up elm app
     var app = Elm.Preview.init({
-      node: document.getElementById("game")
+      node: document.getElementById("game"),
+      flags: { showDebug: true }
     });
 
     // fetch and import manifest data

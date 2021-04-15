@@ -67,11 +67,16 @@ type alias Model =
     , story : String
     , ruleCounts : Dict String Int
     , debug : NarrativeEngine.Debug.State
+    , showDebug : Bool
     }
 
 
-initialModel : ( Model, Cmd Msg )
-initialModel =
+type alias Flags =
+    { showDebug : Bool }
+
+
+initialModel : Flags -> ( Model, Cmd Msg )
+initialModel flags =
     ( { parseErrors = Nothing
       , worldModel = Dict.empty
       , rules = Dict.empty
@@ -79,6 +84,7 @@ initialModel =
       , story = ""
       , ruleCounts = Dict.empty
       , debug = NarrativeEngine.Debug.init
+      , showDebug = flags.showDebug
       }
     , Cmd.none
     )
@@ -273,20 +279,20 @@ view model =
             WorldModel.getLink "PLAYER" "current_location" model.worldModel
 
         inventory =
-            query "*.item.current_location=PLAYER" model.worldModel
+            query "*.item.!hidden.current_location=PLAYER" model.worldModel
 
         locations =
-            query "*.location" model.worldModel
+            query "*.location.!hidden" model.worldModel
                 |> List.filter (\( locationID, _ ) -> Just locationID /= currentLocation)
 
         items =
-            query "*.item.current_location=(link PLAYER.current_location)" model.worldModel
+            query "*.item.!hidden.current_location=(link PLAYER.current_location)" model.worldModel
 
         characters =
-            query "*.character.current_location=(link PLAYER.current_location)" model.worldModel
+            query "*.character.!hidden.current_location=(link PLAYER.current_location)" model.worldModel
 
-        section heading entities =
-            span []
+        section heading class entities =
+            span [ Html.Attributes.class class ]
                 [ b [] [ text heading ]
                 , ul [] entities
                 ]
@@ -298,22 +304,26 @@ view model =
             else
                 v l
     in
-    div [ style "width" "90%", style "margin" "auto" ] <|
-        [ NarrativeEngine.Debug.debugBar UpdateDebugSearchText model.worldModel model.debug
-        , div [ style "display" "flex" ]
-            [ div [ style "flex" "1 0 auto" ]
+    div [ Html.Attributes.class "container", style "width" "90%", style "margin" "auto" ] <|
+        [ if model.showDebug then
+            NarrativeEngine.Debug.debugBar UpdateDebugSearchText model.worldModel model.debug
+
+          else
+            text ""
+        , div [ Html.Attributes.class "game", style "display" "flex" ]
+            [ div [ Html.Attributes.class "world", style "flex" "1 0 auto" ]
                 [ currentLocation
                     |> Maybe.map
                         (\l ->
-                            section "Current location" <| [ entityView ( l, { name = getName l model.worldModel } ) ]
+                            section "Current location" "current_location" <| [ entityView ( l, { name = getName l model.worldModel } ) ]
                         )
                     |> Maybe.withDefault (text "")
-                , ifNotEmpty locations (section "Other locations" << List.map entityView)
-                , ifNotEmpty items (section "Nearby items" << List.map entityView)
-                , ifNotEmpty characters (section "Nearby characters" << List.map entityView)
-                , ifNotEmpty inventory (section "Inventory" << List.map entityView)
+                , ifNotEmpty locations (section "Other locations" "other_locations" << List.map entityView)
+                , ifNotEmpty items (section "Nearby items" "nearby_items" << List.map entityView)
+                , ifNotEmpty characters (section "Nearby characters" "nearby_characters" << List.map entityView)
+                , ifNotEmpty inventory (section "Inventory" "inventory" << List.map entityView)
                 ]
-            , div [ style "flex" "1 0 50%", style "padding" "0 5em" ]
+            , div [ Html.Attributes.class "narrative", style "flex" "1 0 50%", style "padding" "0 5em" ]
                 [ Markdown.toHtml [] model.story ]
             ]
         ]
@@ -324,10 +334,10 @@ entityView ( id, { name } ) =
     li [ onClick <| InteractWith id, style "cursor" "pointer" ] [ text name ]
 
 
-main : Program () Model Msg
+main : Program Flags Model Msg
 main =
     Browser.element
-        { init = \f -> initialModel
+        { init = initialModel
         , view =
             \model ->
                 case model.parseErrors of

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{{TITLE}}</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <script type="text/javascript" src="https://jschomay.github.io/ene-editor/elm-code/preview-elm.js"></script>
+    </head>
+    <body>
+        <div id="game"></div>
+        <script>
+            let gameData = {{GAME_DATA}};
+
+            // start up elm app
+            var app = Elm.Preview.init({
+              node: document.getElementById("game"),
+                flags: {showDebug: false}
+            });
+
+
+            app.ports.addEntities.send(
+              gameData.manifest
+            );
+            app.ports.addRules.send(
+              gameData.rules
+            );
+        </script>
+    </body>
+</html>
