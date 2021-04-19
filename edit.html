@@ -30,8 +30,8 @@
                     <a class="nav-item nav-link" href="http://elmnarrativeengine.com/">About</a>
                     <a class="nav-item nav-link" href="https://package.elm-lang.org/packages/jschomay/elm-narrative-engine/latest/">Documentation</a>
                     <div class="border-left border-light ml-2 pl-2 d-none" id="user-profile">
-                      <a href="index.html"><img width="40" height="40" class="rounded-circle" /></a>
-                      <a id="sign-out" class="nav-item nav-link d-inline" href="javascript:void(0)">Sign out</a>
+                        <a href="index.html"><img width="40" height="40" class="rounded-circle" /></a>
+                        <a id="sign-out" class="nav-item nav-link d-inline" href="javascript:void(0)">Sign out</a>
                     </div>
                 </div>
             </div>
@@ -70,44 +70,64 @@
 
                 <!-- settings -->
                 <div class="tab-pane fade p-4" id="settings" role="tabpanel" aria-labelledby="settings-tab">
-                    <h4>Project settings</h4>
-                    <form class="mb-5">
-                        <div class="form-group row">
-                            <label for="projectName" class="col-sm-2 col-form-label">Name</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="projectName">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="projectDescription" class="col-sm-2 col-form-label">Description</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="projectDescription">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="projectCollaborators" class="col-sm-2 col-form-label">Collborators (comma separated emails)</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="projectCollaborators">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label" for="projectPublic">Public?</label>
-                            <div class="col-sm-10">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="projectPublic">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3>Project settings</h3>
+                            <form class="mb-5">
+                                <div class="form-group row">
+                                    <label for="projectName" class="col-sm-2 col-form-label">Name</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="projectName">
+                                    </div>
                                 </div>
-                            </div>
+                                <div class="form-group row">
+                                    <label for="projectDescription" class="col-sm-2 col-form-label">Description</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="projectDescription">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="projectCollaborators" class="col-sm-2 col-form-label">Collborators (comma separated emails)</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="projectCollaborators">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label" for="projectPublic">Allow public reads</label>
+                                    <div class="col-sm-10">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="projectPublic">
+                                            <span>(Required for real-time updates when developing a custom game/theme)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-10">
+                                        <button id="save-settings" type="submit" class="btn btn-primary">Save</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                        <div class="form-group row">
-                            <div class="col-sm-10">
-                                <button id="save-settings" type="submit" class="btn btn-primary">Save</button>
-                            </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3>Publish</h3>
+                            <p>Download a html file that you can upload to itch.io.</p>
+                            <button id="export-html"class="btn btn-primary">Export playable html...</button>
                         </div>
-                    </form>
-                    <h4>Export</h4>
-                    <button id="export-html"class="btn btn-primary">Export playable html...</button>
-                    <p>This will download a html file that you can upload to itch.io</p>
-                    <!-- <button id="export-json"class="btn btn-primary" disabled>Export project data...</button> -->
+                    </div>
+
+
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3>Custom game/theme</h3>
+                            <p>For more advanced and customized games/themes, see <a href="https://github.com/jschomay/elm-interactive-story-starter">the interactive story starter repo</a> and follow the instructions there to get started.</p>
+                            <p>Your project id is <code id="project-id"><loading ...></code>.</p>
+                            <p>When ready to release you can export your story data with this.</p>
+                            <button id="export-json"class="btn btn-primary">Export project data...</button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <em id="cloud-status" class="small float-right text-warning">Offline</em>

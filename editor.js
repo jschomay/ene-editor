@@ -27,6 +27,8 @@ window.ENE.Editor = {
         window.open("preview.html?id=" + projectId, "_blank")
       );
 
+    document.querySelector("#project-id").innerText = projectId;
+
     document.querySelector("#save-settings").addEventListener("click", (e) => {
       e.preventDefault();
 
@@ -395,7 +397,7 @@ window.ENE.Editor = {
         rulesRef.get().then((s) => s.docs.map((d) => d.data()))
       ]).then(([{ id, settings }, manifest, rules]) => {
         let export_data = { id, settings, manifest, rules };
-        downloadFile(settings.name + ".json", JSON.stringify(export_data));
+        downloadFile("story-data.json", JSON.stringify(export_data));
       });
     });
 
